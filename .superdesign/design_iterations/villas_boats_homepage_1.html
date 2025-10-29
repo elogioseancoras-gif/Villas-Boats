@@ -453,13 +453,18 @@
                             <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i>
                             Location
                         </label>
-                        <select class="input border-2 border-[oklch(0.8800_0.0100_240)] rounded-lg px-4 py-3 text-[oklch(0.2500_0.0400_240)] font-medium">
-                            <option>Porto</option>
-                            <option>Lisbon</option>
-                            <option>Algarve</option>
-                            <option>Rio de Janeiro</option>
-                            <option>São Paulo</option>
-                            <option>Santa Catarina</option>
+                        <select class="input border-2 border-[oklch(0.8800_0.0100_240)] rounded-lg px-4 py-3 text-[oklch(0.2500_0.0400_240)] font-medium cursor-pointer">
+                            <option value="">All Locations</option>
+                            <optgroup label="🇵🇹 Portugal">
+                                <option value="algarve">Algarve</option>
+                                <option value="lisbon">Lisbon</option>
+                                <option value="porto" selected>Porto</option>
+                            </optgroup>
+                            <optgroup label="🇧🇷 Brazil">
+                                <option value="rio">Rio de Janeiro</option>
+                                <option value="santa-catarina">Santa Catarina</option>
+                                <option value="sao-paulo">São Paulo</option>
+                            </optgroup>
                         </select>
                     </div>
 
@@ -802,14 +807,14 @@
                     <i data-lucide="anchor" class="w-10 h-10 text-[oklch(0.8500_0.1200_65)]"></i>
                     <span class="text-3xl font-bold font-['Outfit']">VILLAS BOATS</span>
                 </div>
-                <p class="text-white text-lg" style="color: white !important;">Sail towards your dreams</p>
+                <p class="tagline">Sail towards your dreams</p>
             </div>
 
             <!-- Footer Links -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
                 <!-- Column 1 -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Explore</h4>
+                    <h4>Explore</h4>
                     <ul class="space-y-2">
                         <li><a href="#boats" class="footer-link text-white/80 hover:text-white">Boats</a></li>
                         <li><a href="#destinations" class="footer-link text-white/80 hover:text-white">Destinations</a></li>
@@ -820,7 +825,7 @@
 
                 <!-- Column 2 -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Support</h4>
+                    <h4>Support</h4>
                     <ul class="space-y-2">
                         <li><a href="#contact" class="footer-link text-white/80 hover:text-white">Contact</a></li>
                         <li><a href="#faq" class="footer-link text-white/80 hover:text-white">FAQ</a></li>
@@ -831,7 +836,7 @@
 
                 <!-- Column 3 -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Legal</h4>
+                    <h4>Legal</h4>
                     <ul class="space-y-2">
                         <li><a href="#terms" class="footer-link text-white/80 hover:text-white">Terms of Service</a></li>
                         <li><a href="#privacy" class="footer-link text-white/80 hover:text-white">Privacy Policy</a></li>
@@ -842,7 +847,7 @@
 
                 <!-- Column 4 -->
                 <div>
-                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Contact</h4>
+                    <h4>Contact</h4>
                     <ul class="space-y-3">
                         <li class="flex items-center space-x-2">
                             <i data-lucide="mail" class="w-4 h-4"></i>
@@ -862,7 +867,7 @@
 
             <!-- Bottom Bar -->
             <div class="border-t border-white/20 pt-8 text-center">
-                <p class="text-white/60">© 2025 Villas Boats. All rights reserved.</p>
+                <p class="copyright">© 2025 Villas Boats. All rights reserved.</p>
             </div>
         </div>
     </footer>

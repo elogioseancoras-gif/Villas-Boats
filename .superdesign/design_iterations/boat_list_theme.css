@@ -252,6 +252,57 @@
 */
 
 /* ═══════════════════════════════════════════════════════════
+   FOOTER STYLES
+   ═══════════════════════════════════════════════════════════ */
+
+footer h4 {
+  font-family: var(--font-heading) !important; /* Outfit font for headings */
+  font-size: 1.125rem !important; /* 18px */
+  font-weight: 700 !important;
+  line-height: 1.75 !important; /* 28px */
+  color: #F4B942 !important; /* Golden accent */
+  margin-bottom: 1rem !important;
+}
+
+footer p.tagline {
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  line-height: 28px !important;
+  font-family: var(--font-sans) !important;
+  color: white !important;
+}
+
+footer .copyright {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+footer ul {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+footer ul li {
+  line-height: 2 !important; /* Consistent spacing between links */
+}
+
+footer a {
+  line-height: 2 !important;
+  text-decoration: none !important;
+  transition: color 200ms ease !important;
+}
+
+/* Ensure no extra space after footer */
+footer {
+  margin-bottom: 0 !important;
+}
+
+body {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
    ACCESSIBILITY
    ═══════════════════════════════════════════════════════════ */
 
