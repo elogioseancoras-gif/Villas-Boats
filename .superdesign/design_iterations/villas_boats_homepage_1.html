@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Villas Boats - Premium boat rentals in Portugal & Brazil. Sail towards your dreams with our luxury yacht and boat rental platform.">
+    <meta name="keywords" content="boat rental, yacht rental, Portugal, Brazil, luxury boats, sailing">
+    <title>Villas Boats - Sail Towards Your Dreams | Premium Boat Rentals</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="villas_boats_theme.css">
+
+    <style>
+        /* Additional custom styles and animations */
+
+        /* Hero Video Container */
+        .hero-container {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            object-fit: cover;
+            animation: heroVideoFadeIn 1200ms ease-out forwards;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(10, 25, 47, 0.6) 0%,
+                rgba(10, 25, 47, 0.8) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white !important;
+            padding: 0 2rem;
+            max-width: 900px;
+        }
+
+        .hero-title {
+            animation: slideUpFade 800ms ease-out 200ms backwards;
+            color: white !important;
+        }
+
+        .hero-subtitle {
+            animation: slideUpFade 800ms ease-out 400ms backwards;
+            color: white !important;
+        }
+
+        .hero-search {
+            animation: scaleFade 600ms ease-out 600ms backwards;
+        }
+
+        .scroll-hint {
+            animation: floatUpDown 2000ms ease-in-out infinite;
+        }
+
+        /* Navigation */
+        .navbar {
+            animation: slideDownFade 400ms ease-out;
+            backdrop-filter: blur(10px);
+            transition: all 300ms ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95) !important;
+            box-shadow: var(--shadow-md);
+            padding-top: 0.75rem !important;
+            padding-bottom: 0.75rem !important;
+        }
+
+        .nav-link {
+            position: relative;
+            transition: all 200ms ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: oklch(0.4800 0.1600 240);
+            transition: width 250ms ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Cards */
+        .experience-card,
+        .boat-card {
+            transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: slideUpFadeStagger 600ms ease-out backwards;
+        }
+
+        .experience-card:nth-child(1) { animation-delay: 0ms; }
+        .experience-card:nth-child(2) { animation-delay: 150ms; }
+        .experience-card:nth-child(3) { animation-delay: 300ms; }
+
+        .boat-card:nth-child(1) { animation-delay: 0ms; }
+        .boat-card:nth-child(2) { animation-delay: 100ms; }
+        .boat-card:nth-child(3) { animation-delay: 200ms; }
+        .boat-card:nth-child(4) { animation-delay: 300ms; }
+
+        .experience-card:hover,
+        .boat-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-image {
+            transition: transform 400ms ease;
+            overflow: hidden;
+        }
+
+        .experience-card:hover .card-image img,
+        .boat-card:hover .card-image img {
+            transform: scale(1.1);
+        }
+
+        /* Newsletter Section */
+        .newsletter-section {
+            animation: fadeUpScroll 700ms ease-out backwards;
+        }
+
+        .newsletter-section h2,
+        .newsletter-section p {
+            color: white !important;
+        }
+
+        .newsletter-input {
+            color: oklch(0.2500 0.0400 240) !important;
+            background: white !important;
+        }
+
+        .newsletter-section .btn-secondary-premium {
+            color: oklch(0.2500 0.0400 240) !important;
+            background: oklch(0.8500 0.1200 65) !important;
+        }
+
+        .newsletter-input::placeholder {
+            color: oklch(0.5500 0.0300 240) !important;
+        }
+
+        .newsletter-input:focus {
+            border-color: oklch(0.4800 0.1600 240);
+            box-shadow: 0 0 0 3px oklch(0.4800 0.1600 240 / 0.1);
+            transform: scale(1.01);
+        }
+
+        /* Why Choose Section */
+        .feature-card {
+            animation: cascadeFade 600ms ease-out backwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0ms; }
+        .feature-card:nth-child(2) { animation-delay: 120ms; }
+        .feature-card:nth-child(3) { animation-delay: 240ms; }
+        .feature-card:nth-child(4) { animation-delay: 360ms; }
+
+        .feature-icon {
+            transition: all 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: translateY(-10px) scale(1.1);
+        }
+
+        /* Footer */
+        .footer-link {
+            position: relative;
+            transition: all 250ms ease;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: currentColor;
+            transition: width 250ms ease;
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+        .whatsapp-icon {
+            animation: pulseSlow 1500ms ease-in-out infinite;
+        }
+
+        /* Button Animations */
+        .btn-premium {
+            position: relative;
+            overflow: hidden;
+            transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow);
+        }
+
+        .btn-premium:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .btn-secondary-premium {
+            transition: all 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .btn-secondary-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg), var(--shadow-glow-golden);
+        }
+
+        /* Keyframe Animations */
+        @keyframes heroVideoFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes heroOverlayBreathe {
+            from {
+                opacity: 0.3;
+            }
+            to {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleFade {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideDownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatUpDown {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes slideUpFadeStagger {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUpScroll {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes cascadeFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulseSlow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Intersection Observer Animation Trigger */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 700ms ease-out;
+        }
+
+        .reveal-on-scroll.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-container {
+                height: 100svh;
+                min-height: 500px;
+            }
+
+            .hero-title {
+                font-size: 2.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50 bg-white/80 transition-all duration-300">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <i data-lucide="anchor" class="w-8 h-8 text-[oklch(0.4800_0.1600_240)]"></i>
+                <span class="text-2xl font-bold font-['Outfit'] text-[oklch(0.2500_0.0400_240)]">VILLAS BOATS</span>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#boats" class="nav-link text-[oklch(0.4000_0.0200_240)] hover:text-[oklch(0.2500_0.0400_240)] font-medium">Boats</a>
+                <a href="#destinations" class="nav-link text-[oklch(0.4000_0.0200_240)] hover:text-[oklch(0.2500_0.0400_240)] font-medium">Destinations</a>
+                <a href="#how-it-works" class="nav-link text-[oklch(0.4000_0.0200_240)] hover:text-[oklch(0.2500_0.0400_240)] font-medium">How it works?</a>
+
+                <!-- Language Selector -->
+                <div class="relative">
+                    <button class="flex items-center space-x-2 text-[oklch(0.4000_0.0200_240)] hover:text-[oklch(0.2500_0.0400_240)] font-medium">
+                        <i data-lucide="globe" class="w-4 h-4"></i>
+                        <span>EN</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Login/Register -->
+                <button class="btn-premium bg-[oklch(0.4800_0.1600_240)] text-white px-6 py-2.5 rounded-lg font-semibold">
+                    Login / Register
+                </button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden">
+                <i data-lucide="menu" class="w-6 h-6 text-[oklch(0.2500_0.0400_240)]"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-container">
+        <!-- Background Video -->
+        <img
+            src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?q=80&w=2070&auto=format&fit=crop"
+            alt="Luxury yacht at sunset"
+            class="hero-video"
+        />
+
+        <!-- Overlay -->
+        <div class="hero-overlay"></div>
+
+        <!-- Hero Content -->
+        <div class="hero-content">
+            <h1 class="hero-title font-['Playfair_Display'] text-6xl md:text-7xl font-bold mb-6 text-white" style="text-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);">
+                Sail Towards Your Dreams
+            </h1>
+            <p class="hero-subtitle text-xl md:text-2xl text-white mb-12 font-light" style="text-shadow: 0 2px 12px rgba(0,0,0,0.4), 0 1px 4px rgba(0,0,0,0.3);">
+                Premium boat rentals in Portugal & Brazil
+            </p>
+
+            <!-- Quick Search -->
+            <div class="hero-search bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Location -->
+                    <div class="flex flex-col">
+                        <label class="text-sm font-semibold text-[oklch(0.4000_0.0200_240)] mb-2 flex items-center">
+                            <i data-lucide="map-pin" class="w-4 h-4 mr-2"></i>
+                            Location
+                        </label>
+                        <select class="input border-2 border-[oklch(0.8800_0.0100_240)] rounded-lg px-4 py-3 text-[oklch(0.2500_0.0400_240)] font-medium">
+                            <option>Porto</option>
+                            <option>Lisbon</option>
+                            <option>Algarve</option>
+                            <option>Rio de Janeiro</option>
+                            <option>São Paulo</option>
+                            <option>Santa Catarina</option>
+                        </select>
+                    </div>
+
+                    <!-- Check-in Date -->
+                    <div class="flex flex-col">
+                        <label class="text-sm font-semibold text-[oklch(0.4000_0.0200_240)] mb-2 flex items-center">
+                            <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
+                            Check-in
+                        </label>
+                        <input type="date" class="input border-2 border-[oklch(0.8800_0.0100_240)] rounded-lg px-4 py-3 text-[oklch(0.2500_0.0400_240)] font-medium">
+                    </div>
+
+                    <!-- Check-out Date -->
+                    <div class="flex flex-col">
+                        <label class="text-sm font-semibold text-[oklch(0.4000_0.0200_240)] mb-2 flex items-center">
+                            <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
+                            Check-out
+                        </label>
+                        <input type="date" class="input border-2 border-[oklch(0.8800_0.0100_240)] rounded-lg px-4 py-3 text-[oklch(0.2500_0.0400_240)] font-medium">
+                    </div>
+
+                    <!-- Guests -->
+                    <div class="flex flex-col">
+                        <label class="text-sm font-semibold text-[oklch(0.4000_0.0200_240)] mb-2 flex items-center">
+                            <i data-lucide="users" class="w-4 h-4 mr-2"></i>
+                            Guests
+                        </label>
+                        <select class="input border-2 border-[oklch(0.8800_0.0100_240)] rounded-lg px-4 py-3 text-[oklch(0.2500_0.0400_240)] font-medium">
+                            <option>2</option>
+                            <option>4</option>
+                            <option>6</option>
+                            <option>8</option>
+                            <option>10+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <button class="btn-premium w-full mt-6 bg-[oklch(0.4800_0.1600_240)] text-white py-4 rounded-lg font-semibold text-lg flex items-center justify-center space-x-2 hover:shadow-xl transition-all">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                    <span>Explore Boats</span>
+                </button>
+            </div>
+
+            <!-- Scroll Hint -->
+            <div class="scroll-hint mt-16">
+                <i data-lucide="chevron-down" class="w-8 h-8 text-white/80 mx-auto"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Curated Experiences Section -->
+    <section class="py-20 bg-gradient-to-b from-white to-[oklch(0.9900_0.0050_240)]">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-[oklch(0.2500_0.0400_240)] mb-4">
+                    ✨ Curated Experiences
+                </h2>
+                <p class="text-xl text-[oklch(0.4000_0.0200_240)]">
+                    Discover unforgettable moments on the water
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Experience Card 1 -->
+                <div class="experience-card card bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <div class="card-image h-64 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=2070&auto=format&fit=crop"
+                            alt="Sunset Sailing"
+                            class="w-full h-full object-cover transition-transform duration-500"
+                        />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-[oklch(0.2500_0.0400_240)] mb-3">Sunset Sailing</h3>
+                        <p class="text-[oklch(0.4000_0.0200_240)] mb-4">Experience magical sunsets on the open sea with our premium sailing yachts</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-[oklch(0.4800_0.1600_240)]">From €450/day</span>
+                            <button class="btn-secondary-premium bg-[oklch(0.8500_0.1200_65)] text-[oklch(0.2500_0.0400_240)] px-6 py-2.5 rounded-lg font-semibold">
+                                Discover →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience Card 2 -->
+                <div class="experience-card card bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <div class="card-image h-64 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1566024287286-457247b70310?q=80&w=2074&auto=format&fit=crop"
+                            alt="Party Yacht"
+                            class="w-full h-full object-cover transition-transform duration-500"
+                        />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-[oklch(0.2500_0.0400_240)] mb-3">Party Yacht</h3>
+                        <p class="text-[oklch(0.4000_0.0200_240)] mb-4">Celebrate in style with friends on our luxury party yachts with premium amenities</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-[oklch(0.4800_0.1600_240)]">From €800/day</span>
+                            <button class="btn-secondary-premium bg-[oklch(0.8500_0.1200_65)] text-[oklch(0.2500_0.0400_240)] px-6 py-2.5 rounded-lg font-semibold">
+                                Discover →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Experience Card 3 -->
+                <div class="experience-card card bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <div class="card-image h-64 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=2070&auto=format&fit=crop"
+                            alt="Fishing Trip"
+                            class="w-full h-full object-cover transition-transform duration-500"
+                        />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-[oklch(0.2500_0.0400_240)] mb-3">Fishing Trip</h3>
+                        <p class="text-[oklch(0.4000_0.0200_240)] mb-4">Perfect boats for deep sea fishing adventures with professional equipment</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-2xl font-bold text-[oklch(0.4800_0.1600_240)]">From €300/day</span>
+                            <button class="btn-secondary-premium bg-[oklch(0.8500_0.1200_65)] text-[oklch(0.2500_0.0400_240)] px-6 py-2.5 rounded-lg font-semibold">
+                                Discover →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Rated Boats Section -->
+    <section class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-[oklch(0.2500_0.0400_240)] mb-4">
+                    🏆 Top Rated Boats This Month
+                </h2>
+                <p class="text-xl text-[oklch(0.4000_0.0200_240)]">
+                    Our most loved boats by satisfied customers
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Boat Card 1 -->
+                <div class="boat-card card bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <div class="card-image h-48 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1605281317010-fe5ffe798166?q=80&w=2044&auto=format&fit=crop"
+                            alt="Ocean Dream"
+                            class="w-full h-full object-cover transition-transform duration-500"
+                        />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-2">Ocean Dream</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-[oklch(0.8500_0.1200_65)]">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <span class="ml-2 text-sm font-semibold text-[oklch(0.4000_0.0200_240)]">5.0</span>
+                        </div>
+                        <p class="text-2xl font-bold text-[oklch(0.4800_0.1600_240)]">€650/day</p>
+                    </div>
+                </div>
+
+                <!-- Boat Card 2 -->
+                <div class="boat-card card bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <div class="card-image h-48 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?q=80&w=2070&auto=format&fit=crop"
+                            alt="Azure Spirit"
+                            class="w-full h-full object-cover transition-transform duration-500"
+                        />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-2">Azure Spirit</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-[oklch(0.8500_0.1200_65)]">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <span class="ml-2 text-sm font-semibold text-[oklch(0.4000_0.0200_240)]">5.0</span>
+                        </div>
+                        <p class="text-2xl font-bold text-[oklch(0.4800_0.1600_240)]">€890/day</p>
+                    </div>
+                </div>
+
+                <!-- Boat Card 3 -->
+                <div class="boat-card card bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <div class="card-image h-48 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1540946485063-a40da27545f8?q=80&w=2034&auto=format&fit=crop"
+                            alt="Serenity Sailing"
+                            class="w-full h-full object-cover transition-transform duration-500"
+                        />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-2">Serenity Sailing</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-[oklch(0.8500_0.1200_65)]">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <span class="ml-2 text-sm font-semibold text-[oklch(0.4000_0.0200_240)]">4.9</span>
+                        </div>
+                        <p class="text-2xl font-bold text-[oklch(0.4800_0.1600_240)]">€520/day</p>
+                    </div>
+                </div>
+
+                <!-- Boat Card 4 -->
+                <div class="boat-card card bg-white rounded-2xl overflow-hidden shadow-lg">
+                    <div class="card-image h-48 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?q=80&w=2071&auto=format&fit=crop"
+                            alt="Neptune Crown"
+                            class="w-full h-full object-cover transition-transform duration-500"
+                        />
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-2">Neptune Crown</h3>
+                        <div class="flex items-center mb-3">
+                            <div class="flex text-[oklch(0.8500_0.1200_65)]">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <span class="ml-2 text-sm font-semibold text-[oklch(0.4000_0.0200_240)]">4.9</span>
+                        </div>
+                        <p class="text-2xl font-bold text-[oklch(0.4800_0.1600_240)]">€1,100/day</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section reveal-on-scroll py-20 bg-gradient-to-br from-[oklch(0.4800_0.1600_240)] to-[oklch(0.3800_0.1800_220)] text-white">
+        <div class="container mx-auto px-6 text-center">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4" style="color: white !important; text-shadow: 0 2px 12px rgba(0,0,0,0.3);">💌 Get Exclusive Offers</h2>
+                <p class="text-xl mb-8" style="color: white !important; text-shadow: 0 1px 8px rgba(0,0,0,0.2);">
+                    Subscribe to receive special deals and inspiration for your next adventure
+                </p>
+
+                <div class="flex flex-col md:flex-row gap-4 max-w-xl mx-auto">
+                    <input
+                        type="email"
+                        placeholder="Your email address"
+                        class="newsletter-input flex-1 px-6 py-4 rounded-lg text-[oklch(0.2500_0.0400_240)] font-medium border-2 border-white/20 focus:border-white transition-all"
+                    />
+                    <button class="btn-secondary-premium bg-[oklch(0.8500_0.1200_65)] text-[oklch(0.2500_0.0400_240)] px-8 py-4 rounded-lg font-bold text-lg whitespace-nowrap">
+                        Subscribe →
+                    </button>
+                </div>
+
+                <p class="text-sm text-white/70 mt-4" style="color: white !important; text-shadow: 0 1px 6px rgba(0,0,0,0.2);">
+                    No spam, unsubscribe anytime. We respect your privacy.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Section -->
+    <section class="reveal-on-scroll py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-[oklch(0.2500_0.0400_240)] mb-4">
+                    💎 Why Choose Villas Boats?
+                </h2>
+                <p class="text-xl text-[oklch(0.4000_0.0200_240)]">
+                    Your trusted partner for premium boat experiences
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Feature 1 -->
+                <div class="feature-card text-center p-8 bg-[oklch(0.9900_0.0050_240)] rounded-2xl transition-all hover:shadow-lg">
+                    <div class="feature-icon bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <i data-lucide="shield-check" class="w-10 h-10 text-[oklch(0.4800_0.1600_240)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-3">Verified Owners</h3>
+                    <p class="text-[oklch(0.4000_0.0200_240)]">
+                        All boat owners are thoroughly verified for your safety and peace of mind
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card text-center p-8 bg-[oklch(0.9900_0.0050_240)] rounded-2xl transition-all hover:shadow-lg">
+                    <div class="feature-icon bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <i data-lucide="anchor" class="w-10 h-10 text-[oklch(0.4800_0.1600_240)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-3">Premium Fleet</h3>
+                    <p class="text-[oklch(0.4000_0.0200_240)]">
+                        Handpicked selection of luxury boats and yachts in pristine condition
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card text-center p-8 bg-[oklch(0.9900_0.0050_240)] rounded-2xl transition-all hover:shadow-lg">
+                    <div class="feature-icon bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <i data-lucide="headphones" class="w-10 h-10 text-[oklch(0.4800_0.1600_240)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-3">24/7 Support</h3>
+                    <p class="text-[oklch(0.4000_0.0200_240)]">
+                        Our dedicated team is always ready to assist you with any questions
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card text-center p-8 bg-[oklch(0.9900_0.0050_240)] rounded-2xl transition-all hover:shadow-lg">
+                    <div class="feature-icon bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                        <i data-lucide="badge-check" class="w-10 h-10 text-[oklch(0.4800_0.1600_240)]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-[oklch(0.2500_0.0400_240)] mb-3">Best Prices</h3>
+                    <p class="text-[oklch(0.4000_0.0200_240)]">
+                        Competitive pricing with transparent costs and no hidden fees
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[oklch(0.2500_0.0400_240)] text-white py-16">
+        <div class="container mx-auto px-6">
+            <!-- Logo and Tagline -->
+            <div class="text-center mb-12">
+                <div class="flex items-center justify-center space-x-3 mb-4">
+                    <i data-lucide="anchor" class="w-10 h-10 text-[oklch(0.8500_0.1200_65)]"></i>
+                    <span class="text-3xl font-bold font-['Outfit']">VILLAS BOATS</span>
+                </div>
+                <p class="text-white text-lg" style="color: white !important;">Sail towards your dreams</p>
+            </div>
+
+            <!-- Footer Links -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <!-- Column 1 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Explore</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#boats" class="footer-link text-white/80 hover:text-white">Boats</a></li>
+                        <li><a href="#destinations" class="footer-link text-white/80 hover:text-white">Destinations</a></li>
+                        <li><a href="#how-it-works" class="footer-link text-white/80 hover:text-white">How it works</a></li>
+                        <li><a href="#about" class="footer-link text-white/80 hover:text-white">About</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 2 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#contact" class="footer-link text-white/80 hover:text-white">Contact</a></li>
+                        <li><a href="#faq" class="footer-link text-white/80 hover:text-white">FAQ</a></li>
+                        <li><a href="#help" class="footer-link text-white/80 hover:text-white">Help Center</a></li>
+                        <li><a href="#safety" class="footer-link text-white/80 hover:text-white">Safety</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#terms" class="footer-link text-white/80 hover:text-white">Terms of Service</a></li>
+                        <li><a href="#privacy" class="footer-link text-white/80 hover:text-white">Privacy Policy</a></li>
+                        <li><a href="#cookies" class="footer-link text-white/80 hover:text-white">Cookie Policy</a></li>
+                        <li><a href="#licenses" class="footer-link text-white/80 hover:text-white">Licenses</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4 -->
+                <div>
+                    <h4 class="font-bold text-lg mb-4 text-[oklch(0.8500_0.1200_65)]">Contact</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            <a href="mailto:info@villasboats.com" class="footer-link text-white/80 hover:text-white">info@villasboats.com</a>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                            <span class="text-white/80">+351 xxx xxx xxx</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-lucide="message-circle" class="w-4 h-4 whatsapp-icon text-[oklch(0.8500_0.1200_65)]"></i>
+                            <a href="https://wa.me/" class="footer-link text-white/80 hover:text-white">WhatsApp</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bottom Bar -->
+            <div class="border-t border-white/20 pt-8 text-center">
+                <p class="text-white/60">© 2025 Villas Boats. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.navbar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Intersection Observer for reveal animations
+        const revealElements = document.querySelectorAll('.reveal-on-scroll');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        revealElements.forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form validation for newsletter
+        const newsletterForm = document.querySelector('.newsletter-input');
+        const subscribeBtn = document.querySelector('.newsletter-section button');
+
+        if (subscribeBtn) {
+            subscribeBtn.addEventListener('click', (e) => {
+                const email = newsletterForm.value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (emailRegex.test(email)) {
+                    // Success animation
+                    subscribeBtn.innerHTML = '<i data-lucide="check-circle" class="w-5 h-5 mx-auto"></i>';
+                    subscribeBtn.classList.add('bg-green-500');
+                    lucide.createIcons();
+
+                    setTimeout(() => {
+                        subscribeBtn.innerHTML = 'Subscribe →';
+                        subscribeBtn.classList.remove('bg-green-500');
+                        newsletterForm.value = '';
+                    }, 2000);
+                } else {
+                    // Error animation
+                    newsletterForm.classList.add('border-red-500');
+                    setTimeout(() => {
+                        newsletterForm.classList.remove('border-red-500');
+                    }, 500);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

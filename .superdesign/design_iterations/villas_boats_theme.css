@@ -1,0 +1,328 @@
+/**
+ * VILLAS BOATS - Premium Maritime Theme
+ * "Sail Towards Your Dreams"
+ *
+ * Design Philosophy:
+ * - Ocean-inspired color palette (deep blues, crisp whites, golden accents)
+ * - Modern luxury typography (Outfit for headings, Inter for body)
+ * - Generous spacing for premium, breathable layouts
+ * - Subtle depth with refined shadows (water reflections)
+ * - Smooth animations for elegant interactions
+ */
+
+:root {
+  /* ========================================
+     COLOR SYSTEM - Maritime Luxury Palette
+     ======================================== */
+
+  /* Primary - Deep Ocean Blue (Trust, Stability, Premium) */
+  --background: oklch(0.9900 0.0050 240);           /* Soft white with hint of blue */
+  --foreground: oklch(0.2500 0.0400 240);           /* Deep navy text */
+
+  /* Card surfaces */
+  --card: oklch(1.0000 0 0);                        /* Pure white cards */
+  --card-foreground: oklch(0.2500 0.0400 240);      /* Deep navy on cards */
+
+  /* Popovers & dropdowns */
+  --popover: oklch(1.0000 0 0);                     /* White background */
+  --popover-foreground: oklch(0.2500 0.0400 240);   /* Navy text */
+
+  /* Primary brand color - Ocean Blue */
+  --primary: oklch(0.4800 0.1600 240);              /* Rich ocean blue */
+  --primary-foreground: oklch(1.0000 0 0);          /* White on primary */
+
+  /* Secondary - Golden Sunset (Premium, Freedom) */
+  --secondary: oklch(0.8500 0.1200 65);             /* Warm golden accent */
+  --secondary-foreground: oklch(0.2500 0.0400 240); /* Navy on secondary */
+
+  /* Muted backgrounds */
+  --muted: oklch(0.9600 0.0100 240);                /* Light blue-gray */
+  --muted-foreground: oklch(0.5000 0.0200 240);     /* Medium gray-blue */
+
+  /* Accent - Turquoise Wave (Energy, Action) */
+  --accent: oklch(0.6500 0.1400 200);               /* Bright turquoise */
+  --accent-foreground: oklch(1.0000 0 0);           /* White on accent */
+
+  /* Destructive - Coral Warning */
+  --destructive: oklch(0.6000 0.2200 25);           /* Coral red */
+  --destructive-foreground: oklch(1.0000 0 0);      /* White on destructive */
+
+  /* Borders & inputs */
+  --border: oklch(0.8800 0.0100 240);               /* Soft blue-gray border */
+  --input: oklch(0.8800 0.0100 240);                /* Soft blue-gray input */
+  --ring: oklch(0.4800 0.1600 240);                 /* Ocean blue focus ring */
+
+  /* Chart colors - Ocean gradient */
+  --chart-1: oklch(0.4800 0.1600 240);              /* Deep ocean */
+  --chart-2: oklch(0.6500 0.1400 200);              /* Turquoise */
+  --chart-3: oklch(0.8500 0.1200 65);               /* Golden */
+  --chart-4: oklch(0.5500 0.1800 220);              /* Azure */
+  --chart-5: oklch(0.7000 0.1000 180);              /* Seafoam */
+
+  /* Sidebar (for future admin area) */
+  --sidebar: oklch(0.2500 0.0400 240);              /* Deep navy sidebar */
+  --sidebar-foreground: oklch(0.9500 0.0100 240);   /* Light text on sidebar */
+  --sidebar-primary: oklch(0.8500 0.1200 65);       /* Golden accent */
+  --sidebar-primary-foreground: oklch(0.2500 0.0400 240);
+  --sidebar-accent: oklch(0.6500 0.1400 200);       /* Turquoise highlight */
+  --sidebar-accent-foreground: oklch(1.0000 0 0);
+  --sidebar-border: oklch(0.3500 0.0300 240);       /* Subtle border */
+  --sidebar-ring: oklch(0.8500 0.1200 65);          /* Golden focus */
+
+  /* ========================================
+     TYPOGRAPHY - Modern Luxury
+     ======================================== */
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+
+  /* Letter spacing for premium feel */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+
+  /* ========================================
+     SPACING - Generous & Premium
+     ======================================== */
+
+  --spacing: 0.25rem;                               /* Base unit (4px) */
+  --spacing-xs: 0.5rem;                             /* 8px */
+  --spacing-sm: 0.75rem;                            /* 12px */
+  --spacing-md: 1rem;                               /* 16px */
+  --spacing-lg: 1.5rem;                             /* 24px */
+  --spacing-xl: 2rem;                               /* 32px */
+  --spacing-2xl: 3rem;                              /* 48px */
+  --spacing-3xl: 4rem;                              /* 64px */
+  --spacing-4xl: 6rem;                              /* 96px */
+
+  /* ========================================
+     BORDER RADIUS - Soft & Modern
+     ======================================== */
+
+  --radius: 0.75rem;                                /* 12px base radius */
+  --radius-sm: 0.5rem;                              /* 8px */
+  --radius-md: 0.75rem;                             /* 12px */
+  --radius-lg: 1rem;                                /* 16px */
+  --radius-xl: 1.5rem;                              /* 24px */
+  --radius-2xl: 2rem;                               /* 32px */
+  --radius-full: 9999px;                            /* Full round */
+
+  /* ========================================
+     SHADOWS - Water Reflections & Depth
+     ======================================== */
+
+  /* Subtle shadows inspired by water reflections */
+  --shadow-2xs: 0 1px 2px 0px hsl(240 60% 20% / 0.04);
+  --shadow-xs: 0 1px 3px 0px hsl(240 60% 20% / 0.06);
+  --shadow-sm: 0 2px 6px -1px hsl(240 60% 20% / 0.08),
+               0 1px 3px -1px hsl(240 60% 20% / 0.06);
+  --shadow: 0 4px 12px -2px hsl(240 60% 20% / 0.10),
+            0 2px 6px -2px hsl(240 60% 20% / 0.08);
+  --shadow-md: 0 8px 20px -4px hsl(240 60% 20% / 0.12),
+               0 4px 12px -4px hsl(240 60% 20% / 0.10);
+  --shadow-lg: 0 12px 32px -6px hsl(240 60% 20% / 0.14),
+               0 6px 16px -6px hsl(240 60% 20% / 0.12);
+  --shadow-xl: 0 20px 48px -8px hsl(240 60% 20% / 0.16),
+               0 10px 24px -8px hsl(240 60% 20% / 0.14);
+  --shadow-2xl: 0 32px 64px -12px hsl(240 60% 20% / 0.20);
+
+  /* Glow effects for CTAs */
+  --shadow-glow: 0 0 20px hsl(240 80% 60% / 0.3),
+                 0 0 40px hsl(240 80% 60% / 0.15);
+  --shadow-glow-golden: 0 0 20px hsl(65 70% 60% / 0.4),
+                        0 0 40px hsl(65 70% 60% / 0.2);
+}
+
+/* ========================================
+   GLOBAL STYLES
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans) !important;
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+  line-height: 1.6 !important;
+  font-size: 16px !important;
+}
+
+/* ========================================
+   TYPOGRAPHY HIERARCHY
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading) !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  letter-spacing: var(--tracking-tight) !important;
+  color: oklch(0.2500 0.0400 240) !important;
+}
+
+h1 {
+  font-size: 3.5rem !important; /* 56px */
+  font-weight: 700 !important;
+  letter-spacing: -0.03em !important;
+}
+
+h2 {
+  font-size: 2.5rem !important; /* 40px */
+  font-weight: 600 !important;
+}
+
+h3 {
+  font-size: 2rem !important; /* 32px */
+}
+
+h4 {
+  font-size: 1.5rem !important; /* 24px */
+}
+
+h5 {
+  font-size: 1.25rem !important; /* 20px */
+}
+
+h6 {
+  font-size: 1rem !important; /* 16px */
+}
+
+p {
+  font-size: 1rem !important;
+  line-height: 1.7 !important;
+  color: oklch(0.4000 0.0200 240) !important;
+}
+
+/* Premium serif for hero text */
+.hero-text {
+  font-family: var(--font-serif) !important;
+  font-size: 4rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.1 !important;
+}
+
+/* ========================================
+   COMPONENT UTILITIES
+   ======================================== */
+
+/* Buttons */
+.btn-primary {
+  background: oklch(0.4800 0.1600 240) !important;
+  color: white !important;
+  padding: 0.875rem 2rem !important;
+  border-radius: var(--radius-lg) !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.01em !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all 300ms ease !important;
+}
+
+.btn-primary:hover {
+  background: oklch(0.4200 0.1800 240) !important;
+  box-shadow: var(--shadow-lg), var(--shadow-glow) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-secondary {
+  background: oklch(0.8500 0.1200 65) !important;
+  color: oklch(0.2500 0.0400 240) !important;
+  padding: 0.875rem 2rem !important;
+  border-radius: var(--radius-lg) !important;
+  font-weight: 600 !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: all 300ms ease !important;
+}
+
+.btn-secondary:hover {
+  background: oklch(0.8000 0.1400 65) !important;
+  box-shadow: var(--shadow-lg), var(--shadow-glow-golden) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Cards */
+.card {
+  background: white !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow) !important;
+  overflow: hidden !important;
+  transition: all 400ms ease !important;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-8px) !important;
+}
+
+/* Input fields */
+.input {
+  border: 2px solid oklch(0.8800 0.0100 240) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 1rem !important;
+  transition: all 200ms ease !important;
+  background: white !important;
+}
+
+.input:focus {
+  border-color: oklch(0.4800 0.1600 240) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px oklch(0.4800 0.1600 240 / 0.1) !important;
+}
+
+/* ========================================
+   RESPONSIVE TYPOGRAPHY
+   ======================================== */
+
+@media (max-width: 768px) {
+  h1, .hero-text {
+    font-size: 2.5rem !important;
+  }
+
+  h2 {
+    font-size: 2rem !important;
+  }
+
+  h3 {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+:focus-visible {
+  outline: 3px solid oklch(0.4800 0.1600 240) !important;
+  outline-offset: 2px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --foreground: oklch(0.1000 0.0500 240);
+    --border: oklch(0.3000 0.0200 240);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
