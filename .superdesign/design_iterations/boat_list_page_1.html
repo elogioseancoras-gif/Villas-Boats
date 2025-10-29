@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boat Listings - Villas Boats | Premium Boat Rentals in Portugal & Brazil</title>
+    <meta name="description" content="Browse our selection of luxury boats available for rent in Portugal and Brazil. Filter by location, dates, type, and amenities to find your perfect vessel.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="boat_list_theme.css">
+
+    <style>
+        /* Import theme variables and apply global styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans) !important;
+            background-color: var(--background) !important;
+            color: var(--foreground) !important;
+            line-height: var(--leading-normal) !important;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading) !important;
+            font-weight: var(--font-bold) !important;
+            line-height: var(--leading-tight) !important;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           NAVBAR
+           ═══════════════════════════════════════════════════════ */
+        .navbar {
+            background: var(--navbar-background);
+            border-bottom: 1px solid var(--navbar-border);
+            box-shadow: var(--navbar-shadow);
+            backdrop-filter: blur(8px);
+            animation: navbarSlideDown 400ms ease-out;
+            z-index: var(--z-navbar);
+        }
+
+        .navbar.scrolled {
+            box-shadow: var(--shadow-md);
+        }
+
+        @keyframes navbarSlideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           SEARCH BAR
+           ═══════════════════════════════════════════════════════ */
+        .search-bar {
+            background: var(--surface);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            animation: searchBarEntrance 500ms ease-out 150ms both;
+        }
+
+        @keyframes searchBarEntrance {
+            from {
+                transform: translateY(-15px) scale(0.98);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           FILTER CONTROLS
+           ═══════════════════════════════════════════════════════ */
+        .filter-controls {
+            animation: filterControlsSlide 350ms ease-out 200ms both;
+        }
+
+        @keyframes filterControlsSlide {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           BOAT CARDS
+           ═══════════════════════════════════════════════════════ */
+        .boat-card {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: var(--card-radius);
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-base);
+            cursor: pointer;
+            opacity: 0;
+            animation: cardEntrance 600ms ease-out both;
+            will-change: transform, opacity;
+        }
+
+        .boat-card:nth-child(1) { animation-delay: 0ms; }
+        .boat-card:nth-child(2) { animation-delay: 80ms; }
+        .boat-card:nth-child(3) { animation-delay: 160ms; }
+        .boat-card:nth-child(4) { animation-delay: 240ms; }
+        .boat-card:nth-child(5) { animation-delay: 320ms; }
+        .boat-card:nth-child(6) { animation-delay: 400ms; }
+        .boat-card:nth-child(n+7) { animation-delay: 480ms; }
+
+        @keyframes cardEntrance {
+            from {
+                transform: translateY(40px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .boat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .boat-card-image {
+            height: var(--card-image-height);
+            overflow: hidden;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            background: var(--muted);
+        }
+
+        .boat-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform var(--transition-slow);
+        }
+
+        .boat-card:hover .boat-card-image img {
+            transform: scale(1.08);
+        }
+
+        .price-tag {
+            transition: all var(--transition-base);
+        }
+
+        .boat-card:hover .price-tag {
+            transform: scale(1.05);
+            color: var(--primary);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           FILTER DRAWER
+           ═══════════════════════════════════════════════════════ */
+        .filter-drawer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: var(--drawer-width);
+            background: var(--drawer-background);
+            box-shadow: var(--drawer-shadow);
+            transform: translateX(-100%);
+            transition: transform var(--transition-slow);
+            z-index: var(--z-filter-drawer);
+            overflow-y: auto;
+        }
+
+        .filter-drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--drawer-overlay);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-base);
+            z-index: var(--z-drawer-overlay);
+        }
+
+        .drawer-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .filter-group {
+            opacity: 0;
+            animation: filterGroupStagger 400ms ease-out both;
+        }
+
+        .filter-drawer.open .filter-group:nth-child(1) { animation-delay: 0ms; }
+        .filter-drawer.open .filter-group:nth-child(2) { animation-delay: 60ms; }
+        .filter-drawer.open .filter-group:nth-child(3) { animation-delay: 120ms; }
+        .filter-drawer.open .filter-group:nth-child(4) { animation-delay: 180ms; }
+        .filter-drawer.open .filter-group:nth-child(5) { animation-delay: 240ms; }
+        .filter-drawer.open .filter-group:nth-child(6) { animation-delay: 300ms; }
+        .filter-drawer.open .filter-group:nth-child(7) { animation-delay: 360ms; }
+        .filter-drawer.open .filter-group:nth-child(8) { animation-delay: 420ms; }
+
+        @keyframes filterGroupStagger {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           MAP SECTION
+           ═══════════════════════════════════════════════════════ */
+        .map-section {
+            background: var(--map-background);
+            border-top: 1px solid var(--map-border);
+            border-bottom: 1px solid var(--map-border);
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all var(--transition-slow);
+        }
+
+        .map-section.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .location-card {
+            background: var(--map-card);
+            border: 1px solid var(--map-border);
+            border-radius: var(--map-card-radius);
+            padding: var(--spacing-xl);
+            transition: all var(--transition-base);
+            cursor: pointer;
+            opacity: 0;
+            animation: locationCardStagger 500ms ease-out both;
+        }
+
+        .map-section.revealed .location-card:nth-child(1) { animation-delay: 0ms; }
+        .map-section.revealed .location-card:nth-child(2) { animation-delay: 100ms; }
+        .map-section.revealed .location-card:nth-child(3) { animation-delay: 200ms; }
+        .map-section.revealed .location-card:nth-child(4) { animation-delay: 300ms; }
+        .map-section.revealed .location-card:nth-child(5) { animation-delay: 400ms; }
+        .map-section.revealed .location-card:nth-child(6) { animation-delay: 500ms; }
+
+        @keyframes locationCardStagger {
+            from {
+                transform: translateY(30px) scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .location-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            background: var(--map-highlight);
+            box-shadow: var(--shadow-md);
+        }
+
+        .view-boats-btn {
+            transition: all var(--transition-fast);
+        }
+
+        .view-boats-btn:hover .arrow-icon {
+            transform: translateX(4px);
+        }
+
+        .season-badge {
+            animation: seasonBadgeFloat 2000ms ease-in-out infinite;
+        }
+
+        @keyframes seasonBadgeFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           BUTTONS & INPUTS
+           ═══════════════════════════════════════════════════════ */
+        .btn-primary {
+            background: var(--primary);
+            color: var(--primary-foreground);
+            padding: var(--button-padding-y) var(--button-padding-x);
+            border-radius: var(--button-radius);
+            font-weight: var(--font-semibold);
+            transition: all var(--transition-fast);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--secondary-foreground);
+            padding: var(--button-padding-y) var(--button-padding-x);
+            border-radius: var(--button-radius);
+            font-weight: var(--font-semibold);
+            transition: all var(--transition-fast);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: var(--secondary-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--foreground);
+            border: 2px solid var(--border);
+            padding: var(--button-padding-y) var(--button-padding-x);
+            border-radius: var(--button-radius);
+            font-weight: var(--font-semibold);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--hover-overlay);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           UTILITIES
+           ═══════════════════════════════════════════════════════ */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+        }
+
+        .star-filled {
+            color: var(--secondary);
+        }
+
+        .star-empty {
+            color: var(--muted-foreground);
+        }
+
+        /* Scroll reveal utility */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all var(--transition-slow);
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .boat-card-image {
+                height: 220px;
+            }
+
+            .filter-drawer {
+                width: 100%;
+                transform: translateY(100%);
+            }
+
+            .filter-drawer.open {
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Drawer Overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Filter Drawer -->
+    <aside class="filter-drawer" id="filterDrawer">
+        <div class="p-6 bg-[var(--drawer-header)] border-b border-[var(--border)]">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold">Filters</h2>
+                <button id="closeDrawer" class="p-2 hover:bg-[var(--hover-overlay)] rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6 space-y-8">
+            <!-- Location Filter -->
+            <div class="filter-group">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="map-pin" class="w-5 h-5 text-[var(--primary)]"></i>
+                    Location
+                </h3>
+                <div class="space-y-3">
+                    <p class="text-sm font-semibold text-[var(--muted-foreground)] mb-2">🇵🇹 Portugal</p>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Porto <span class="text-[var(--muted-foreground)]">(12)</span></span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Lisbon <span class="text-[var(--muted-foreground)]">(18)</span></span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Algarve <span class="text-[var(--muted-foreground)]">(17)</span></span>
+                    </label>
+
+                    <p class="text-sm font-semibold text-[var(--muted-foreground)] mt-4 mb-2">🇧🇷 Brazil</p>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>São Paulo <span class="text-[var(--muted-foreground)]">(8)</span></span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Rio de Janeiro <span class="text-[var(--muted-foreground)]">(15)</span></span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Santa Catarina <span class="text-[var(--muted-foreground)]">(9)</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Dates Filter -->
+            <div class="filter-group">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="calendar" class="w-5 h-5 text-[var(--primary)]"></i>
+                    Dates
+                </h3>
+                <div class="space-y-3">
+                    <div>
+                        <label class="text-sm text-[var(--muted-foreground)] mb-1 block">Check-in</label>
+                        <input type="date" class="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="text-sm text-[var(--muted-foreground)] mb-1 block">Check-out</label>
+                        <input type="date" class="w-full px-4 py-2 border border-[var(--border)] rounded-lg focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boat Type Filter -->
+            <div class="filter-group">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="ship" class="w-5 h-5 text-[var(--primary)]"></i>
+                    Boat Type
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Sailboat</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Yacht</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Catamaran</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Motor Boat</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="filter-group">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="euro" class="w-5 h-5 text-[var(--primary)]"></i>
+                    Price Range
+                </h3>
+                <div class="space-y-3">
+                    <input type="range" min="0" max="2000" step="50" class="w-full accent-[var(--primary)]">
+                    <div class="flex justify-between text-sm text-[var(--muted-foreground)]">
+                        <span>€0</span>
+                        <span>€2000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Capacity Filter -->
+            <div class="filter-group">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="users" class="w-5 h-5 text-[var(--primary)]"></i>
+                    Capacity
+                </h3>
+                <div class="space-y-3">
+                    <input type="range" min="2" max="12" step="1" class="w-full accent-[var(--primary)]">
+                    <div class="flex justify-between text-sm text-[var(--muted-foreground)]">
+                        <span>2 guests</span>
+                        <span>12+ guests</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Filter -->
+            <div class="filter-group">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="ruler" class="w-5 h-5 text-[var(--primary)]"></i>
+                    Size (feet)
+                </h3>
+                <div class="space-y-3">
+                    <input type="range" min="20" max="100" step="5" class="w-full accent-[var(--primary)]">
+                    <div class="flex justify-between text-sm text-[var(--muted-foreground)]">
+                        <span>20 ft</span>
+                        <span>100 ft</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amenities Filter -->
+            <div class="filter-group">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-[var(--primary)]"></i>
+                    Amenities
+                </h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>WiFi</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Kitchen</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Air Conditioning</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Jacuzzi</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Fishing Equipment</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[var(--primary)]">
+                        <span>Water Toys</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="filter-group space-y-3 pt-4 border-t border-[var(--border)]">
+                <button class="btn-primary w-full">Apply Filters (47)</button>
+                <button class="btn-outline w-full">Clear All</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar fixed top-0 left-0 right-0">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <i data-lucide="anchor" class="w-8 h-8 text-[var(--primary)]"></i>
+                <span class="text-2xl font-bold" style="font-family: var(--font-heading);">VILLAS BOATS</span>
+            </div>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-[var(--primary)] font-semibold">Boats</a>
+                <a href="#" class="hover:text-[var(--primary)] transition-colors">Destinations</a>
+                <a href="#" class="hover:text-[var(--primary)] transition-colors">How it works?</a>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="globe" class="w-5 h-5"></i>
+                    <select class="bg-transparent border-none focus:outline-none cursor-pointer">
+                        <option>EN</option>
+                        <option>PT-BR</option>
+                        <option>PT-PT</option>
+                        <option>ES</option>
+                    </select>
+                </div>
+                <button class="btn-primary">Login / Register</button>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="md:hidden p-2">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Spacer for fixed navbar -->
+    <div style="height: 72px;"></div>
+
+    <!-- Quick Search Bar -->
+    <section class="py-8 bg-[var(--surface)]">
+        <div class="container">
+            <div class="search-bar p-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="text-sm text-[var(--muted-foreground)] mb-2 block">Location</label>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-[var(--primary)]"></i>
+                            <input type="text" placeholder="Porto, Portugal" class="flex-1 bg-transparent border-none focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm text-[var(--muted-foreground)] mb-2 block">Check-in</label>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-5 h-5 text-[var(--primary)]"></i>
+                            <input type="date" value="2024-12-20" class="flex-1 bg-transparent border-none focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm text-[var(--muted-foreground)] mb-2 block">Check-out</label>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="calendar" class="w-5 h-5 text-[var(--primary)]"></i>
+                            <input type="date" value="2024-12-27" class="flex-1 bg-transparent border-none focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-sm text-[var(--muted-foreground)] mb-2 block">Guests</label>
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="users" class="w-5 h-5 text-[var(--primary)]"></i>
+                            <input type="number" value="6" min="1" max="20" class="flex-1 bg-transparent border-none focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-primary w-full md:w-auto mt-4 md:mt-0 md:ml-auto flex items-center justify-center gap-2">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                    Search
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Controls -->
+    <section class="py-6 bg-[var(--background)]">
+        <div class="container">
+            <div class="filter-controls flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <button id="filterButton" class="btn-outline flex items-center gap-2">
+                        <i data-lucide="sliders-horizontal" class="w-5 h-5"></i>
+                        Filters
+                    </button>
+                    <p class="text-[var(--muted-foreground)]">
+                        <span class="font-semibold text-[var(--foreground)]">47</span> boats available
+                    </p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-[var(--muted-foreground)]">Sort by:</span>
+                    <select class="bg-[var(--surface)] border border-[var(--border)] rounded-lg px-4 py-2 focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent">
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                        <option>Rating</option>
+                        <option>Capacity</option>
+                        <option>Size</option>
+                        <option>Recently Added</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Boat Listings Grid -->
+    <section class="py-12 bg-[var(--background)]">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Boat Card 1 -->
+                <div class="boat-card">
+                    <div class="boat-card-image">
+                        <img src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=600&h=400&fit=crop" alt="Ocean Dream">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Ocean Dream</h3>
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <span class="ml-2 text-sm font-semibold">4.9</span>
+                            <span class="text-sm text-[var(--muted-foreground)] ml-1">(127 reviews)</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Porto Marina</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="ship" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Yacht • 45ft</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="users" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>8 guests</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">WiFi</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Kitchen</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">AC</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+                            <div>
+                                <p class="price-tag text-3xl font-bold">€650<span class="text-base text-[var(--muted-foreground)] font-normal">/day</span></p>
+                            </div>
+                            <button class="btn-primary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boat Card 2 -->
+                <div class="boat-card">
+                    <div class="boat-card-image">
+                        <img src="https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=600&h=400&fit=crop" alt="Azure Spirit">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Azure Spirit</h3>
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <span class="ml-2 text-sm font-semibold">5.0</span>
+                            <span class="text-sm text-[var(--muted-foreground)] ml-1">(89 reviews)</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Lisbon Marina</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="ship" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Catamaran • 55ft</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="users" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>12 guests</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">WiFi</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Jacuzzi</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Water Toys</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+                            <div>
+                                <p class="price-tag text-3xl font-bold">€890<span class="text-base text-[var(--muted-foreground)] font-normal">/day</span></p>
+                            </div>
+                            <button class="btn-primary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boat Card 3 -->
+                <div class="boat-card">
+                    <div class="boat-card-image">
+                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop" alt="Serenity Sailing">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Serenity Sailing</h3>
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 stroke-[var(--secondary)]"></i>
+                            <span class="ml-2 text-sm font-semibold">4.8</span>
+                            <span class="text-sm text-[var(--muted-foreground)] ml-1">(156 reviews)</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Algarve Marina</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="ship" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Sailboat • 38ft</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="users" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>6 guests</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">WiFi</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Solar Panels</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+                            <div>
+                                <p class="price-tag text-3xl font-bold">€520<span class="text-base text-[var(--muted-foreground)] font-normal">/day</span></p>
+                            </div>
+                            <button class="btn-primary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boat Card 4 -->
+                <div class="boat-card">
+                    <div class="boat-card-image">
+                        <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&h=400&fit=crop" alt="Neptune Crown">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Neptune Crown</h3>
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 stroke-[var(--secondary)]"></i>
+                            <span class="ml-2 text-sm font-semibold">4.7</span>
+                            <span class="text-sm text-[var(--muted-foreground)] ml-1">(203 reviews)</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Porto Marina</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="ship" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Yacht • 52ft</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="users" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>10 guests</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">WiFi</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Kitchen</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">AC</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Jacuzzi</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+                            <div>
+                                <p class="price-tag text-3xl font-bold">€780<span class="text-base text-[var(--muted-foreground)] font-normal">/day</span></p>
+                            </div>
+                            <button class="btn-primary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boat Card 5 -->
+                <div class="boat-card">
+                    <div class="boat-card-image">
+                        <img src="https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=600&h=400&fit=crop" alt="Coral Bay">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Coral Bay</h3>
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <span class="ml-2 text-sm font-semibold">4.9</span>
+                            <span class="text-sm text-[var(--muted-foreground)] ml-1">(94 reviews)</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Algarve Marina</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="ship" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Catamaran • 48ft</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="users" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>8 guests</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">WiFi</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Kitchen</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">Fishing Eq.</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+                            <div>
+                                <p class="price-tag text-3xl font-bold">€650<span class="text-base text-[var(--muted-foreground)] font-normal">/day</span></p>
+                            </div>
+                            <button class="btn-primary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boat Card 6 -->
+                <div class="boat-card">
+                    <div class="boat-card-image">
+                        <img src="https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=600&h=400&fit=crop" alt="Wave Runner">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">Wave Runner</h3>
+                        <div class="flex items-center gap-1 mb-3">
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <i data-lucide="star" class="w-4 h-4 fill-[var(--secondary)] stroke-[var(--secondary)]"></i>
+                            <span class="ml-2 text-sm font-semibold">5.0</span>
+                            <span class="text-sm text-[var(--muted-foreground)] ml-1">(67 reviews)</span>
+                        </div>
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Lisbon Marina</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="ship" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>Motor Boat • 32ft</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+                                <i data-lucide="users" class="w-4 h-4 text-[var(--primary)]"></i>
+                                <span>4 guests</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">WiFi</span>
+                            <span class="px-3 py-1 bg-[var(--muted)] text-xs rounded-full">GPS</span>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-[var(--border)]">
+                            <div>
+                                <p class="price-tag text-3xl font-bold">€420<span class="text-base text-[var(--muted-foreground)] font-normal">/day</span></p>
+                            </div>
+                            <button class="btn-primary">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- More Boat Listings -->
+    <section class="py-12 bg-[var(--background)]">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Additional boats would go here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="flex items-center justify-center gap-2 mt-12">
+                <button class="btn-outline px-4 py-2">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+                <button class="btn-primary px-4 py-2">1</button>
+                <button class="btn-outline px-4 py-2">2</button>
+                <button class="btn-outline px-4 py-2">3</button>
+                <button class="btn-outline px-4 py-2">4</button>
+                <span class="px-2 text-[var(--muted-foreground)]">...</span>
+                <button class="btn-outline px-4 py-2">8</button>
+                <button class="btn-outline px-4 py-2">
+                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[var(--surface)] border-t border-[var(--border)] py-16">
+        <div class="container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <!-- Brand -->
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i data-lucide="anchor" class="w-8 h-8 text-[var(--primary)]"></i>
+                        <span class="text-2xl font-bold" style="font-family: var(--font-heading);">VILLAS BOATS</span>
+                    </div>
+                    <p class="text-[var(--muted-foreground)] mb-4">
+                        Sail towards your dreams with premium boat rentals in Portugal and Brazil.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="font-bold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">Boats</a></li>
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">Destinations</a></li>
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">How it works</a></li>
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">About Us</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h3 class="font-bold mb-4">Support</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">Help Center</a></li>
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">Safety</a></li>
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">Terms of Service</a></li>
+                        <li><a href="#" class="text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors">Privacy Policy</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact -->
+                <div>
+                    <h3 class="font-bold mb-4">Contact</h3>
+                    <ul class="space-y-2 text-[var(--muted-foreground)]">
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="mail" class="w-4 h-4 text-[var(--primary)]"></i>
+                            info@villasboats.com
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="phone" class="w-4 h-4 text-[var(--primary)]"></i>
+                            +351 123 456 789
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-[var(--primary)]"></i>
+                            Lisbon, Portugal
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-[var(--border)] mt-12 pt-8 text-center text-[var(--muted-foreground)]">
+                <p>&copy; 2024 Villas Boats. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('.navbar');
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Filter drawer functionality
+        const filterButton = document.getElementById('filterButton');
+        const closeDrawer = document.getElementById('closeDrawer');
+        const filterDrawer = document.getElementById('filterDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+
+        function openDrawer() {
+            filterDrawer.classList.add('open');
+            drawerOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawerFunc() {
+            filterDrawer.classList.remove('open');
+            drawerOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        filterButton.addEventListener('click', openDrawer);
+        closeDrawer.addEventListener('click', closeDrawerFunc);
+        drawerOverlay.addEventListener('click', closeDrawerFunc);
+
+        // Map section reveal on scroll
+        const mapSection = document.getElementById('mapSection');
+        const revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
+
+        if (mapSection) {
+            revealObserver.observe(mapSection);
+        }
+
+        // Scroll reveal for other elements
+        const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+        const scrollObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            },
+            { threshold: 0.15 }
+        );
+
+        scrollRevealElements.forEach(el => scrollObserver.observe(el));
+
+        // Re-initialize icons after any dynamic content changes
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

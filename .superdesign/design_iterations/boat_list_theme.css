@@ -1,0 +1,300 @@
+/**
+ * VILLAS BOATS - BOAT LIST PAGE THEME
+ * Maritime luxury design system optimized for browsing and filtering
+ * Inherits from homepage theme with list-specific enhancements
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════
+     COLOR PALETTE - Maritime Luxury
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Primary - Deep Ocean Blue */
+  --primary: oklch(0.4800 0.1600 240);
+  --primary-hover: oklch(0.4200 0.1800 240);
+  --primary-light: oklch(0.6500 0.1200 240);
+  --primary-foreground: oklch(1.0000 0 0);
+
+  /* Secondary - Golden Sunset */
+  --secondary: oklch(0.8500 0.1200 65);
+  --secondary-hover: oklch(0.8000 0.1400 65);
+  --secondary-foreground: oklch(0.2500 0.0400 240);
+
+  /* Accent - Turquoise Wave */
+  --accent: oklch(0.6500 0.1400 200);
+  --accent-hover: oklch(0.6000 0.1600 200);
+  --accent-foreground: oklch(1.0000 0 0);
+
+  /* Neutrals - Clean & Modern */
+  --background: oklch(0.9900 0 0);
+  --surface: oklch(1.0000 0 0);
+  --surface-elevated: oklch(1.0000 0 0);
+  --foreground: oklch(0.2500 0.0200 240);
+  --muted: oklch(0.9500 0.0100 240);
+  --muted-foreground: oklch(0.5500 0.0300 240);
+  --border: oklch(0.9000 0.0200 240);
+  --border-light: oklch(0.9500 0.0100 240);
+
+  /* Interactive States */
+  --hover-overlay: oklch(0.4800 0.1600 240 / 0.08);
+  --active-overlay: oklch(0.4800 0.1600 240 / 0.12);
+  --focus-ring: oklch(0.4800 0.1600 240 / 0.20);
+
+  /* Semantic Colors */
+  --success: oklch(0.6500 0.1500 145);
+  --warning: oklch(0.7500 0.1400 65);
+  --error: oklch(0.6000 0.1800 25);
+  --info: oklch(0.6500 0.1400 240);
+
+  /* Map Section Colors */
+  --map-background: oklch(0.9700 0.0200 240);
+  --map-card: oklch(1.0000 0 0);
+  --map-border: oklch(0.8500 0.0400 240);
+  --map-highlight: oklch(0.9300 0.0300 65);
+
+  /* Filter Drawer */
+  --drawer-background: oklch(1.0000 0 0);
+  --drawer-overlay: oklch(0.1500 0 0 / 0.50);
+  --drawer-header: oklch(0.9700 0.0200 240);
+
+  /* ═══════════════════════════════════════════════════════════
+     TYPOGRAPHY
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Font Families */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Font Sizes - Responsive Scale */
+  --text-xs: 0.75rem;      /* 12px */
+  --text-sm: 0.875rem;     /* 14px */
+  --text-base: 1rem;       /* 16px */
+  --text-lg: 1.125rem;     /* 18px */
+  --text-xl: 1.25rem;      /* 20px */
+  --text-2xl: 1.5rem;      /* 24px */
+  --text-3xl: 1.875rem;    /* 30px */
+  --text-4xl: 2.25rem;     /* 36px */
+
+  /* Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* Letter Spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+
+  /* ═══════════════════════════════════════════════════════════
+     SPACING & LAYOUT
+     ═══════════════════════════════════════════════════════════ */
+
+  --spacing-unit: 0.25rem; /* 4px base */
+  --spacing-xs: calc(var(--spacing-unit) * 2);   /* 8px */
+  --spacing-sm: calc(var(--spacing-unit) * 3);   /* 12px */
+  --spacing-md: calc(var(--spacing-unit) * 4);   /* 16px */
+  --spacing-lg: calc(var(--spacing-unit) * 6);   /* 24px */
+  --spacing-xl: calc(var(--spacing-unit) * 8);   /* 32px */
+  --spacing-2xl: calc(var(--spacing-unit) * 12); /* 48px */
+  --spacing-3xl: calc(var(--spacing-unit) * 16); /* 64px */
+
+  /* Container */
+  --container-max-width: 1280px;
+  --container-padding: var(--spacing-lg);
+
+  /* Card Spacing */
+  --card-padding: var(--spacing-lg);
+  --card-gap: var(--spacing-lg);
+
+  /* ═══════════════════════════════════════════════════════════
+     BORDERS & RADIUS
+     ═══════════════════════════════════════════════════════════ */
+
+  --radius-sm: 0.5rem;   /* 8px - small elements */
+  --radius-md: 0.75rem;  /* 12px - cards */
+  --radius-lg: 1rem;     /* 16px - large cards */
+  --radius-xl: 1.5rem;   /* 24px - hero elements */
+  --radius-full: 9999px; /* circular */
+
+  --border-width: 1px;
+  --border-width-thick: 2px;
+
+  /* ═══════════════════════════════════════════════════════════
+     SHADOWS - Ocean-Inspired Elevation
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Subtle shadows for clean design */
+  --shadow-xs: 0 1px 2px 0 hsl(240 60% 20% / 0.05);
+  --shadow-sm: 0 2px 6px -1px hsl(240 60% 20% / 0.08);
+  --shadow-md: 0 4px 12px -2px hsl(240 60% 20% / 0.10);
+  --shadow-lg: 0 8px 24px -4px hsl(240 60% 20% / 0.12);
+  --shadow-xl: 0 12px 36px -6px hsl(240 60% 20% / 0.15);
+
+  /* Interactive shadows */
+  --shadow-hover: 0 8px 28px -4px hsl(240 60% 20% / 0.18);
+  --shadow-active: 0 4px 16px -2px hsl(240 60% 20% / 0.12);
+
+  /* Glow effects */
+  --shadow-glow: 0 0 20px hsl(240 80% 60% / 0.3);
+  --shadow-glow-golden: 0 0 20px hsl(65 70% 60% / 0.4);
+
+  /* Inner shadows for inputs */
+  --shadow-inset: inset 0 2px 4px 0 hsl(240 60% 20% / 0.05);
+
+  /* ═══════════════════════════════════════════════════════════
+     TRANSITIONS & ANIMATIONS
+     ═══════════════════════════════════════════════════════════ */
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ═══════════════════════════════════════════════════════════
+     Z-INDEX LAYERS
+     ═══════════════════════════════════════════════════════════ */
+
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-filter-drawer: 40;
+  --z-drawer-overlay: 39;
+  --z-navbar: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+  --z-tooltip: 80;
+
+  /* ═══════════════════════════════════════════════════════════
+     COMPONENT-SPECIFIC TOKENS
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Navbar */
+  --navbar-height: 72px;
+  --navbar-background: oklch(1.0000 0 0 / 0.90);
+  --navbar-border: var(--border-light);
+  --navbar-shadow: var(--shadow-sm);
+
+  /* Boat Cards */
+  --card-background: var(--surface);
+  --card-border: var(--border-light);
+  --card-radius: var(--radius-lg);
+  --card-shadow: var(--shadow-sm);
+  --card-shadow-hover: var(--shadow-hover);
+  --card-image-height: 280px;
+
+  /* Filter Drawer */
+  --drawer-width: 320px;
+  --drawer-shadow: var(--shadow-xl);
+
+  /* Buttons */
+  --button-radius: var(--radius-md);
+  --button-padding-x: var(--spacing-lg);
+  --button-padding-y: var(--spacing-sm);
+
+  /* Inputs */
+  --input-radius: var(--radius-md);
+  --input-border: var(--border);
+  --input-padding-x: var(--spacing-md);
+  --input-padding-y: var(--spacing-sm);
+  --input-focus-ring: 0 0 0 3px var(--focus-ring);
+
+  /* Map Section */
+  --map-section-padding: var(--spacing-3xl);
+  --map-card-radius: var(--radius-lg);
+  --map-card-padding: var(--spacing-xl);
+
+  /* ═══════════════════════════════════════════════════════════
+     BREAKPOINTS
+     ═══════════════════════════════════════════════════════════ */
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE SUPPORT (Future Enhancement)
+   ═══════════════════════════════════════════════════════════ */
+
+/* Dark mode temporarily disabled to maintain light theme consistency with homepage
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.1500 0.0200 240);
+    --surface: oklch(0.2000 0.0200 240);
+    --surface-elevated: oklch(0.2500 0.0200 240);
+    --foreground: oklch(0.9500 0.0100 240);
+    --muted: oklch(0.3000 0.0200 240);
+    --muted-foreground: oklch(0.6500 0.0300 240);
+    --border: oklch(0.3500 0.0200 240);
+    --border-light: oklch(0.3000 0.0200 240);
+
+    --shadow-xs: 0 1px 2px 0 hsl(240 80% 5% / 0.20);
+    --shadow-sm: 0 2px 6px -1px hsl(240 80% 5% / 0.25);
+    --shadow-md: 0 4px 12px -2px hsl(240 80% 5% / 0.30);
+    --shadow-lg: 0 8px 24px -4px hsl(240 80% 5% / 0.35);
+    --shadow-xl: 0 12px 36px -6px hsl(240 80% 5% / 0.40);
+  }
+}
+*/
+
+/* ═══════════════════════════════════════════════════════════
+   ACCESSIBILITY
+   ═══════════════════════════════════════════════════════════ */
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border-width: 2px;
+    --border-width-thick: 3px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   UTILITY CLASSES REFERENCE
+   ═══════════════════════════════════════════════════════════ */
+
+/*
+  These CSS variables are designed to work with Tailwind CSS.
+
+  Usage examples:
+  - Background: bg-[var(--primary)]
+  - Text: text-[var(--foreground)]
+  - Border: border-[var(--border)]
+  - Shadow: shadow-[var(--shadow-md)]
+  - Rounded: rounded-[var(--radius-lg)]
+  - Font: font-[var(--font-heading)]
+
+  Custom classes can be added in the HTML file as needed.
+*/
