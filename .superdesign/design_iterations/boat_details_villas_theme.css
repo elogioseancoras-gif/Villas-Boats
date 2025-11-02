@@ -1,0 +1,379 @@
+/**
+ * BOAT DETAILS - VILLAS BOATS UNIFIED THEME
+ * Matches the homepage design system
+ *
+ * Design Philosophy:
+ * - Fresh, modern maritime aesthetic
+ * - Vibrant ocean blues with warm orange accents
+ * - Clean white backgrounds
+ * - Sans-serif typography throughout
+ * - Approachable and inviting
+ */
+
+:root {
+  /* ========================================
+     COLOR SYSTEM - Vibrant Maritime
+     ======================================== */
+
+  /* Backgrounds - Clean whites */
+  --background: oklch(1.0000 0 0);                 /* Pure white */
+  --surface: oklch(1.0000 0 0);                    /* Pure white cards */
+  --surface-elevated: oklch(0.9900 0.0050 240);    /* Slightly elevated */
+  --foreground: oklch(0.2000 0.0500 240);          /* Deep navy text */
+
+  /* Primary - Vibrant Ocean Blue */
+  --primary: oklch(0.5500 0.1800 240);             /* Bright ocean blue */
+  --primary-light: oklch(0.6500 0.1600 240);       /* Lighter blue */
+  --primary-dark: oklch(0.4500 0.2000 240);        /* Deeper blue */
+  --primary-foreground: oklch(1.0000 0 0);         /* White */
+
+  /* Secondary - Warm Orange/Gold */
+  --secondary: oklch(0.7200 0.1500 55);            /* Warm orange/gold */
+  --secondary-light: oklch(0.7800 0.1400 55);      /* Light orange */
+  --secondary-dark: oklch(0.6500 0.1700 55);       /* Deep orange */
+  --secondary-foreground: oklch(1.0000 0 0);       /* White */
+
+  /* Accent - Supporting colors */
+  --accent: oklch(0.6800 0.1600 200);              /* Turquoise accent */
+  --accent-foreground: oklch(1.0000 0 0);          /* White */
+
+  /* Success */
+  --success: oklch(0.6500 0.1500 150);             /* Fresh green */
+  --success-foreground: oklch(1.0000 0 0);         /* White */
+
+  /* Muted - Light grays */
+  --muted: oklch(0.9600 0.0050 240);               /* Very light gray */
+  --muted-foreground: oklch(0.5000 0.0300 240);    /* Medium gray */
+
+  /* Borders */
+  --border: oklch(0.9000 0.0100 240);              /* Light border */
+  --border-accent: oklch(0.7200 0.1500 55);        /* Orange border */
+
+  /* ========================================
+     TYPOGRAPHY - Modern Sans-Serif
+     ======================================== */
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* Letter spacing */
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+
+  /* Line heights */
+  --leading-tight: 1.2;
+  --leading-snug: 1.4;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+
+  /* ========================================
+     SPACING
+     ======================================== */
+
+  --spacing-xs: 0.5rem;      /* 8px */
+  --spacing-sm: 0.75rem;     /* 12px */
+  --spacing-md: 1rem;        /* 16px */
+  --spacing-lg: 1.5rem;      /* 24px */
+  --spacing-xl: 2rem;        /* 32px */
+  --spacing-2xl: 3rem;       /* 48px */
+  --spacing-3xl: 4rem;       /* 64px */
+  --spacing-4xl: 6rem;       /* 96px */
+
+  /* Layout */
+  --max-width-full: 1400px;
+  --max-width-content: 1200px;
+  --max-width-text: 800px;
+
+  /* ========================================
+     BORDER RADIUS - Modern Curves
+     ======================================== */
+
+  --radius-sm: 0.5rem;       /* 8px */
+  --radius-md: 0.75rem;      /* 12px */
+  --radius-lg: 1rem;         /* 16px */
+  --radius-xl: 1.25rem;      /* 20px */
+  --radius-2xl: 1.5rem;      /* 24px */
+  --radius-full: 9999px;     /* Full round */
+
+  /* ========================================
+     SHADOWS - Soft Depth
+     ======================================== */
+
+  --shadow-xs: 0 1px 3px 0px hsl(240 60% 20% / 0.05);
+  --shadow-sm: 0 2px 6px 0px hsl(240 60% 20% / 0.08);
+  --shadow-md: 0 4px 12px -2px hsl(240 60% 20% / 0.10),
+               0 2px 6px -2px hsl(240 60% 20% / 0.08);
+  --shadow-lg: 0 8px 24px -4px hsl(240 60% 20% / 0.12),
+               0 4px 12px -4px hsl(240 60% 20% / 0.10);
+  --shadow-xl: 0 16px 40px -8px hsl(240 60% 20% / 0.14);
+  --shadow-2xl: 0 24px 64px -12px hsl(240 60% 20% / 0.18);
+
+  /* Colored shadows */
+  --shadow-primary: 0 8px 24px hsl(240 70% 60% / 0.25);
+  --shadow-secondary: 0 8px 24px hsl(55 70% 60% / 0.25);
+
+  /* ========================================
+     Z-INDEX LAYERS
+     ======================================== */
+
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-tooltip: 700;
+
+  /* ========================================
+     TRANSITIONS
+     ======================================== */
+
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-slower: 400ms ease;
+}
+
+/* ========================================
+   GLOBAL STYLES
+   ======================================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans) !important;
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  line-height: var(--leading-normal) !important;
+  font-size: 16px !important;
+}
+
+/* ========================================
+   TYPOGRAPHY SYSTEM
+   ======================================== */
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading) !important;
+  color: var(--foreground) !important;
+  line-height: var(--leading-tight) !important;
+  letter-spacing: var(--tracking-tight) !important;
+}
+
+h1 {
+  font-size: 3rem !important;         /* 48px */
+  font-weight: var(--font-bold) !important;
+}
+
+h2 {
+  font-size: 2.25rem !important;      /* 36px */
+  font-weight: var(--font-bold) !important;
+}
+
+h3 {
+  font-size: 1.875rem !important;     /* 30px */
+  font-weight: var(--font-semibold) !important;
+}
+
+h4 {
+  font-size: 1.5rem !important;       /* 24px */
+  font-weight: var(--font-semibold) !important;
+}
+
+h5 {
+  font-size: 1.25rem !important;      /* 20px */
+  font-weight: var(--font-medium) !important;
+}
+
+h6 {
+  font-size: 1rem !important;         /* 16px */
+  font-weight: var(--font-medium) !important;
+  letter-spacing: var(--tracking-wide) !important;
+  text-transform: uppercase !important;
+}
+
+/* Body text */
+p {
+  font-size: 1rem !important;
+  line-height: var(--leading-relaxed) !important;
+  color: var(--muted-foreground) !important;
+}
+
+/* Text sizes */
+.text-xs { font-size: 0.75rem !important; }    /* 12px */
+.text-sm { font-size: 0.875rem !important; }   /* 14px */
+.text-base { font-size: 1rem !important; }     /* 16px */
+.text-lg { font-size: 1.125rem !important; }   /* 18px */
+.text-xl { font-size: 1.25rem !important; }    /* 20px */
+.text-2xl { font-size: 1.5rem !important; }    /* 24px */
+
+/* ========================================
+   COMPONENT STYLES
+   ======================================== */
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: 0.875rem 2rem;
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-semibold);
+  font-size: 1rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--secondary-foreground);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background: var(--secondary-dark);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--foreground);
+  border: 2px solid var(--border);
+}
+
+.btn-outline:hover {
+  background: var(--muted);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: all var(--transition-slow);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: var(--spacing-md);
+  border-bottom: 2px solid var(--border);
+  margin-bottom: var(--spacing-xl);
+}
+
+.tab {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-weight: var(--font-medium);
+  color: var(--muted-foreground);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all var(--transition-base);
+  letter-spacing: var(--tracking-normal);
+  font-size: 1rem;
+}
+
+.tab:hover {
+  color: var(--foreground);
+}
+
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: var(--font-semibold);
+}
+
+/* Dividers */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin: var(--spacing-3xl) 0;
+}
+
+.divider-gold {
+  width: 60px;
+  height: 3px;
+  background: var(--secondary);
+  margin: var(--spacing-2xl) auto;
+}
+
+/* ========================================
+   RESPONSIVE TYPOGRAPHY
+   ======================================== */
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.25rem !important;
+  }
+
+  h2 {
+    font-size: 1.875rem !important;
+  }
+
+  h3 {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+:focus-visible {
+  outline: 3px solid var(--primary) !important;
+  outline-offset: 2px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

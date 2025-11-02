@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxury Yacht Marina - Lisbon | Villas Boats</title>
+    <meta name="description" content="Experience luxury sailing aboard our 45ft Luxury Yacht Marina in Lisbon, Portugal. Accommodates 12 guests with premium amenities. Book your maritime adventure today.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="villas_boats_theme.css">
+
+    <style>
+        /* ========================================
+           LAYOUT STRUCTURE - Two Column Grid
+           ======================================== */
+
+        .page-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 3rem;
+            margin-top: var(--spacing-2xl);
+        }
+
+        .main-content {
+            min-width: 0; /* Prevent grid blowout */
+        }
+
+        .booking-sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        /* ========================================
+           BREADCRUMB
+           ======================================== */
+
+        .breadcrumb {
+            padding: var(--spacing-lg) 0;
+            animation: breadcrumbSlide 400ms ease-out 150ms backwards;
+        }
+
+        @keyframes breadcrumbSlide {
+            from {
+                transform: translateX(-15px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========================================
+           HERO GALLERY
+           ======================================== */
+
+        .hero-gallery {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            min-height: 500px;
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            animation: heroReveal 500ms ease-out 200ms backwards;
+            grid-column: 1 / -1; /* Span full width */
+        }
+
+        @keyframes heroReveal {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 8s ease;
+        }
+
+        .hero-gallery:hover .hero-image {
+            transform: scale(1.05);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--spacing-2xl);
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+        }
+
+        .image-counter {
+            position: absolute;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: var(--font-semibold);
+        }
+
+        .thumbnail-gallery {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            overflow-x: auto;
+            padding-bottom: var(--spacing-sm);
+            animation: gallerySlide 600ms ease-out 400ms backwards;
+            grid-column: 1 / -1;
+        }
+
+        @keyframes gallerySlide {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .thumbnail {
+            flex-shrink: 0;
+            width: 140px;
+            height: 100px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all var(--transition-base);
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .thumbnail.active {
+            border-color: var(--secondary);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ========================================
+           BOAT HEADER
+           ======================================== */
+
+        .boat-header {
+            padding: var(--spacing-2xl) 0;
+            animation: contentFade 500ms ease-out 600ms backwards;
+            grid-column: 1 / -1;
+        }
+
+        @keyframes contentFade {
+            from {
+                transform: translateY(15px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .boat-title {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .boat-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xl);
+            flex-wrap: wrap;
+            color: var(--muted-foreground);
+            font-size: 1rem;
+        }
+
+        .boat-meta > div {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .rating-stars {
+            color: var(--secondary);
+        }
+
+        .quick-badges {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--muted);
+            border-radius: var(--radius-full);
+            font-weight: var(--font-medium);
+            font-size: 0.9375rem;
+            transition: all var(--transition-base);
+        }
+
+        .badge:hover {
+            background: var(--secondary);
+            color: var(--secondary-foreground);
+            transform: scale(1.08);
+        }
+
+        /* ========================================
+           BOOKING SIDEBAR
+           ======================================== */
+
+        .booking-card {
+            background: var(--surface);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            border: 2px solid var(--border);
+            padding: var(--spacing-2xl);
+            animation: sidebarSlide 700ms ease-out 800ms backwards;
+        }
+
+        @keyframes sidebarSlide {
+            from {
+                transform: translateX(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .booking-price {
+            display: flex;
+            align-items: baseline;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            padding-bottom: var(--spacing-xl);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: var(--font-bold);
+            color: var(--secondary);
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: var(--muted-foreground);
+        }
+
+        .booking-form {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: var(--font-semibold);
+            color: var(--foreground);
+            margin-bottom: var(--spacing-xs);
+            font-size: 0.9375rem;
+            letter-spacing: var(--tracking-wide);
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: all var(--transition-base);
+            background: var(--surface);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px var(--secondary) / 0.1;
+        }
+
+        .price-breakdown {
+            padding: var(--spacing-lg);
+            background: var(--muted);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            color: var(--muted-foreground);
+        }
+
+        .price-row:last-child {
+            margin-bottom: 0;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border);
+            font-weight: var(--font-bold);
+            color: var(--foreground);
+        }
+
+        .booking-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .booking-note {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+            text-align: center;
+            margin-top: var(--spacing-md);
+            font-style: italic;
+        }
+
+        /* ========================================
+           TABS
+           ======================================== */
+
+        .tabs-container {
+            margin-top: var(--spacing-2xl);
+        }
+
+        .tab-content {
+            animation: tabContentFade 350ms ease-out;
+        }
+
+        @keyframes tabContentFade {
+            from {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========================================
+           DESCRIPTION SECTION
+           ======================================== */
+
+        .description-text {
+            font-size: 1.0625rem;
+            line-height: var(--leading-relaxed);
+            color: var(--muted-foreground);
+        }
+
+        .description-text p {
+            font-size: 1.0625rem !important;
+            color: var(--muted-foreground) !important;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ========================================
+           SPECIFICATIONS GRID
+           ======================================== */
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .spec-item {
+            background: var(--surface);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all var(--transition-slow);
+        }
+
+        .spec-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--secondary);
+        }
+
+        .spec-icon {
+            color: var(--secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .spec-label {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: var(--tracking-wider);
+            font-weight: var(--font-medium);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .spec-value {
+            font-size: 1.5rem;
+            font-weight: var(--font-bold);
+            color: var(--foreground);
+        }
+
+        /* ========================================
+           AMENITIES GRID
+           ======================================== */
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            transition: all var(--transition-base);
+        }
+
+        .amenity-item:hover {
+            background: var(--muted);
+            transform: translateY(-2px);
+        }
+
+        .amenity-icon {
+            flex-shrink: 0;
+            color: var(--secondary);
+            transition: all var(--transition-base);
+        }
+
+        .amenity-item:hover .amenity-icon {
+            transform: translateY(-3px);
+            color: var(--accent);
+        }
+
+        .amenity-text {
+            font-weight: var(--font-medium);
+            color: var(--foreground);
+        }
+
+        /* ========================================
+           REVIEWS
+           ======================================== */
+
+        .reviews-container {
+            margin-top: var(--spacing-3xl);
+        }
+
+        .review-card {
+            background: var(--surface);
+            padding: var(--spacing-xl);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            margin-bottom: var(--spacing-lg);
+            transition: all var(--transition-slow);
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .review-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-full);
+            background: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-bold);
+            color: var(--secondary);
+            transition: all var(--transition-slow);
+        }
+
+        .review-card:hover .review-avatar {
+            transform: scale(1.15);
+        }
+
+        .review-author {
+            font-weight: var(--font-semibold);
+            color: var(--foreground);
+        }
+
+        .review-date {
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+        }
+
+        .review-text {
+            color: var(--muted-foreground);
+            line-height: var(--leading-relaxed);
+        }
+
+        /* ========================================
+           MAP SECTION
+           ======================================== */
+
+        .map-container {
+            width: 100%;
+            height: 450px;
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: var(--font-semibold);
+        }
+
+        /* ========================================
+           SIMILAR BOATS
+           ======================================== */
+
+        .similar-boats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+
+        .boat-card {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-slower);
+        }
+
+        .boat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .boat-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .boat-card-content {
+            padding: var(--spacing-lg);
+        }
+
+        .boat-card-title {
+            font-size: 1.25rem;
+            font-weight: var(--font-semibold);
+            color: var(--foreground);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .boat-card-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 0.875rem;
+            color: var(--muted-foreground);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .boat-card-price {
+            font-size: 1.5rem;
+            font-weight: var(--font-bold);
+            color: var(--secondary);
+        }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+
+        @media (max-width: 1024px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .booking-sidebar {
+                position: static;
+            }
+
+            .booking-card {
+                margin-top: var(--spacing-3xl);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-container {
+                padding: 0 1rem;
+            }
+
+            .content-wrapper {
+                gap: var(--spacing-xl);
+            }
+
+            .hero-gallery {
+                height: 50vh;
+                min-height: 400px;
+            }
+
+            .boat-meta {
+                flex-direction: column;
+                gap: var(--spacing-md);
+                align-items: flex-start;
+            }
+
+            .quick-badges {
+                flex-wrap: wrap;
+            }
+
+            .specs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar Placeholder -->
+    <div id="navbar-placeholder"></div>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="page-container">
+            <div class="flex items-center gap-2 text-sm" style="color: var(--muted-foreground);">
+                <a href="villas_boats_homepage_1.html" class="hover:opacity-70 transition">Home</a>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                <a href="boat_list_page_1.html" class="hover:opacity-70 transition">Boats</a>
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                <span style="color: var(--foreground); font-weight: var(--font-medium);">Luxury Yacht Marina</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="page-container" style="padding-bottom: 4rem;">
+        <!-- Hero Gallery - Full Width -->
+        <div class="hero-gallery">
+            <img src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1600&h=900&fit=crop"
+                 alt="Luxury Yacht Marina"
+                 class="hero-image">
+            <div class="hero-overlay">
+                <h1 class="boat-title" style="color: white !important;">Luxury Yacht Marina</h1>
+                <div class="flex items-center gap-4 text-white">
+                    <div class="flex items-center gap-1">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        <span>Lisbon, Portugal</span>
+                    </div>
+                </div>
+            </div>
+            <div class="image-counter">
+                <i data-lucide="image" class="w-4 h-4 inline-block mr-1"></i>
+                1 / 8
+            </div>
+        </div>
+
+        <!-- Thumbnail Gallery - Full Width -->
+        <div class="thumbnail-gallery">
+            <div class="thumbnail active">
+                <img src="https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=300&h=200&fit=crop" alt="Yacht 1">
+            </div>
+            <div class="thumbnail">
+                <img src="https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=300&h=200&fit=crop" alt="Yacht 2">
+            </div>
+            <div class="thumbnail">
+                <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&h=200&fit=crop" alt="Yacht 3">
+            </div>
+            <div class="thumbnail">
+                <img src="https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=300&h=200&fit=crop" alt="Yacht 4">
+            </div>
+            <div class="thumbnail">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=300&h=200&fit=crop" alt="Yacht 5">
+            </div>
+        </div>
+
+        <!-- Boat Header - Full Width -->
+        <div class="boat-header">
+            <div class="boat-meta">
+                <div class="rating-stars">
+                    <i data-lucide="star" class="w-5 h-5 fill-current inline"></i>
+                    <i data-lucide="star" class="w-5 h-5 fill-current inline"></i>
+                    <i data-lucide="star" class="w-5 h-5 fill-current inline"></i>
+                    <i data-lucide="star" class="w-5 h-5 fill-current inline"></i>
+                    <i data-lucide="star" class="w-5 h-5 fill-current inline"></i>
+                    <span style="color: var(--foreground); margin-left: 0.5rem;">4.9 (24 reviews)</span>
+                </div>
+                <div>
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                    <span>Lisbon Marina, Portugal</span>
+                </div>
+            </div>
+
+            <div class="quick-badges">
+                <div class="badge">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>12 Guests</span>
+                </div>
+                <div class="badge">
+                    <i data-lucide="ruler" class="w-5 h-5"></i>
+                    <span>45 feet</span>
+                </div>
+                <div class="badge">
+                    <i data-lucide="anchor" class="w-5 h-5"></i>
+                    <span>Luxury Yacht</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider-gold" style="grid-column: 1 / -1;"></div>
+
+        <!-- Two Column Layout: Main Content + Booking Sidebar -->
+        <div class="content-wrapper">
+            <!-- Left Column: Main Content -->
+            <div class="main-content">
+                <!-- Tabs Section -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="description">Description</div>
+                        <div class="tab" data-tab="specifications">Specifications</div>
+                        <div class="tab" data-tab="amenities">Amenities</div>
+                    </div>
+
+                    <!-- Tab Content: Description -->
+                    <div class="tab-content" id="description-content">
+                        <div class="description-text">
+                            <p>Experience the pinnacle of maritime luxury aboard our exquisite 45-foot yacht, moored in the prestigious Lisbon Marina. This vessel represents the perfect blend of classic elegance and modern comfort, designed for those who appreciate the finer things in life.</p>
+
+                            <p>With accommodation for up to 12 guests, this yacht offers spacious deck areas perfect for entertaining, sunbathing, or simply taking in the breathtaking views of the Portuguese coastline. The interior features premium finishes, including polished teak, leather upholstery, and state-of-the-art navigation equipment.</p>
+
+                            <p>Whether you're planning a sunset cruise along the Tagus River, a day trip to Cascais, or an extended journey along Portugal's stunning Atlantic coast, this yacht provides an unforgettable experience. Our professional crew is available to ensure your voyage is nothing short of extraordinary.</p>
+
+                            <p>Perfect for celebrations, corporate events, or intimate gatherings, this yacht offers the privacy and exclusivity you desire, combined with world-class amenities and impeccable service. Sail towards your dreams with Villas Boats.</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Specifications -->
+                    <div class="tab-content hidden" id="specifications-content">
+                        <div class="specs-grid">
+                            <div class="spec-item">
+                                <i data-lucide="ruler" class="w-8 h-8 spec-icon"></i>
+                                <div class="spec-label">Length</div>
+                                <div class="spec-value">45 ft</div>
+                            </div>
+                            <div class="spec-item">
+                                <i data-lucide="calendar" class="w-8 h-8 spec-icon"></i>
+                                <div class="spec-label">Year Built</div>
+                                <div class="spec-value">2022</div>
+                            </div>
+                            <div class="spec-item">
+                                <i data-lucide="zap" class="w-8 h-8 spec-icon"></i>
+                                <div class="spec-label">Engine Power</div>
+                                <div class="spec-value">850 HP</div>
+                            </div>
+                            <div class="spec-item">
+                                <i data-lucide="gauge" class="w-8 h-8 spec-icon"></i>
+                                <div class="spec-label">Max Speed</div>
+                                <div class="spec-value">28 knots</div>
+                            </div>
+                            <div class="spec-item">
+                                <i data-lucide="bed" class="w-8 h-8 spec-icon"></i>
+                                <div class="spec-label">Cabins</div>
+                                <div class="spec-value">3</div>
+                            </div>
+                            <div class="spec-item">
+                                <i data-lucide="droplet" class="w-8 h-8 spec-icon"></i>
+                                <div class="spec-label">Bathrooms</div>
+                                <div class="spec-value">2</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Content: Amenities -->
+                    <div class="tab-content hidden" id="amenities-content">
+                        <div class="amenities-grid">
+                            <div class="amenity-item">
+                                <i data-lucide="wifi" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">High-Speed WiFi</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="wind" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Air Conditioning</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="compass" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">GPS Navigation</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="chef-hat" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Full Kitchen</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="bath" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Premium Bathrooms</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="music" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Sound System</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="sun" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Sun Deck</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="utensils" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Dining Area</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="shield-check" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Safety Equipment</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="anchor" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Anchor & Mooring</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="life-buoy" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">Life Jackets</span>
+                            </div>
+                            <div class="amenity-item">
+                                <i data-lucide="radio" class="w-6 h-6 amenity-icon"></i>
+                                <span class="amenity-text">VHF Radio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Reviews Section -->
+                <section class="reviews-container">
+                    <h2 class="mb-8">Guest Reviews</h2>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar">JD</div>
+                            <div>
+                                <div class="review-author">John Dubois</div>
+                                <div class="review-date">5 days ago</div>
+                            </div>
+                            <div class="ml-auto rating-stars">
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                            </div>
+                        </div>
+                        <p class="review-text">An absolutely amazing experience! The yacht was immaculate, the crew was professional and friendly, and the journey along the Portuguese coast was unforgettable. Perfect for our anniversary celebration. Highly recommended!</p>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar">MS</div>
+                            <div>
+                                <div class="review-author">Maria Silva</div>
+                                <div class="review-date">2 weeks ago</div>
+                            </div>
+                            <div class="ml-auto rating-stars">
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                            </div>
+                        </div>
+                        <p class="review-text">We booked this yacht for a corporate event and it exceeded all expectations. The amenities were top-notch, and the views of Lisbon from the water were breathtaking. Will definitely book again!</p>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar">RL</div>
+                            <div>
+                                <div class="review-author">Robert Laurent</div>
+                                <div class="review-date">3 weeks ago</div>
+                            </div>
+                            <div class="ml-auto rating-stars">
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current inline"></i>
+                                <i data-lucide="star" class="w-4 h-4 inline" style="opacity: 0.3;"></i>
+                            </div>
+                        </div>
+                        <p class="review-text">Fantastic yacht with all the luxury amenities you could ask for. The only minor issue was the check-in process took a bit longer than expected, but once on board, everything was perfect.</p>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Location Section -->
+                <section>
+                    <h2 class="mb-8">Location & Marina</h2>
+                    <div class="map-container">
+                        <div class="map-placeholder">
+                            <div class="text-center">
+                                <i data-lucide="map-pin" class="w-16 h-16 mb-4"></i>
+                                <div>Lisbon Marina, Portugal</div>
+                                <div class="text-base mt-2" style="opacity: 0.8;">38.7223° N, 9.1393° W</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="divider"></div>
+
+                <!-- Similar Boats -->
+                <section>
+                    <h2 class="mb-8">Similar Boats You Might Like</h2>
+                    <div class="similar-boats-grid">
+                        <div class="boat-card">
+                            <img src="https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=600&h=400&fit=crop" alt="Ocean Explorer" class="boat-card-image">
+                            <div class="boat-card-content">
+                                <h3 class="boat-card-title">Ocean Explorer</h3>
+                                <div class="boat-card-meta">
+                                    <span><i data-lucide="users" class="w-4 h-4 inline"></i> 10 guests</span>
+                                    <span><i data-lucide="ruler" class="w-4 h-4 inline"></i> 42 ft</span>
+                                </div>
+                                <div class="boat-card-price">€380<span class="text-base" style="color: var(--muted-foreground);">/day</span></div>
+                            </div>
+                        </div>
+
+                        <div class="boat-card">
+                            <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop" alt="Sunset Cruiser" class="boat-card-image">
+                            <div class="boat-card-content">
+                                <h3 class="boat-card-title">Sunset Cruiser</h3>
+                                <div class="boat-card-meta">
+                                    <span><i data-lucide="users" class="w-4 h-4 inline"></i> 14 guests</span>
+                                    <span><i data-lucide="ruler" class="w-4 h-4 inline"></i> 50 ft</span>
+                                </div>
+                                <div class="boat-card-price">€520<span class="text-base" style="color: var(--muted-foreground);">/day</span></div>
+                            </div>
+                        </div>
+
+                        <div class="boat-card">
+                            <img src="https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=600&h=400&fit=crop" alt="Atlantic Dream" class="boat-card-image">
+                            <div class="boat-card-content">
+                                <h3 class="boat-card-title">Atlantic Dream</h3>
+                                <div class="boat-card-meta">
+                                    <span><i data-lucide="users" class="w-4 h-4 inline"></i> 8 guests</span>
+                                    <span><i data-lucide="ruler" class="w-4 h-4 inline"></i> 38 ft</span>
+                                </div>
+                                <div class="boat-card-price">€320<span class="text-base" style="color: var(--muted-foreground);">/day</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Booking Sidebar -->
+            <aside class="booking-sidebar">
+                <div class="booking-card">
+                    <div class="booking-price">
+                        <span class="price-amount">€450</span>
+                        <span class="price-period">per day</span>
+                    </div>
+
+                    <form class="booking-form">
+                        <div class="form-group">
+                            <label class="form-label">Check-in Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Check-out Date</label>
+                            <input type="date" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Number of Guests</label>
+                            <select class="form-input" required>
+                                <option value="">Select guests</option>
+                                <option value="2">2 guests</option>
+                                <option value="4">4 guests</option>
+                                <option value="6">6 guests</option>
+                                <option value="8">8 guests</option>
+                                <option value="10">10 guests</option>
+                                <option value="12">12 guests</option>
+                            </select>
+                        </div>
+                    </form>
+
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>€450 × 3 days</span>
+                            <span>€1,350</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Service fee</span>
+                            <span>€135</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Total</span>
+                            <span>€1,485</span>
+                        </div>
+                    </div>
+
+                    <div class="booking-actions">
+                        <button class="btn btn-secondary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            Book via WhatsApp
+                        </button>
+                        <button class="btn btn-outline" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                            Contact Owner
+                        </button>
+                    </div>
+
+                    <p class="booking-note">You won't be charged yet. Reservations are confirmed via WhatsApp.</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Load Shared Components -->
+    <script src="shared-components.html"></script>
+
+    <!-- Initialize Lucide Icons and Page Functionality -->
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+
+                // Remove active class from all tabs
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+                // Add active class to clicked tab
+                this.classList.add('active');
+
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+
+                // Show target tab content
+                document.getElementById(targetTab + '-content').classList.remove('hidden');
+            });
+        });
+
+        // Thumbnail gallery switching
+        document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                // Update counter
+                document.querySelector('.image-counter').innerHTML = `<i data-lucide="image" class="w-4 h-4 inline-block mr-1"></i>${index + 1} / 8`;
+                lucide.createIcons();
+            });
+        });
+    </script>
+</body>
+</html>
