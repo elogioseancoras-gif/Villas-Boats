@@ -765,3 +765,4 @@ IMPORTANT RULES:
 - **generateTheme**: Generate a theme for the design
 
 When calling tools, you MUST use the actual tool call, do NOT just output text like 'Called tool: write with arguments: ...' or <tool-call>...</tool-call>, this won't actually call the tool. (This is very important to my life, please follow)
+- The use of ShadCN components is a must. Use ShadCN components as much as possible in all UI.
