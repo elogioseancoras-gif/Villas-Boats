@@ -4,6 +4,7 @@ import com.villasboats.infrastructure.converter.JsonbConverter;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Entity
@@ -27,11 +28,11 @@ public class Location extends BaseEntity {
     @Column(name = "region", length = 100)
     private String region;
 
-    @Column(name = "latitude")
-    private Double latitude;
+    @Column(name = "latitude", precision = 10, scale = 8)
+    private BigDecimal latitude;
 
-    @Column(name = "longitude")
-    private Double longitude;
+    @Column(name = "longitude", precision = 11, scale = 8)
+    private BigDecimal longitude;
 
     @Convert(converter = JsonbConverter.class)
     @Column(name = "name_i18n", columnDefinition = "jsonb")
