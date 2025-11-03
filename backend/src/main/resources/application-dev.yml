@@ -17,6 +17,10 @@ spring:
       hibernate:
         generate_statistics: false
 
+jwt:
+  secret: ${JWT_SECRET:dGhpc19pc19hX3NlY3VyZV9kZXZlbG9wbWVudF9zZWNyZXRfa2V5X2NoYW5nZV9pbl9wcm9kdWN0aW9uX3RoaXNfbXVzdF9iZV9hdF9sZWFzdF8yNTZfYml0c19mb3JfaHMyNTY=}
+  expiration: ${JWT_EXPIRATION:86400000}
+
 logging:
   level:
     com.villasboats: DEBUG
