@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: villas-boats-postgres
+    environment:
+      POSTGRES_DB: villas_boats
+      POSTGRES_USER: villasboats
+      POSTGRES_PASSWORD: dev_password_change_in_production
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U villasboats -d villas_boats"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - villas-boats-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: villas-boats-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - villas-boats-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: villas-boats-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: villas_boats
+      DB_USER: villasboats
+      DB_PASSWORD: dev_password_change_in_production
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET_KEY: dev-secret-key-change-in-production-must-be-at-least-256-bits-long
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:3001
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - villas-boats-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  villas-boats-network:
+    driver: bridge
