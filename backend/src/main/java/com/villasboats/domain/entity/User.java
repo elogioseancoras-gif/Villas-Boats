@@ -29,12 +29,12 @@ public class User extends BaseEntity {
     @Column(name = "phone", length = 50)
     private String phone;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 20)
+    @Convert(converter = com.villasboats.infrastructure.converter.UserRoleConverter.class)
+    @Column(name = "role", nullable = false)
     private UserRole role = UserRole.CUSTOMER;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "preferred_language", length = 10)
+    @Convert(converter = com.villasboats.infrastructure.converter.LanguageConverter.class)
+    @Column(name = "preferred_language")
     private Language preferredLanguage = Language.EN;
 
     @Column(name = "country", length = 100)
