@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import { Menu, X, Anchor, Globe, DollarSign } from 'lucide-react';
+import { Menu, X, Anchor, Globe, DollarSign, User, LogOut, UserCircle, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Container } from './Container';
 import { cn } from '@/lib/utils';
 import { useCurrency } from '@/app/contexts/CurrencyContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -16,6 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const locales = [
   { value: 'en', label: 'EN' },
@@ -34,6 +43,7 @@ const currencies = [
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currency, setCurrency } = useCurrency();
+  const { user, isAdmin, logout } = useAuth();
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -117,12 +127,40 @@ export function Header() {
               </Select>
             </div>
 
-            {/* Login Button - TODO: Implement auth */}
-            <Button asChild className="hidden md:inline-flex" size="sm">
-              <Link href={`/${locale}/admin`}>
-                Admin
-              </Link>
-            </Button>
+            {/* Auth Button/Menu */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="hidden md:inline-flex gap-2">
+                    <UserCircle className="h-4 w-4" />
+                    <span>{user.fullName}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href={`/${locale}/profile`} className="flex items-center cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link href={`/${locale}/admin`} className="flex items-center cursor-pointer">
+                        <Shield className="mr-2 h-4 w-4" />
+                        <span>Admin</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout} className="cursor-pointer text-destructive focus:text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Logout</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
 
             {/* Mobile Menu Button */}
             <button
@@ -154,13 +192,51 @@ export function Header() {
                   {item.name}
                 </Link>
               ))}
-              <Link
-                href={`/${locale}/admin`}
-                className="block px-3 py-2 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground rounded-md transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Admin
-              </Link>
+
+              {/* Mobile Auth Section */}
+              <div className="border-t border-border mt-2 pt-2">
+                {user ? (
+                  <>
+                    {/* User Info */}
+                    <div className="px-3 py-2">
+                      <p className="text-sm font-medium text-foreground">{user.fullName}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </div>
+
+                    {/* Auth Menu Items */}
+                    <Link
+                      href={`/${locale}/profile`}
+                      className="flex items-center gap-2 px-3 py-2 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground rounded-md transition-colors"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Profile</span>
+                    </Link>
+
+                    {isAdmin && (
+                      <Link
+                        href={`/${locale}/admin`}
+                        className="flex items-center gap-2 px-3 py-2 text-base font-medium text-muted-foreground hover:bg-accent hover:text-foreground rounded-md transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Shield className="h-4 w-4" />
+                        <span>Admin</span>
+                      </Link>
+                    )}
+
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 w-full px-3 py-2 text-base font-medium text-destructive hover:bg-accent rounded-md transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Logout</span>
+                    </button>
+                  </>
+                ) : null}
+              </div>
 
               {/* Mobile Language & Currency Selectors */}
               <div className="px-3 py-2 space-y-3 border-t border-border mt-2 pt-4">
