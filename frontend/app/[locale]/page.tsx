@@ -10,67 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { BoatCard } from '@/components/boats/BoatCard';
-
-// Sample featured boats data
-const featuredBoats = [
-  {
-    id: '1',
-    slug: 'luxury-catamaran-algarve',
-    name: { en: 'Luxury Catamaran Algarve', 'pt-BR': 'Catamarã de Luxo Algarve', 'pt-PT': 'Catamarã de Luxo Algarve', es: 'Catamarán de Lujo Algarve' },
-    description: { en: 'Experience luxury sailing in the beautiful Algarve coast', 'pt-BR': 'Experimente navegação de luxo na bela costa do Algarve', 'pt-PT': 'Experimente navegação de luxo na bela costa do Algarve', es: 'Experimenta la navegación de lujo en la hermosa costa del Algarve' },
-    type: 'CATAMARAN' as const,
-    capacity: 12,
-    length: 15,
-    priceUSD: 850,
-    priceEUR: 780,
-    priceGBP: 670,
-    priceBRL: 4200,
-    location: { city: 'Faro', country: 'Portugal', lat: 37.0194, lng: -7.9304 },
-    images: [
-      { id: '1', url: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80', alt: 'Luxury Catamaran', isPrimary: true }
-    ],
-    rating: 4.9,
-    reviewCount: 127
-  },
-  {
-    id: '2',
-    slug: 'classic-sailboat-lisbon',
-    name: { en: 'Classic Sailboat Lisbon', 'pt-BR': 'Veleiro Clássico Lisboa', 'pt-PT': 'Veleiro Clássico Lisboa', es: 'Velero Clásico Lisboa' },
-    description: { en: 'Discover the Tagus River on a classic sailboat', 'pt-BR': 'Descubra o Rio Tejo num veleiro clássico', 'pt-PT': 'Descubra o Rio Tejo num veleiro clássico', es: 'Descubre el río Tajo en un velero clásico' },
-    type: 'SAILBOAT' as const,
-    capacity: 6,
-    length: 12,
-    priceUSD: 320,
-    priceEUR: 300,
-    priceGBP: 260,
-    priceBRL: 1600,
-    location: { city: 'Lisbon', country: 'Portugal', lat: 38.7223, lng: -9.1393 },
-    images: [
-      { id: '2', url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80', alt: 'Sailboat', isPrimary: true }
-    ],
-    rating: 4.8,
-    reviewCount: 45
-  },
-  {
-    id: '3',
-    slug: 'speedboat-rio-janeiro',
-    name: { en: 'Speedboat Rio de Janeiro', 'pt-BR': 'Lancha Rio de Janeiro', 'pt-PT': 'Lancha Rio de Janeiro', es: 'Lancha Río de Janeiro' },
-    description: { en: 'Explore the stunning bays of Rio on a fast speedboat', 'pt-BR': 'Explore as baías deslumbrantes do Rio numa lancha rápida', 'pt-PT': 'Explore as baías deslumbrantes do Rio numa lancha rápida', es: 'Explora las impresionantes bahías de Río en una lancha rápida' },
-    type: 'SPEEDBOAT' as const,
-    capacity: 8,
-    length: 10,
-    priceUSD: 400,
-    priceEUR: 370,
-    priceGBP: 320,
-    priceBRL: 2000,
-    location: { city: 'Rio de Janeiro', country: 'Brazil', lat: -22.9068, lng: -43.1729 },
-    images: [
-      { id: '3', url: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80', alt: 'Speedboat', isPrimary: true }
-    ],
-    rating: 4.7,
-    reviewCount: 38
-  }
-];
+import { useFeaturedBoats } from '@/lib/api/hooks/useBoats';
 
 export default function HomePage() {
   const t = useTranslations('hero');
@@ -78,6 +18,9 @@ export default function HomePage() {
   const tCommon = useTranslations('common');
   const params = useParams();
   const locale = params?.locale as string || 'en';
+
+  // Fetch featured boats from API
+  const { data: featuredBoats, isLoading, error } = useFeaturedBoats();
 
   // JSON-LD structured data for SEO
   const jsonLdOrganization = {
@@ -226,9 +169,41 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredBoats.map((boat) => (
+            {isLoading && (
+              <>
+                {[1, 2, 3].map((i) => (
+                  <Card key={i} className="overflow-hidden">
+                    <CardContent className="p-0">
+                      <div className="h-64 bg-muted animate-pulse" />
+                      <div className="p-6 space-y-3">
+                        <div className="h-6 bg-muted animate-pulse rounded" />
+                        <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+                        <div className="h-4 bg-muted animate-pulse rounded w-1/2" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </>
+            )}
+            {error && (
+              <div className="col-span-full text-center py-12">
+                <p className="text-destructive mb-4">Failed to load featured boats. Please try again later.</p>
+                <Button asChild variant="outline">
+                  <Link href={`/${locale}/boats`}>View All Boats</Link>
+                </Button>
+              </div>
+            )}
+            {!isLoading && !error && featuredBoats && featuredBoats.length > 0 && featuredBoats.map((boat) => (
               <BoatCard key={boat.id} boat={boat} variant="grid" locale={locale as 'en' | 'pt-BR' | 'pt-PT' | 'es'} />
             ))}
+            {!isLoading && !error && (!featuredBoats || featuredBoats.length === 0) && (
+              <div className="col-span-full text-center py-12">
+                <p className="text-muted-foreground mb-4">No featured boats available at the moment.</p>
+                <Button asChild variant="outline">
+                  <Link href={`/${locale}/boats`}>View All Boats</Link>
+                </Button>
+              </div>
+            )}
           </div>
           <div className="text-center mt-12">
             <Button asChild size="lg" variant="outline">

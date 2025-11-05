@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation';
 import { Inter, Outfit } from 'next/font/google';
 import { Layout } from '@/components/layout';
 import { CurrencyProvider } from '@/app/contexts/CurrencyContext';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { QueryProvider } from '@/app/providers/QueryProvider';
 import { locales } from '@/i18n/request';
 import '../globals.css';
 
@@ -68,11 +70,15 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <CurrencyProvider>
-            <Layout>{children}</Layout>
-          </CurrencyProvider>
-        </NextIntlClientProvider>
+        <QueryProvider>
+          <AuthProvider>
+            <NextIntlClientProvider locale={locale} messages={messages}>
+              <CurrencyProvider>
+                <Layout>{children}</Layout>
+              </CurrencyProvider>
+            </NextIntlClientProvider>
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );
