@@ -57,6 +57,11 @@ public class AuthService {
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // First version: only allow ADMIN users to login
+        if (user.getRole() != UserRole.ADMIN) {
+            throw new RuntimeException("Access restricted to administrators only");
+        }
+
         return buildAuthResponse(jwt, user);
     }
 
