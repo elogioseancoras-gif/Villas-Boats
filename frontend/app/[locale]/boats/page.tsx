@@ -11,295 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-
-// Mock data - will be replaced with API calls
-const mockBoats: Boat[] = [
-  {
-    id: '1',
-    slug: 'luxury-catamaran-algarve',
-    name: {
-      en: 'Luxury Catamaran Experience',
-      'pt-BR': 'Experiência em Catamarã de Luxo',
-      'pt-PT': 'Experiência em Catamarã de Luxo',
-      es: 'Experiencia en Catamarán de Lujo',
-    },
-    description: {
-      en: 'Experience the ultimate sailing adventure on this stunning 50ft catamaran. Perfect for families and groups, featuring spacious decks, modern amenities, and breathtaking ocean views.',
-      'pt-BR': 'Experimente a aventura de navegação definitiva neste deslumbrante catamarã de 15m. Perfeito para famílias e grupos, com decks espaçosos, comodidades modernas e vistas deslumbrantes do oceano.',
-      'pt-PT': 'Experimente a aventura de navegação definitiva neste deslumbrante catamarã de 15m. Perfeito para famílias e grupos, com decks espaçosos, comodidades modernas e vistas deslumbrantes do oceano.',
-      es: 'Experimente la aventura de navegación definitiva en este impresionante catamarán de 15m. Perfecto para familias y grupos, con cubiertas espaciosas, comodidades modernas y vistas impresionantes del océano.',
-    },
-    type: BoatType.CATAMARAN,
-    capacity: 12,
-    length: 15,
-    location: {
-      id: '1',
-      country: 'Portugal',
-      city: 'Algarve',
-      region: 'Algarve',
-      coordinates: { latitude: 37.0179, longitude: -7.9304 },
-    },
-    priceUSD: 850,
-    priceEUR: 780,
-    priceGBP: 670,
-    priceBRL: 4200,
-    images: [
-      {
-        id: '1',
-        url: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=800&q=80',
-        alt: 'Luxury catamaran sailing',
-        isPrimary: true,
-      },
-      {
-        id: '2',
-        url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80',
-        alt: 'Catamaran deck view',
-        isPrimary: false,
-      },
-    ],
-    amenities: [
-      { id: '1', name: { en: 'WiFi', 'pt-BR': 'WiFi', 'pt-PT': 'WiFi', es: 'WiFi' } },
-      { id: '2', name: { en: 'Air Conditioning', 'pt-BR': 'Ar Condicionado', 'pt-PT': 'Ar Condicionado', es: 'Aire Acondicionado' } },
-      { id: '3', name: { en: 'Kitchen', 'pt-BR': 'Cozinha', 'pt-PT': 'Cozinha', es: 'Cocina' } },
-      { id: '4', name: { en: 'Sound System', 'pt-BR': 'Sistema de Som', 'pt-PT': 'Sistema de Som', es: 'Sistema de Sonido' } },
-    ],
-    rating: 4.9,
-    reviewCount: 127,
-  },
-  {
-    id: '2',
-    slug: 'classic-sailboat-lisbon',
-    name: {
-      en: 'Classic Sailboat Adventure',
-      'pt-BR': 'Aventura em Veleiro Clássico',
-      'pt-PT': 'Aventura em Veleiro Clássico',
-      es: 'Aventura en Velero Clásico',
-    },
-    description: {
-      en: 'Discover Lisbon\'s coastline aboard this beautiful 40ft classic sailboat. Ideal for romantic getaways and small group excursions with experienced crew.',
-      'pt-BR': 'Descubra a costa de Lisboa a bordo deste belo veleiro clássico de 12m. Ideal para escapadas românticas e excursões em pequenos grupos com tripulação experiente.',
-      'pt-PT': 'Descubra a costa de Lisboa a bordo deste belo veleiro clássico de 12m. Ideal para escapadas românticas e excursões em pequenos grupos com tripulação experiente.',
-      es: 'Descubra la costa de Lisboa a bordo de este hermoso velero clásico de 12m. Ideal para escapadas románticas y excursiones en grupos pequeños con tripulación experimentada.',
-    },
-    type: BoatType.SAILBOAT,
-    capacity: 8,
-    length: 12,
-    location: {
-      id: '2',
-      country: 'Portugal',
-      city: 'Lisbon',
-      region: 'Lisboa',
-      coordinates: { latitude: 38.7223, longitude: -9.1393 },
-    },
-    priceUSD: 450,
-    priceEUR: 420,
-    priceGBP: 360,
-    priceBRL: 2250,
-    images: [
-      {
-        id: '3',
-        url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80',
-        alt: 'Classic sailboat',
-        isPrimary: true,
-      },
-    ],
-    amenities: [
-      { id: '5', name: { en: 'GPS Navigation', 'pt-BR': 'Navegação GPS', 'pt-PT': 'Navegação GPS', es: 'Navegación GPS' } },
-      { id: '6', name: { en: 'Safety Equipment', 'pt-BR': 'Equipamento de Segurança', 'pt-PT': 'Equipamento de Segurança', es: 'Equipo de Seguridad' } },
-      { id: '7', name: { en: 'Snorkeling Gear', 'pt-BR': 'Equipamento de Snorkeling', 'pt-PT': 'Equipamento de Snorkeling', es: 'Equipo de Snorkeling' } },
-    ],
-    rating: 4.7,
-    reviewCount: 89,
-  },
-  {
-    id: '3',
-    slug: 'speedboat-rio-janeiro',
-    name: {
-      en: 'Rio Speedboat Thrill',
-      'pt-BR': 'Emoção na Lancha Rio',
-      'pt-PT': 'Emoção na Lancha Rio',
-      es: 'Emoción en Lancha Rápida Rio',
-    },
-    description: {
-      en: 'Experience the thrill of Rio\'s waters on this powerful speedboat. Perfect for adventure seekers and water sports enthusiasts.',
-      'pt-BR': 'Experimente a emoção das águas do Rio nesta poderosa lancha. Perfeita para aventureiros e entusiastas de esportes aquáticos.',
-      'pt-PT': 'Experimente a emoção das águas do Rio nesta poderosa lancha. Perfeita para aventureiros e entusiastas de desportos aquáticos.',
-      es: 'Experimente la emoción de las aguas de Río en esta potente lancha rápida. Perfecta para buscadores de aventuras y entusiastas de los deportes acuáticos.',
-    },
-    type: BoatType.MOTORBOAT,
-    capacity: 6,
-    length: 8,
-    location: {
-      id: '5',
-      country: 'Brazil',
-      city: 'Rio de Janeiro',
-      region: 'Sudeste',
-      coordinates: { latitude: -22.9068, longitude: -43.1729 },
-    },
-    priceUSD: 320,
-    priceEUR: 290,
-    priceGBP: 250,
-    priceBRL: 1600,
-    images: [
-      {
-        id: '4',
-        url: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=800&q=80',
-        alt: 'Speedboat on water',
-        isPrimary: true,
-      },
-    ],
-    amenities: [
-      { id: '8', name: { en: 'Water Skis', 'pt-BR': 'Esqui Aquático', 'pt-PT': 'Esqui Aquático', es: 'Esquí Acuático' } },
-      { id: '9', name: { en: 'Wakeboard', 'pt-BR': 'Wakeboard', 'pt-PT': 'Wakeboard', es: 'Wakeboard' } },
-      { id: '10', name: { en: 'Cooler', 'pt-BR': 'Caixa Térmica', 'pt-PT': 'Caixa Térmica', es: 'Nevera' } },
-    ],
-    rating: 4.8,
-    reviewCount: 54,
-  },
-  {
-    id: '4',
-    slug: 'luxury-yacht-porto',
-    name: {
-      en: 'Porto Luxury Yacht',
-      'pt-BR': 'Iate de Luxo Porto',
-      'pt-PT': 'Iate de Luxo Porto',
-      es: 'Yate de Lujo Oporto',
-    },
-    description: {
-      en: 'Indulge in luxury aboard this magnificent 60ft yacht. Features premium amenities, professional crew, and unforgettable views of Porto\'s coastline.',
-      'pt-BR': 'Entregue-se ao luxo a bordo deste magnífico iate de 18m. Possui comodidades premium, tripulação profissional e vistas inesquecíveis da costa do Porto.',
-      'pt-PT': 'Entregue-se ao luxo a bordo deste magnífico iate de 18m. Possui comodidades premium, tripulação profissional e vistas inesquecíveis da costa do Porto.',
-      es: 'Disfrute del lujo a bordo de este magnífico yate de 18m. Cuenta con comodidades premium, tripulación profesional y vistas inolvidables de la costa de Oporto.',
-    },
-    type: BoatType.YACHT,
-    capacity: 15,
-    length: 18,
-    location: {
-      id: '3',
-      country: 'Portugal',
-      city: 'Porto',
-      region: 'Norte',
-      coordinates: { latitude: 41.1579, longitude: -8.6291 },
-    },
-    priceUSD: 1200,
-    priceEUR: 1100,
-    priceGBP: 950,
-    priceBRL: 6000,
-    images: [
-      {
-        id: '5',
-        url: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=800&q=80',
-        alt: 'Luxury yacht',
-        isPrimary: true,
-      },
-      {
-        id: '6',
-        url: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=800&q=80',
-        alt: 'Yacht interior',
-        isPrimary: false,
-      },
-    ],
-    amenities: [
-      { id: '11', name: { en: 'Jacuzzi', 'pt-BR': 'Jacuzzi', 'pt-PT': 'Jacuzzi', es: 'Jacuzzi' } },
-      { id: '12', name: { en: 'Chef Service', 'pt-BR': 'Serviço de Chef', 'pt-PT': 'Serviço de Chef', es: 'Servicio de Chef' } },
-      { id: '13', name: { en: 'Bar', 'pt-BR': 'Bar', 'pt-PT': 'Bar', es: 'Bar' } },
-      { id: '14', name: { en: 'Satellite TV', 'pt-BR': 'TV por Satélite', 'pt-PT': 'TV por Satélite', es: 'TV Satélite' } },
-      { id: '15', name: { en: 'Sun Deck', 'pt-BR': 'Deck Solar', 'pt-PT': 'Deck Solar', es: 'Terraza Solar' } },
-    ],
-    rating: 5.0,
-    reviewCount: 203,
-  },
-  {
-    id: '5',
-    slug: 'fishing-boat-sao-paulo',
-    name: {
-      en: 'São Paulo Fishing Experience',
-      'pt-BR': 'Experiência de Pesca São Paulo',
-      'pt-PT': 'Experiência de Pesca São Paulo',
-      es: 'Experiencia de Pesca São Paulo',
-    },
-    description: {
-      en: 'Join us for an authentic fishing experience along São Paulo\'s coast. Equipped with professional fishing gear and guided by expert local fishermen.',
-      'pt-BR': 'Junte-se a nós para uma experiência autêntica de pesca ao longo da costa de São Paulo. Equipado com equipamento de pesca profissional e guiado por pescadores locais experientes.',
-      'pt-PT': 'Junte-se a nós para uma experiência autêntica de pesca ao longo da costa de São Paulo. Equipado com equipamento de pesca profissional e guiado por pescadores locais experientes.',
-      es: 'Únase a nosotros para una experiencia auténtica de pesca a lo largo de la costa de São Paulo. Equipado con equipo de pesca profesional y guiado por pescadores locales expertos.',
-    },
-    type: BoatType.FISHING_BOAT,
-    capacity: 10,
-    length: 10,
-    location: {
-      id: '4',
-      country: 'Brazil',
-      city: 'São Paulo',
-      region: 'Sudeste',
-      coordinates: { latitude: -23.5505, longitude: -46.6333 },
-    },
-    priceUSD: 380,
-    priceEUR: 350,
-    priceGBP: 300,
-    priceBRL: 1900,
-    images: [
-      {
-        id: '7',
-        url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80',
-        alt: 'Fishing boat',
-        isPrimary: true,
-      },
-    ],
-    amenities: [
-      { id: '16', name: { en: 'Fishing Rods', 'pt-BR': 'Varas de Pesca', 'pt-PT': 'Varas de Pesca', es: 'Cañas de Pescar' } },
-      { id: '17', name: { en: 'Bait & Tackle', 'pt-BR': 'Isca e Equipamento', 'pt-PT': 'Isca e Equipamento', es: 'Cebo y Equipo' } },
-      { id: '18', name: { en: 'Fish Finder', 'pt-BR': 'Sonda de Pesca', 'pt-PT': 'Sonda de Pesca', es: 'Detector de Peces' } },
-      { id: '19', name: { en: 'Ice Box', 'pt-BR': 'Caixa de Gelo', 'pt-PT': 'Caixa de Gelo', es: 'Caja de Hielo' } },
-    ],
-    rating: 4.6,
-    reviewCount: 76,
-  },
-  {
-    id: '6',
-    slug: 'jet-ski-santa-catarina',
-    name: {
-      en: 'Santa Catarina Jet Ski',
-      'pt-BR': 'Jet Ski Santa Catarina',
-      'pt-PT': 'Jet Ski Santa Catarina',
-      es: 'Moto de Agua Santa Catarina',
-    },
-    description: {
-      en: 'Feel the adrenaline rush with our high-performance jet ski. Explore Santa Catarina\'s beautiful beaches at your own pace.',
-      'pt-BR': 'Sinta a adrenalina com nosso jet ski de alta performance. Explore as belas praias de Santa Catarina no seu próprio ritmo.',
-      'pt-PT': 'Sinta a adrenalina com o nosso jet ski de alta performance. Explore as belas praias de Santa Catarina no seu próprio ritmo.',
-      es: 'Sienta la adrenalina con nuestra moto de agua de alto rendimiento. Explore las hermosas playas de Santa Catarina a su propio ritmo.',
-    },
-    type: BoatType.JETSKI,
-    capacity: 2,
-    length: 3,
-    location: {
-      id: '6',
-      country: 'Brazil',
-      city: 'Santa Catarina',
-      region: 'Sul',
-      coordinates: { latitude: -27.5954, longitude: -48.5480 },
-    },
-    priceUSD: 150,
-    priceEUR: 140,
-    priceGBP: 120,
-    priceBRL: 750,
-    images: [
-      {
-        id: '8',
-        url: 'https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=800&q=80',
-        alt: 'Jet ski on water',
-        isPrimary: true,
-      },
-    ],
-    amenities: [
-      { id: '20', name: { en: 'Life Jackets', 'pt-BR': 'Coletes Salva-vidas', 'pt-PT': 'Coletes Salva-vidas', es: 'Chalecos Salvavidas' } },
-      { id: '21', name: { en: 'Waterproof Storage', 'pt-BR': 'Compartimento Impermeável', 'pt-PT': 'Compartimento Impermeável', es: 'Almacenamiento Impermeable' } },
-    ],
-    rating: 4.5,
-    reviewCount: 42,
-  },
-];
+import { Card, CardContent } from '@/components/ui/card';
+import { useBoats } from '@/lib/api/hooks/useBoats';
 
 export default function BoatsPage() {
   const params = useParams();
@@ -308,6 +21,9 @@ export default function BoatsPage() {
   const tLocations = useTranslations('locations');
   const tTypes = useTranslations('boatTypes');
   const tCommon = useTranslations('common');
+
+  // Fetch all boats from API
+  const { data: apiBoats, isLoading, error } = useBoats();
 
   // View and filter state
   const [viewMode, setViewMode] = useState<'grid' | 'list' | 'map'>('grid');
@@ -347,7 +63,8 @@ export default function BoatsPage() {
 
   // Filter boats based on all criteria
   const filteredBoats = useMemo(() => {
-    return mockBoats.filter((boat) => {
+    if (!apiBoats) return [];
+    return apiBoats.filter((boat) => {
       // Search filter
       if (searchQuery) {
         const searchLower = searchQuery.toLowerCase();
@@ -384,13 +101,14 @@ export default function BoatsPage() {
 
       return true;
     });
-  }, [searchQuery, selectedType, selectedLocation, selectedCapacity, selectedPriceRange, showFavoritesOnly, favorites, locale]);
+  }, [apiBoats, searchQuery, selectedType, selectedLocation, selectedCapacity, selectedPriceRange, showFavoritesOnly, favorites, locale]);
 
   // Get unique locations for filter
   const locations = useMemo(() => {
-    const uniqueLocations = new Set(mockBoats.map((boat) => boat.location.city));
+    if (!apiBoats) return [];
+    const uniqueLocations = new Set(apiBoats.map((boat) => boat.location.city));
     return Array.from(uniqueLocations);
-  }, []);
+  }, [apiBoats]);
 
   // Clear all filters
   const clearFilters = () => {
@@ -604,7 +322,27 @@ export default function BoatsPage() {
       {/* Boats Grid/List/Map */}
       <section className="py-12">
         <Container>
-          {viewMode === 'map' ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i} className="overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="h-64 bg-muted animate-pulse" />
+                    <div className="p-6 space-y-3">
+                      <div className="h-6 bg-muted animate-pulse rounded" />
+                      <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
+                      <div className="h-4 bg-muted animate-pulse rounded w-1/2" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : error ? (
+            <div className="rounded-lg border border-border bg-muted/50 p-12 text-center">
+              <p className="text-destructive text-lg font-medium mb-4">Failed to load boats. Please try again later.</p>
+              <Button onClick={() => window.location.reload()}>Refresh Page</Button>
+            </div>
+          ) : viewMode === 'map' ? (
             <div className="rounded-lg border border-border bg-muted/50 p-12 text-center">
               <MapIcon className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
               <p className="text-lg font-medium text-muted-foreground">
