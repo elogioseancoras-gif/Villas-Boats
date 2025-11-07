@@ -69,8 +69,11 @@ public class SecurityConfig {
                         // Public endpoints (paths relative to context path /api)
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/error").permitAll()  // Allow error endpoint to return proper error messages
                         .requestMatchers(HttpMethod.GET, "/locations/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/boats/**").permitAll()
+                        // Booking inquiries (unauthenticated)
+                        .requestMatchers(HttpMethod.POST, "/bookings/inquiries").permitAll()
                         // Swagger/OpenAPI endpoints
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Health check endpoints
