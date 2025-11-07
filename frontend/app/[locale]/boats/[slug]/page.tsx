@@ -2,7 +2,7 @@
 
 import { use } from 'react';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Container } from '@/components/layout';
 import {
@@ -11,23 +11,16 @@ import {
   BoatFeatures,
 } from '@/components/boats';
 import { Boat, BoatType } from '@/types';
-import { MapPin, Star, ArrowLeft, Heart, Share2, MessageCircle } from 'lucide-react';
+import { MapPin, Star, ArrowLeft, Heart, Share2 } from 'lucide-react';
 import { useCurrency } from '@/app/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { BookingWidget } from '@/components/booking/BookingWidget';
 
 // Mock data - will be replaced with API calls
 const mockBoats: Boat[] = [
   {
-    id: '1',
+    id: '850e8400-e29b-41d4-a716-446655440001', // Real UUID from database
     slug: 'luxury-catamaran-algarve',
     name: {
       en: 'Luxury Catamaran Experience',
@@ -62,6 +55,10 @@ const mockBoats: Boat[] = [
     priceEUR: 780,
     priceGBP: 670,
     priceBRL: 4200,
+    captainPricePerDayUsd: 200,
+    captainPricePerDayEur: 185,
+    captainPricePerDayGbp: 160,
+    captainPricePerDayBrl: 1000,
     images: [
       {
         id: '1',
@@ -104,7 +101,7 @@ const mockBoats: Boat[] = [
     reviewCount: 127,
   },
   {
-    id: '2',
+    id: '850e8400-e29b-41d4-a716-446655440002', // Real UUID from database
     slug: 'classic-sailboat-lisbon',
     name: {
       en: 'Classic Sailboat Lisbon',
@@ -139,6 +136,10 @@ const mockBoats: Boat[] = [
     priceEUR: 300,
     priceGBP: 260,
     priceBRL: 1600,
+    captainPricePerDayUsd: 150,
+    captainPricePerDayEur: 140,
+    captainPricePerDayGbp: 120,
+    captainPricePerDayBrl: 750,
     images: [
       {
         id: '5',
@@ -164,7 +165,7 @@ const mockBoats: Boat[] = [
     reviewCount: 45,
   },
   {
-    id: '3',
+    id: '850e8400-e29b-41d4-a716-446655440003', // Real UUID from database
     slug: 'speedboat-rio-janeiro',
     name: {
       en: 'Speedboat Rio de Janeiro',
@@ -199,6 +200,10 @@ const mockBoats: Boat[] = [
     priceEUR: 370,
     priceGBP: 320,
     priceBRL: 2000,
+    captainPricePerDayUsd: 180,
+    captainPricePerDayEur: 165,
+    captainPricePerDayGbp: 145,
+    captainPricePerDayBrl: 900,
     images: [
       {
         id: '7',
@@ -239,6 +244,7 @@ interface PageProps {
 export default function BoatDetailsPage({ params }: PageProps) {
   const { locale, slug } = use(params);
   const localeTyped = locale as 'en' | 'pt-BR' | 'pt-PT' | 'es';
+  const router = useRouter();
   const { currency } = useCurrency();
   const t = useTranslations('boats');
   const tCommon = useTranslations('common');
@@ -441,103 +447,31 @@ export default function BoatDetailsPage({ params }: PageProps) {
               </Card>
             </div>
 
-            {/* Right Column - Booking Card */}
+            {/* Right Column - Booking Widget */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-24 shadow-lg">
-                <CardContent className="p-6">
-                {/* Price */}
-                <div className="mb-6 pb-6 border-b border-border">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-3xl font-bold text-foreground">
-                      {currencySymbol}{price.toLocaleString()}
-                    </span>
-                    <span className="text-muted-foreground">{tCommon('perDay')}</span>
-                  </div>
-                  {boat.rating && (
-                    <div className="mt-2 flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-secondary text-secondary" />
-                      <span className="font-medium">{boat.rating.toFixed(1)}</span>
-                      <span className="text-sm text-muted-foreground">
-                        ({boat.reviewCount} {boat.reviewCount === 1 ? t('review') : t('reviews')})
-                      </span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Booking Form Placeholder */}
-                <div className="space-y-4">
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-foreground">
-                      {t('checkIn')}
-                    </label>
-                    <Input type="date" />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-foreground">
-                      {t('checkOut')}
-                    </label>
-                    <Input type="date" />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-foreground">
-                      {tCommon('guests').charAt(0).toUpperCase() + tCommon('guests').slice(1)}
-                    </label>
-                    <Select defaultValue="1">
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.from({ length: boat.capacity }, (_, i) => (
-                          <SelectItem key={i + 1} value={String(i + 1)}>
-                            {i + 1} {i === 0 ? tCommon('guest') : tCommon('guests')}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Book via WhatsApp Button */}
-                  <Button asChild className="w-full">
-                    <a
-                      href={`https://wa.me/?text=I'm interested in booking ${name}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <MessageCircle className="h-5 w-5 mr-2" />
-                      {t('bookViaWhatsApp')}
-                    </a>
-                  </Button>
-
-                  <p className="text-center text-xs text-muted-foreground">
-                    {t('youWontBeCharged')}
-                  </p>
-                </div>
-
-                {/* Price Breakdown */}
-                <div className="mt-6 space-y-2 border-t border-border pt-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {currencySymbol}{price.toLocaleString()} x 1 day
-                    </span>
-                    <span className="text-foreground">
-                      {currencySymbol}{price.toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">{t('serviceFee')}</span>
-                    <span className="text-foreground">
-                      {currencySymbol}{Math.round(price * 0.1).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between border-t border-border pt-2 font-semibold">
-                    <span>{t('total')}</span>
-                    <span>
-                      {currencySymbol}{Math.round(price * 1.1).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-                </CardContent>
-              </Card>
+              <div className="sticky top-24">
+                <BookingWidget
+                  boat={{
+                    id: boat.id,
+                    name: boat.name,
+                    slug: boat.slug,
+                    pricePerDayUsd: boat.priceUSD,
+                    pricePerDayEur: boat.priceEUR,
+                    pricePerDayGbp: boat.priceGBP,
+                    pricePerDayBrl: boat.priceBRL,
+                    captainPricePerDayUsd: boat.captainPricePerDayUsd,
+                    captainPricePerDayEur: boat.captainPricePerDayEur,
+                    captainPricePerDayGbp: boat.captainPricePerDayGbp,
+                    captainPricePerDayBrl: boat.captainPricePerDayBrl,
+                    capacity: boat.capacity,
+                  }}
+                  locale={localeTyped}
+                  onSuccess={(bookingReference) => {
+                    // Navigate to confirmation page
+                    router.push(`/${locale}/booking/confirmation/${bookingReference}`);
+                  }}
+                />
+              </div>
             </div>
           </div>
         </Container>
