@@ -17,7 +17,11 @@ class APIClient {
     // Request interceptor for JWT token
     this.client.interceptors.request.use(
       (config) => {
-        if (typeof window !== 'undefined') {
+        // List of public endpoints that should NOT have auth headers
+        const publicEndpoints = ['/bookings/inquiries', '/auth/login', '/auth/register'];
+        const isPublicEndpoint = publicEndpoints.some(endpoint => config.url?.includes(endpoint));
+
+        if (typeof window !== 'undefined' && !isPublicEndpoint) {
           const token = localStorage.getItem('access_token');
           if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
