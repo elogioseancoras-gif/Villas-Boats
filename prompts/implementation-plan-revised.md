@@ -631,38 +631,144 @@ export default function BookBoatPage() {
 ---
 
 ### 👨‍💼 Wave 4: Admin Dashboard (Priority 4)
-**Estimated Time**: 10-14 hours
-**Dependencies**: Waves 1, 2, 3 complete
+**Completion**: ~5%
+**Estimated Time**: 16-18 hours
+**Dependencies**: Waves 1, 2, 3 complete ✅
+**Last Updated**: 2025-11-07
+
+#### Current State:
+**Backend**: ✅ 100% Ready
+- 33 REST endpoints implemented (18 admin-protected)
+- Boats CRUD: 11 endpoints (list, search, create, update, delete)
+- Bookings CRUD: 14 endpoints (status management, filters, notes)
+- Locations CRUD: 7 endpoints
+- All CRUD operations protected with `@PreAuthorize("hasRole('ADMIN')")`
+
+**Frontend Infrastructure**: ✅ 90% Ready
+- API services complete (boat, booking, location, auth, user)
+- TypeScript types matching backend DTOs
+- 11 ShadCN components installed (button, card, input, select, badge, etc.)
+- Authentication working (JWT + role-based access)
+- Admin login page functional
+
+**Admin UI**: ⚠️ ~5% Complete
+- ✅ Admin layout shell exists (`/backoffice/layout.tsx`)
+- ✅ Admin login page working (`/backoffice/login/page.tsx`)
+- ❌ Dashboard overview page (0%)
+- ❌ Bookings management interface (0%)
+- ❌ Boats management interface (0%)
+- ❌ Locations management interface (0%)
+- ❌ Customers view (0%)
+
+**Missing Components** (Need Installation):
+- ❌ Table component (for data tables)
+- ❌ Dialog/Modal component (for create/edit forms)
+- ❌ Alert component (for notifications)
+- ❌ Pagination component
+- ❌ Form component (with validation)
+- ❌ Checkbox component
 
 #### Tasks:
-1. **Admin Layout & Navigation** (2h)
-   - Admin sidebar with navigation
-   - Dashboard overview page
-   - Stats and metrics display
-   - Quick actions panel
 
-2. **Boat Management** (3h)
-   - Boats list table with pagination
-   - Create/edit boat form
-   - Image upload component
-   - Amenities management
-   - Boat status toggle (active/inactive)
+**Phase 1: Foundation & Setup** (1.5h)
+1. **Component Installation** (0.5h)
+   - Install ShadCN components: `table`, `dialog`, `alert`, `pagination`, `form`, `checkbox`
+   - Test component imports and basic usage
 
-3. **Booking Management** (2.5h)
-   - Bookings table with filters
-   - Booking details view
-   - Status management (confirm/cancel)
-   - Notes and communication
+2. **Admin Navigation & Layout** (1h)
+   - Create admin sidebar with navigation menu
+   - Setup route structure (`/backoffice/dashboard`, `/bookings`, `/boats`, `/locations`, `/customers`)
+   - Create reusable page layout component
+   - Add loading states and error boundaries
 
-4. **Location Management** (1.5h)
-   - Locations list
-   - Create/edit location form
-   - Coordinate picker/map integration
+**Phase 2: Bookings Management** (3.5h) 🔥 **HIGHEST PRIORITY**
+3. **Bookings Data Table** (1.5h)
+   - Data table with pagination and sorting
+   - Filter by status (PENDING, CONFIRMED, COMPLETED, CANCELLED)
+   - Filter by date range
+   - Search by booking reference or customer name
+   - Show key info: reference, customer, boat, dates, status, total price
 
-5. **User Management** (2h)
-   - Users table
-   - User details and roles
-   - Account activation/deactivation
+4. **Bookings Management Actions** (2h)
+   - View booking details modal (full info display)
+   - Status management dropdown (PENDING → CONFIRMED → COMPLETED/CANCELLED)
+   - Add admin notes field (internal notes, not visible to customer)
+   - Confirm booking button (with validation)
+   - Cancel booking button (with confirmation dialog)
+   - Show booking history/timeline
+
+**Phase 3: Boats Management** (3.5h)
+5. **Boats Data Table** (1h)
+   - Boats list with pagination
+   - Filter by status (ACTIVE, INACTIVE, MAINTENANCE)
+   - Filter by type (CATAMARAN, YACHT, SAILBOAT, SPEEDBOAT, MOTORBOAT)
+   - Search by name
+   - Show key info: name, type, capacity, price range, status
+
+6. **Boats CRUD Operations** (2.5h)
+   - Create boat modal form with:
+     * Multi-language name/description fields (EN, PT-BR, PT-PT, ES)
+     * Type selection dropdown
+     * Capacity inputs (min/max guests)
+     * Multi-currency pricing (EUR, USD, GBP, BRL)
+     * Status toggle
+     * Location assignment
+   - Edit boat modal (same form, pre-populated)
+   - Delete boat with confirmation dialog
+   - Validation for all required fields
+
+**Phase 4: Dashboard Overview** (2h)
+7. **Dashboard Stats & Metrics** (2h)
+   - 4 stat cards: Total Boats, Total Bookings, Revenue Estimate, Total Customers
+   - Recent bookings table (last 10 with quick actions)
+   - Quick actions panel (Create Boat, View Bookings)
+   - Real-time data fetching with React Query
+
+**Phase 5: Locations & Customers** (3.5h)
+8. **Locations Management** (2h)
+   - Locations data table
+   - Create location form (name, city, country, coordinates as text fields)
+   - Edit location form
+   - Delete location with confirmation
+   - Show boats count per location
+
+9. **Customers View** (1.5h)
+   - Customers data table (read-only)
+   - View customer details modal
+   - Show customer's booking history
+   - Show total bookings and total spend per customer
+
+**Phase 6: Testing & Polish** (2h)
+10. **Quality Assurance** (2h)
+    - Test all CRUD operations end-to-end
+    - Add error handling for API failures
+    - Add loading states for all async operations
+    - Responsive design testing (mobile, tablet, desktop)
+    - Fix any bugs discovered
+    - Add success/error toast notifications
+
+#### Deferred Items (Future Waves):
+These items are intentionally scoped out of Wave 4 and will be addressed in later waves:
+
+**❌ Image Upload** (Moved to Wave 5)
+- Reason: Requires backend endpoint for file upload + cloud storage setup (Cloudinary/S3)
+- Complexity: Needs multipart/form-data handling, image optimization, CDN integration
+- Current workaround: Use placeholder images or direct URL input
+
+**❌ Map Integration** (Moved to Wave 5)
+- Reason: Requires Google Maps API or similar service integration
+- Complexity: API key management, interactive map component, coordinate picker
+- Current workaround: Use text input for lat/lng coordinates
+
+**❌ User CRUD Operations** (Needs backend implementation)
+- Reason: Backend only has GET /users/profile endpoint, no admin user management
+- Required backend: POST/PUT/DELETE /users endpoints with role management
+- Current scope: Read-only customers view showing booking history
+
+**❌ Advanced Analytics** (Moved to Wave 5)
+- Reason: Requires data aggregation, charting library, complex queries
+- Complexity: Revenue charts, booking trends, seasonal analysis
+- Current scope: Simple stat cards with total counts
 
 #### Code Example - Admin Dashboard:
 ```typescript
@@ -753,12 +859,50 @@ export default function AdminDashboard() {
 ```
 
 #### Quality Gates:
-- [ ] Admin routes protected by role check
-- [ ] All CRUD operations work correctly
-- [ ] Forms have proper validation
-- [ ] Images upload successfully
-- [ ] Tables have sorting and filtering
-- [ ] Dashboard stats update in real-time
+**Security & Access:**
+- [ ] Admin routes protected by role check (ADMIN role required)
+- [ ] JWT authentication working for all admin endpoints
+- [ ] Unauthorized access redirects to login page
+
+**Bookings Management:**
+- [ ] Bookings table displays all bookings with pagination
+- [ ] Status filtering works (PENDING, CONFIRMED, COMPLETED, CANCELLED)
+- [ ] Date range filtering works correctly
+- [ ] Search by booking reference or customer name works
+- [ ] View booking details modal shows complete information
+- [ ] Confirm booking action updates status to CONFIRMED
+- [ ] Cancel booking action updates status to CANCELLED
+- [ ] Admin notes can be added and saved
+
+**Boats Management:**
+- [ ] Boats table displays all boats with pagination
+- [ ] Create boat form validates and submits successfully
+- [ ] Edit boat form pre-populates and updates correctly
+- [ ] Delete boat with confirmation dialog works
+- [ ] Multi-language fields (name, description) work for all 4 languages
+- [ ] Multi-currency pricing saves correctly (EUR, USD, GBP, BRL)
+- [ ] Status toggle (ACTIVE/INACTIVE/MAINTENANCE) works
+
+**Locations Management:**
+- [ ] Locations table displays all locations
+- [ ] Create location form works with coordinate inputs
+- [ ] Edit location form updates correctly
+- [ ] Delete location with confirmation works
+- [ ] Boats count per location displays correctly
+
+**Dashboard:**
+- [ ] Dashboard stats cards show correct counts
+- [ ] Recent bookings table displays last 10 bookings
+- [ ] Quick actions navigate to correct pages
+
+**General UI/UX:**
+- [ ] All tables have sorting capability
+- [ ] All tables have pagination working
+- [ ] Loading states show during API calls
+- [ ] Error messages display for failed operations
+- [ ] Success notifications appear for successful actions
+- [ ] Responsive design works on mobile, tablet, desktop
+- [ ] All forms have proper validation with error messages
 
 ---
 
