@@ -6,6 +6,7 @@ import { Layout } from '@/components/layout';
 import { CurrencyProvider } from '@/app/contexts/CurrencyContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { QueryProvider } from '@/app/providers/QueryProvider';
+import { Toaster } from 'sonner';
 import { locales } from '@/i18n/request';
 import '../globals.css';
 
@@ -75,6 +76,7 @@ export default async function LocaleLayout({
             <NextIntlClientProvider locale={locale} messages={messages}>
               <CurrencyProvider>
                 <Layout>{children}</Layout>
+                <Toaster position="top-right" />
               </CurrencyProvider>
             </NextIntlClientProvider>
           </AuthProvider>
