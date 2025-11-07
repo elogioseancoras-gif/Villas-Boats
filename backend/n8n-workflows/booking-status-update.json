@@ -1,0 +1,283 @@
+{
+  "name": "Booking Status Update",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "booking-status-update",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 400],
+      "webhookId": "booking-status-update"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equals",
+              "value2": "CONFIRMED"
+            }
+          ]
+        }
+      },
+      "id": "check-confirmed",
+      "name": "Status is CONFIRMED?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equals",
+              "value2": "CANCELLED"
+            }
+          ]
+        }
+      },
+      "id": "check-cancelled",
+      "name": "Status is CANCELLED?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "operation": "equals",
+              "value2": "COMPLETED"
+            }
+          ]
+        }
+      },
+      "id": "check-completed",
+      "name": "Status is COMPLETED?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 600]
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@villasboats.com",
+        "toEmail": "={{ $json.customer_email }}",
+        "subject": "✅ Booking Confirmed - {{ $json.booking_reference }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }\n    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n    .detail { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }\n    .label { font-weight: bold; color: #28a745; }\n    .important { background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0; }\n    .footer { text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 0.9em; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>✅ Your Booking is Confirmed!</h1>\n      <p>Reference: {{ $json.booking_reference }}</p>\n    </div>\n    <div class=\"content\">\n      <p>Dear {{ $json.customer_name }},</p>\n      <p>Great news! Your boat booking has been confirmed. We're excited to have you aboard!</p>\n      \n      <h3>📋 Confirmed Booking Details:</h3>\n      <div class=\"detail\">\n        <span class=\"label\">Boat:</span> {{ $json.boat_name }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Dates:</span> {{ $json.start_datetime }} to {{ $json.end_datetime }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Guests:</span> {{ $json.guest_count }} people\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Captain:</span> {{ $json.needs_captain ? 'Included ⚓' : 'Not included' }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Total Price:</span> {{ $json.total_price }} {{ $json.currency }}\n      </div>\n      \n      <div class=\"important\">\n        <strong>📍 What's Next?</strong><br>\n        • Check-in location and time will be sent 48 hours before your trip<br>\n        • Please arrive 15 minutes early for safety briefing<br>\n        • Bring valid ID and confirmation email<br>\n        • Contact us at {{ $json.whatsapp_number }} for any questions\n      </div>\n      \n      <p>We look forward to providing you with an unforgettable experience!</p>\n      \n      <div class=\"footer\">\n        <p><strong>Villas Boats Team</strong></p>\n        <p style=\"font-size: 0.85em; color: #999;\">For support, contact us at {{ $json.whatsapp_number }}</p>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-confirmed",
+      "name": "Email - Confirmed",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 100],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@villasboats.com",
+        "toEmail": "={{ $json.customer_email }}",
+        "subject": "❌ Booking Cancelled - {{ $json.booking_reference }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }\n    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n    .detail { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }\n    .label { font-weight: bold; color: #dc3545; }\n    .info { background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; margin: 20px 0; }\n    .footer { text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 0.9em; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>❌ Booking Cancelled</h1>\n      <p>Reference: {{ $json.booking_reference }}</p>\n    </div>\n    <div class=\"content\">\n      <p>Dear {{ $json.customer_name }},</p>\n      <p>Your booking has been cancelled as requested.</p>\n      \n      <h3>📋 Cancelled Booking Details:</h3>\n      <div class=\"detail\">\n        <span class=\"label\">Boat:</span> {{ $json.boat_name }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Original Dates:</span> {{ $json.start_datetime }} to {{ $json.end_datetime }}\n      </div>\n      {{ $json.cancellation_reason ? '<div class=\"detail\"><span class=\"label\">Reason:</span> ' + $json.cancellation_reason + '</div>' : '' }}\n      \n      <div class=\"info\">\n        <strong>💰 Refund Information:</strong><br>\n        If you paid a deposit or full payment, our team will process your refund according to our cancellation policy. You'll receive a separate email with refund details within 3-5 business days.\n      </div>\n      \n      <p>We're sorry to see this booking cancelled. If you'd like to book for different dates or have any questions, please don't hesitate to contact us!</p>\n      \n      <div class=\"footer\">\n        <p><strong>Villas Boats Team</strong></p>\n        <p style=\"font-size: 0.85em; color: #999;\">Contact us at {{ $json.whatsapp_number }}</p>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-cancelled",
+      "name": "Email - Cancelled",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 300],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@villasboats.com",
+        "toEmail": "={{ $json.customer_email }}",
+        "subject": "🎉 Thank You for Sailing with Us! - {{ $json.booking_reference }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }\n    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n    .detail { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }\n    .label { font-weight: bold; color: #667eea; }\n    .review { background: #e8f4f8; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; text-align: center; }\n    .footer { text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 0.9em; }\n    .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 10px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🎉 Thank You for Sailing with Us!</h1>\n      <p>Reference: {{ $json.booking_reference }}</p>\n    </div>\n    <div class=\"content\">\n      <p>Dear {{ $json.customer_name }},</p>\n      <p>We hope you had an amazing time on your boat adventure! Your booking has been marked as completed.</p>\n      \n      <h3>📋 Trip Summary:</h3>\n      <div class=\"detail\">\n        <span class=\"label\">Boat:</span> {{ $json.boat_name }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Dates:</span> {{ $json.start_datetime }} to {{ $json.end_datetime }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Guests:</span> {{ $json.guest_count }} people\n      </div>\n      \n      <div class=\"review\">\n        <h3>⭐ Share Your Experience!</h3>\n        <p>We'd love to hear about your trip! Your feedback helps us improve and helps others choose their perfect boat experience.</p>\n        <a href=\"https://villasboats.com/reviews/new?booking={{ $json.booking_reference }}\" class=\"button\">Leave a Review</a>\n      </div>\n      \n      <p>We'd be thrilled to have you back for another adventure! As a returning customer, you'll receive a special discount on your next booking.</p>\n      \n      <div class=\"footer\">\n        <p><strong>Villas Boats Team</strong></p>\n        <p style=\"font-size: 0.85em; color: #999;\">Contact us anytime at {{ $json.whatsapp_number }}</p>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-completed",
+      "name": "Email - Completed",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 500],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@villasboats.com",
+        "toEmail": "admin@villasboats.com",
+        "subject": "📊 Booking Status Updated: {{ $json.status }} - {{ $json.booking_reference }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #2c3e50; color: white; padding: 20px; text-align: center; }\n    .content { background: #f9f9f9; padding: 20px; }\n    .detail { margin: 10px 0; padding: 10px; background: white; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h2>Booking Status Updated</h2>\n      <p>{{ $json.booking_reference }} → {{ $json.status }}</p>\n    </div>\n    <div class=\"content\">\n      <div class=\"detail\">Customer: {{ $json.customer_name }} ({{ $json.customer_email }})</div>\n      <div class=\"detail\">Boat: {{ $json.boat_name }}</div>\n      <div class=\"detail\">Dates: {{ $json.start_datetime }} to {{ $json.end_datetime }}</div>\n      <div class=\"detail\">New Status: <strong>{{ $json.status }}</strong></div>\n      {{ $json.cancellation_reason ? '<div class=\"detail\">Cancellation Reason: ' + $json.cancellation_reason + '</div>' : '' }}\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-admin-notify",
+      "name": "Notify Admin",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [850, 400],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Status update notifications sent\", \"booking_reference\": $json.booking_reference, \"status\": $json.status } }}"
+      },
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 400]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Status is CONFIRMED?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Status is CANCELLED?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Status is COMPLETED?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status is CONFIRMED?": {
+      "main": [
+        [
+          {
+            "node": "Email - Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status is CANCELLED?": {
+      "main": [
+        [
+          {
+            "node": "Email - Cancelled",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status is COMPLETED?": {
+      "main": [
+        [
+          {
+            "node": "Email - Completed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email - Confirmed": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email - Cancelled": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email - Completed": {
+      "main": [
+        [
+          {
+            "node": "Notify Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify Admin": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-06T14:00:00.000Z",
+      "updatedAt": "2025-01-06T14:00:00.000Z",
+      "id": "1",
+      "name": "booking"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-06T14:00:00.000Z",
+  "versionId": "1"
+}

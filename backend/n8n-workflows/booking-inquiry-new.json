@@ -1,0 +1,169 @@
+{
+  "name": "Booking Inquiry - New",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "booking-inquiry-new",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "booking-inquiry-new"
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@villasboats.com",
+        "toEmail": "={{ $json.customer_email }}",
+        "subject": "🚤 Booking Inquiry Received - {{ $json.booking_reference }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }\n    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n    .detail { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }\n    .label { font-weight: bold; color: #667eea; }\n    .footer { text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 0.9em; }\n    .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🚤 Booking Inquiry Received!</h1>\n      <p>Reference: {{ $json.booking_reference }}</p>\n    </div>\n    <div class=\"content\">\n      <p>Dear {{ $json.customer_name }},</p>\n      <p>Thank you for your interest in booking with Villas Boats! We've received your inquiry and our team will review it shortly.</p>\n      \n      <h3>📋 Booking Details:</h3>\n      <div class=\"detail\">\n        <span class=\"label\">Boat:</span> {{ $json.boat_name }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Dates:</span> {{ $json.start_datetime }} to {{ $json.end_datetime }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Guests:</span> {{ $json.guest_count }} people\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Captain Needed:</span> {{ $json.needs_captain ? 'Yes' : 'No' }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Total Price:</span> {{ $json.total_price }} {{ $json.currency }}\n      </div>\n      {{ $json.customer_notes ? '<div class=\"detail\"><span class=\"label\">Your Notes:</span> ' + $json.customer_notes + '</div>' : '' }}\n      \n      <p style=\"margin-top: 20px;\">Our team will contact you within 24 hours to confirm availability and finalize your booking.</p>\n      \n      <div class=\"footer\">\n        <p>Best regards,<br><strong>Villas Boats Team</strong></p>\n        <p style=\"font-size: 0.85em; color: #999;\">This is an automated confirmation. Please do not reply to this email.</p>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-customer",
+      "name": "Email to Customer",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [450, 200],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@villasboats.com",
+        "toEmail": "admin@villasboats.com",
+        "subject": "🔔 New Booking Inquiry - {{ $json.booking_reference }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }\n    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n    .detail { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }\n    .label { font-weight: bold; color: #2c3e50; }\n    .urgent { background: #ffe5e5; border-left: 4px solid #e74c3c; padding: 15px; margin: 20px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🔔 New Booking Inquiry</h1>\n      <p>Reference: {{ $json.booking_reference }}</p>\n    </div>\n    <div class=\"content\">\n      <div class=\"urgent\">\n        <strong>⚡ Action Required:</strong> New customer inquiry needs review and confirmation\n      </div>\n      \n      <h3>👤 Customer Information:</h3>\n      <div class=\"detail\">\n        <span class=\"label\">Name:</span> {{ $json.customer_name }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Email:</span> {{ $json.customer_email }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Phone:</span> {{ $json.customer_phone }}\n      </div>\n      \n      <h3>🚤 Booking Details:</h3>\n      <div class=\"detail\">\n        <span class=\"label\">Boat:</span> {{ $json.boat_name }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Dates:</span> {{ $json.start_datetime }} to {{ $json.end_datetime }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Guests:</span> {{ $json.guest_count }} people\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Captain Needed:</span> {{ $json.needs_captain ? 'Yes ⚓' : 'No' }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Total Price:</span> {{ $json.total_price }} {{ $json.currency }}\n      </div>\n      {{ $json.customer_notes ? '<div class=\"detail\"><span class=\"label\">Customer Notes:</span> ' + $json.customer_notes + '</div>' : '' }}\n      \n      <p style=\"margin-top: 30px; padding: 15px; background: #e8f4f8; border-radius: 5px;\">\n        <strong>Next Steps:</strong><br>\n        1. Review boat availability for requested dates<br>\n        2. Contact customer within 24 hours<br>\n        3. Confirm or propose alternative dates\n      </p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-admin",
+      "name": "Email to Admin",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [450, 400],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/send",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $json.whatsapp_number }}"
+            },
+            {
+              "name": "text",
+              "value": "🔔 *NEW BOOKING INQUIRY*\\n\\n*Reference:* {{ $json.booking_reference }}\\n*Customer:* {{ $json.customer_name }}\\n*Phone:* {{ $json.customer_phone }}\\n*Email:* {{ $json.customer_email }}\\n\\n*Boat:* {{ $json.boat_name }}\\n*Dates:* {{ $json.start_datetime }} to {{ $json.end_datetime }}\\n*Guests:* {{ $json.guest_count }}\\n*Captain:* {{ $json.needs_captain ? 'Yes ⚓' : 'No' }}\\n*Price:* {{ $json.total_price }} {{ $json.currency }}\\n\\n{{ $json.customer_notes ? '*Notes:* ' + $json.customer_notes + '\\n\\n' : '' }}⏰ *Action:* Review and contact customer within 24h"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "whatsapp-notification",
+      "name": "WhatsApp to Admin",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [450, 600],
+      "notes": "WhatsApp Business API integration - configure with your WhatsApp Business account"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Notifications sent successfully\", \"booking_reference\": $json.booking_reference } }}"
+      },
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Email to Customer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email to Admin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp to Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email to Customer": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email to Admin": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp to Admin": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-06T14:00:00.000Z",
+      "updatedAt": "2025-01-06T14:00:00.000Z",
+      "id": "1",
+      "name": "booking"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-06T14:00:00.000Z",
+  "versionId": "1"
+}

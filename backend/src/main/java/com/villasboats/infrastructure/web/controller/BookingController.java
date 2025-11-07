@@ -3,6 +3,7 @@ package com.villasboats.infrastructure.web.controller;
 import com.villasboats.application.service.BookingService;
 import com.villasboats.domain.valueobject.BookingStatus;
 import com.villasboats.infrastructure.web.dto.request.CreateBookingRequest;
+import com.villasboats.infrastructure.web.dto.request.CreateInquiryRequest;
 import com.villasboats.infrastructure.web.dto.request.UpdateBookingRequest;
 import com.villasboats.infrastructure.web.dto.response.BookingResponse;
 import jakarta.validation.Valid;
@@ -93,6 +94,18 @@ public class BookingController {
             Authentication authentication) {
         UUID customerId = UUID.fromString(authentication.getName());
         BookingResponse response = bookingService.createBooking(request, customerId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    /**
+     * Create a booking inquiry from unauthenticated users.
+     * This endpoint accepts customer details directly and creates a lead user if needed.
+     * Triggers n8n workflow for email and WhatsApp notifications.
+     */
+    @PostMapping("/inquiries")
+    public ResponseEntity<BookingResponse> createInquiry(
+            @Valid @RequestBody CreateInquiryRequest request) {
+        BookingResponse response = bookingService.createInquiry(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

@@ -1,0 +1,132 @@
+{
+  "name": "Booking Inquiry - Follow-up",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "booking-inquiry-followup",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "booking-inquiry-followup"
+    },
+    {
+      "parameters": {
+        "fromEmail": "noreply@villasboats.com",
+        "toEmail": "={{ $json.customer_email }}",
+        "subject": "⏰ Following up on your Villas Boats inquiry - {{ $json.booking_reference }}",
+        "emailType": "html",
+        "message": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }\n    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n    .detail { margin: 10px 0; padding: 10px; background: white; border-radius: 5px; }\n    .label { font-weight: bold; color: #667eea; }\n    .cta { text-align: center; margin: 30px 0; }\n    .button { display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }\n    .footer { text-align: center; margin-top: 30px; padding: 20px; color: #666; font-size: 0.9em; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>⏰ Still Interested in Your Boat Adventure?</h1>\n      <p>Reference: {{ $json.booking_reference }}</p>\n    </div>\n    <div class=\"content\">\n      <p>Dear {{ $json.customer_name }},</p>\n      <p>We noticed you recently inquired about booking one of our boats, and we wanted to follow up to see if you're still interested or if you have any questions!</p>\n      \n      <h3>📋 Your Inquiry Details:</h3>\n      <div class=\"detail\">\n        <span class=\"label\">Boat:</span> {{ $json.boat_name }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Dates:</span> {{ $json.start_datetime }} to {{ $json.end_datetime }}\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Guests:</span> {{ $json.guest_count }} people\n      </div>\n      <div class=\"detail\">\n        <span class=\"label\">Total Price:</span> {{ $json.total_price }} {{ $json.currency }}\n      </div>\n      \n      <div style=\"background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0;\">\n        <strong>⚡ Limited Availability!</strong><br>\n        These dates are popular - secure your booking soon to avoid disappointment.\n      </div>\n      \n      <div class=\"cta\">\n        <a href=\"https://villasboats.com/bookings/{{ $json.booking_reference }}\" class=\"button\">Complete Your Booking</a>\n      </div>\n      \n      <p>If you have any questions or need help with your booking, simply reply to this email or call us at <strong>{{ $json.whatsapp_number }}</strong>.</p>\n      \n      <div class=\"footer\">\n        <p>We'd love to help make your boat adventure unforgettable!</p>\n        <p><strong>Villas Boats Team</strong></p>\n      </div>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "email-followup",
+      "name": "Email Follow-up",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/send",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "phone",
+              "value": "={{ $json.customer_phone }}"
+            },
+            {
+              "name": "text",
+              "value": "Hi {{ $json.customer_name }}! 👋\\n\\nWe wanted to follow up on your boat booking inquiry (Ref: *{{ $json.booking_reference }}*).\\n\\n🚤 *{{ $json.boat_name }}*\\n📅 {{ $json.start_datetime }} to {{ $json.end_datetime }}\\n👥 {{ $json.guest_count }} guests\\n💰 {{ $json.total_price }} {{ $json.currency }}\\n\\nAre you still interested? We'd love to help finalize your booking!\\n\\nReply to this message or call us at {{ $json.whatsapp_number }} if you have any questions.\\n\\n⛵ Villas Boats Team"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "whatsapp-followup",
+      "name": "WhatsApp Follow-up",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [450, 500],
+      "notes": "Optional WhatsApp follow-up to customer"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"Follow-up sent successfully\", \"booking_reference\": $json.booking_reference } }}"
+      },
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Email Follow-up",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp Follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Follow-up": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Follow-up": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-01-06T14:00:00.000Z",
+      "updatedAt": "2025-01-06T14:00:00.000Z",
+      "id": "1",
+      "name": "booking"
+    }
+  ],
+  "triggerCount": 0,
+  "updatedAt": "2025-01-06T14:00:00.000Z",
+  "versionId": "1"
+}
