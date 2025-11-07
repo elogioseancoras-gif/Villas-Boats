@@ -113,6 +113,12 @@ export interface Boat {
   priceGBP: number;
   priceBRL: number;
 
+  // Captain pricing (optional, multi-currency)
+  captainPricePerDayUsd?: number;
+  captainPricePerDayEur?: number;
+  captainPricePerDayGbp?: number;
+  captainPricePerDayBrl?: number;
+
   // Media
   images: Image[];
   videos?: Video[];
