@@ -9,6 +9,7 @@ import com.villasboats.domain.repository.BookingRepository;
 import com.villasboats.domain.repository.UserRepository;
 import com.villasboats.domain.valueobject.*;
 import com.villasboats.infrastructure.web.dto.request.CreateBookingRequest;
+import com.villasboats.infrastructure.web.dto.request.CreateInquiryRequest;
 import com.villasboats.infrastructure.web.dto.request.UpdateBookingRequest;
 import com.villasboats.infrastructure.web.dto.response.BoatResponse;
 import com.villasboats.infrastructure.web.dto.response.BookingResponse;
@@ -25,7 +26,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,6 +41,7 @@ public class BookingService {
     private final BookingRepository bookingRepository;
     private final BoatRepository boatRepository;
     private final UserRepository userRepository;
+    private final WebhookService webhookService;
 
     public List<BookingResponse> getAllBookings() {
         return bookingRepository.findAll().stream()
@@ -155,6 +161,150 @@ public class BookingService {
 
         booking = bookingRepository.save(booking);
         return toResponse(booking);
+    }
+
+    /**
+     * Create a booking inquiry from unauthenticated users.
+     * Accepts customer details directly, creates lead user if needed, and triggers n8n workflow.
+     *
+     * @param request CreateInquiryRequest with booking and customer details
+     * @return BookingResponse with inquiry details
+     */
+    @Transactional
+    public BookingResponse createInquiry(CreateInquiryRequest request) {
+        // Validate dates - ALLOW SAME DAY BOOKINGS (endDatetime >= startDatetime)
+        if (request.getEndDatetime().isBefore(request.getStartDatetime())) {
+            throw new IllegalArgumentException("End date cannot be before start date");
+        }
+
+        // Find boat
+        Boat boat = boatRepository.findById(request.getBoatId())
+                .orElseThrow(() -> new EntityNotFoundException("Boat not found with id: " + request.getBoatId()));
+
+        // Find or create lead user (no authentication required)
+        User customer = findOrCreateLeadUser(
+                request.getEmail(),
+                request.getFullName(),
+                request.getPhone()
+        );
+
+        // Check boat availability
+        if (bookingRepository.existsConflictingBooking(boat.getId(), request.getStartDatetime(), request.getEndDatetime())) {
+            throw new IllegalStateException("Boat is not available for the selected dates");
+        }
+
+        // Validate guest count
+        if (request.getGuestCount() > boat.getCapacity()) {
+            throw new IllegalArgumentException("Guest count exceeds boat capacity");
+        }
+
+        // Validate captain requirement
+        if (boat.getCaptainRequired() && !request.getNeedsCaptain()) {
+            throw new IllegalArgumentException("This boat requires a captain");
+        }
+
+        // Calculate days - same-day bookings count as 1 day
+        long days = ChronoUnit.DAYS.between(request.getStartDatetime().toLocalDate(), request.getEndDatetime().toLocalDate());
+        if (days < 1) {
+            days = 1; // Minimum 1 day (includes same-day bookings)
+        }
+
+        // Get prices based on currency
+        BigDecimal boatPrice = getPriceForCurrency(boat, request.getCurrency());
+        BigDecimal captainPrice = request.getNeedsCaptain() ? getCaptainPriceForCurrency(boat, request.getCurrency()) : BigDecimal.ZERO;
+
+        // Calculate totals
+        BigDecimal subtotal = boatPrice.multiply(BigDecimal.valueOf(days));
+        if (captainPrice.compareTo(BigDecimal.ZERO) > 0) {
+            subtotal = subtotal.add(captainPrice.multiply(BigDecimal.valueOf(days)));
+        }
+
+        BigDecimal taxPercentage = BigDecimal.valueOf(0); // Can be configured
+        BigDecimal taxAmount = subtotal.multiply(taxPercentage).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+        BigDecimal totalPrice = subtotal.add(taxAmount);
+
+        // Generate unique booking reference
+        String bookingReference = generateBookingReference();
+
+        // Create booking with PENDING status
+        Booking booking = Booking.builder()
+                .bookingReference(bookingReference)
+                .boat(boat)
+                .customer(customer)
+                .startDatetime(request.getStartDatetime())
+                .endDatetime(request.getEndDatetime())
+                .guestCount(request.getGuestCount())
+                .needsCaptain(request.getNeedsCaptain())
+                .currency(request.getCurrency())
+                .boatPricePerDay(boatPrice)
+                .captainPricePerDay(captainPrice)
+                .daysCount((int) days)
+                .extrasTotal(BigDecimal.ZERO)
+                .subtotal(subtotal)
+                .taxPercentage(taxPercentage)
+                .taxAmount(taxAmount)
+                .totalPrice(totalPrice)
+                .status(BookingStatus.PENDING)
+                .customerNotes(request.getCustomerNotes())
+                .build();
+
+        booking = bookingRepository.save(booking);
+
+        // Emit webhook to n8n for automation (email + WhatsApp)
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            Map<String, Object> webhookPayload = webhookService.buildInquiryPayload(
+                    bookingReference,
+                    customer.getFullName(),
+                    customer.getEmail(),
+                    customer.getPhone(),
+                    boat.getNameI18n().get("en"), // Default to English name
+                    request.getStartDatetime().format(formatter),
+                    request.getEndDatetime().format(formatter),
+                    request.getGuestCount(),
+                    request.getNeedsCaptain(),
+                    totalPrice.toString(),
+                    request.getCurrency().name(),
+                    request.getCustomerNotes()
+            );
+            webhookService.emitInquiryCreated(webhookPayload);
+        } catch (Exception e) {
+            // Log error but don't fail booking creation
+            System.err.println("Failed to emit inquiry webhook: " + e.getMessage());
+        }
+
+        return toResponse(booking);
+    }
+
+    /**
+     * Find existing user by email or create new lead user with dummy password.
+     * Lead users have role CUSTOMER but with a placeholder password.
+     *
+     * @param email User's email address
+     * @param fullName User's full name
+     * @param phone User's phone number
+     * @return User entity (existing or newly created)
+     */
+    private User findOrCreateLeadUser(String email, String fullName, String phone) {
+        Optional<User> existingUser = userRepository.findByEmail(email);
+
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
+
+        // Create new lead user with dummy password
+        User newUser = User.builder()
+                .email(email)
+                .fullName(fullName)
+                .phone(phone)
+                .passwordHash("LEAD_USER_NO_PASSWORD") // Dummy password for lead users
+                .role(UserRole.CUSTOMER)
+                .preferredLanguage(Language.EN)
+                .isActive(true) // Lead users are active by default
+                .isEmailVerified(false) // Lead users need to verify email later
+                .build();
+
+        return userRepository.save(newUser);
     }
 
     @Transactional
