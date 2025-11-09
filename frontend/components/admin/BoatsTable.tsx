@@ -43,7 +43,8 @@ import {
   DollarSign,
 } from 'lucide-react';
 import { Boat, BoatType, BoatStatus } from '@/types';
-import { cn } from '@/lib/utils';
+import { BoatService } from '@/lib/api/services/boat.service';
+import { adaptBoats } from '@/lib/api/adapters/boat.adapter';
 
 interface BoatsTableProps {
   locale?: 'en' | 'pt-BR' | 'pt-PT' | 'es';
@@ -101,24 +102,24 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
       setLoading(true);
       setError(null);
 
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: pageSize.toString(),
-      });
+      // Build search params for BoatService
+      const params: any = {
+        page: currentPage - 1, // API uses 0-based indexing
+        size: pageSize,
+      };
 
-      if (searchQuery) params.append('search', searchQuery);
-      if (typeFilter !== 'all') params.append('type', typeFilter);
-      if (statusFilter !== 'all') params.append('status', statusFilter);
+      if (typeFilter !== 'all') params.type = typeFilter;
+      if (statusFilter !== 'all') params.status = statusFilter;
 
-      const response = await fetch(`/api/boats?${params}`);
+      // Note: BoatSearchParams doesn't include a search/query field
+      // If search is needed, would need to use BoatService.search() instead
+      // For now, using getPage() with type and status filters
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch boats');
-      }
+      const response = await BoatService.getPage(params);
+      const adaptedBoats = adaptBoats(response.content);
 
-      const data = await response.json();
-      setBoats(data.boats || []);
-      setTotalBoats(data.total || 0);
+      setBoats(adaptedBoats);
+      setTotalBoats(response.page.totalElements);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load boats');
       console.error('Error fetching boats:', err);

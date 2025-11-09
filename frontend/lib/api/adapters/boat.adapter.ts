@@ -1,5 +1,5 @@
 import type { BoatResponse, LocationResponse } from '@/types/api';
-import type { Boat, Location, Image, BoatType as FrontendBoatType, BoatStatus as FrontendBoatStatus } from '@/types';
+import type { Boat, Location, Image, BoatType as FrontendBoatType, BoatStatus as FrontendBoatStatus, TranslatableString } from '@/types';
 
 /**
  * Converts backend LocationResponse to frontend Location type
@@ -16,7 +16,7 @@ export function adaptLocation(location: LocationResponse): Location {
           longitude: location.longitude,
         }
       : undefined,
-    description: location.descriptionI18n as any,
+    description: location.descriptionI18n as TranslatableString,
     image: location.imageUrl || undefined,
   };
 }
@@ -31,7 +31,7 @@ export function adaptBoat(boat: BoatResponse): Boat {
         {
           id: `${boat.id}-primary`,
           url: boat.primaryImageUrl,
-          alt: boat.nameI18n as any,
+          alt: boat.nameI18n as TranslatableString,
           isPrimary: true,
         },
       ]
@@ -40,9 +40,9 @@ export function adaptBoat(boat: BoatResponse): Boat {
   return {
     id: boat.id,
     slug: boat.slug,
-    name: boat.nameI18n as any,
-    description: boat.descriptionI18n as any,
-    shortDescription: boat.shortDescriptionI18n as any,
+    name: boat.nameI18n as TranslatableString,
+    description: boat.descriptionI18n as TranslatableString,
+    shortDescription: boat.shortDescriptionI18n as TranslatableString,
     type: boat.type as FrontendBoatType,
     status: boat.status as FrontendBoatStatus,
 

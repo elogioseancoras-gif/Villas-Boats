@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BookingService } from '@/lib/api/services/booking.service';
-import { format, subDays, startOfDay, endOfDay } from 'date-fns';
+import { format, subDays, startOfDay } from 'date-fns';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
 interface DayData {
