@@ -181,7 +181,7 @@ const mockBoats: Boat[] = [
       'pt-PT': 'Explore as baías deslumbrantes do Rio numa lancha rápida. Experimente a emoção da velocidade enquanto aprecia as vistas deslumbrantes do Cristo Redentor e Pão de Açúcar.',
       es: 'Explora las impresionantes bahías de Río en una lancha rápida. Experimenta la emoción de la velocidad mientras disfrutas de las impresionantes vistas del Cristo Redentor y el Pan de Azúcar.',
     },
-    type: BoatType.SPEEDBOAT,
+    type: BoatType.MOTORBOAT,
     status: BoatStatus.ACTIVE,
     capacity: 8,
     length: 10,
