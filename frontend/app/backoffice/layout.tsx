@@ -1,6 +1,7 @@
 import { Inter, Outfit } from 'next/font/google';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { QueryProvider } from '@/app/providers/QueryProvider';
+import { AdminSidebar } from '@/components/admin/AdminSidebar';
 import '../globals.css';
 
 const inter = Inter({
@@ -30,7 +31,12 @@ export default function BackofficeLayout({
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
         <QueryProvider>
           <AuthProvider>
-            {children}
+            <div className="flex h-screen overflow-hidden bg-gray-50">
+              <AdminSidebar />
+              <main className="flex-1 overflow-y-auto">
+                {children}
+              </main>
+            </div>
           </AuthProvider>
         </QueryProvider>
       </body>

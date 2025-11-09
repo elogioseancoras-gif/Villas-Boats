@@ -1,6 +1,6 @@
 'use client';
 
-import { Users, Ruler, Anchor, Gauge, Fuel, Bed, Waves } from 'lucide-react';
+import { Users, Ruler, Anchor, Bed, Waves } from 'lucide-react';
 import { Boat } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -45,22 +45,6 @@ export function BoatSpecs({ boat, className }: BoatSpecsProps) {
     });
   }
 
-  if (boat.enginePower) {
-    specs.push({
-      icon: Gauge,
-      label: 'Engine Power',
-      value: `${boat.enginePower} HP`,
-    });
-  }
-
-  if (boat.fuelType) {
-    specs.push({
-      icon: Fuel,
-      label: 'Fuel Type',
-      value: boat.fuelType,
-    });
-  }
-
   return (
     <div className={cn("rounded-lg border border-border bg-card p-6", className)}>
       <h2 className="mb-6 text-xl font-heading font-semibold text-foreground">
@@ -85,22 +69,22 @@ export function BoatSpecs({ boat, className }: BoatSpecsProps) {
       </div>
 
       {/* Additional Details */}
-      {(boat.yearBuilt || boat.manufacturer || boat.model) && (
+      {(boat.year || boat.make || boat.model) && (
         <div className="mt-6 border-t border-border pt-6">
           <h3 className="mb-4 text-sm font-medium uppercase tracking-wide text-muted-foreground">
             Additional Details
           </h3>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {boat.yearBuilt && (
+            {boat.year && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Year Built</span>
-                <span className="font-medium text-foreground">{boat.yearBuilt}</span>
+                <span className="font-medium text-foreground">{boat.year}</span>
               </div>
             )}
-            {boat.manufacturer && (
+            {boat.make && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Manufacturer</span>
-                <span className="font-medium text-foreground">{boat.manufacturer}</span>
+                <span className="font-medium text-foreground">{boat.make}</span>
               </div>
             )}
             {boat.model && (

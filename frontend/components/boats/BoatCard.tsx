@@ -72,7 +72,7 @@ export function BoatCard({
           <div className="relative h-64 sm:h-auto sm:w-80 flex-shrink-0 overflow-hidden">
             <Image
               src={boat.images[currentImageIndex]?.url || '/placeholder-boat.jpg'}
-              alt={boat.images[currentImageIndex]?.alt || name}
+              alt={boat.images[currentImageIndex]?.alt?.[locale] || boat.images[currentImageIndex]?.alt?.en || name}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-105"
               sizes="(max-width: 640px) 100vw, 320px"
@@ -215,7 +215,7 @@ export function BoatCard({
         <div className="relative h-56 overflow-hidden">
           <Image
             src={boat.images[currentImageIndex]?.url || '/placeholder-boat.jpg'}
-            alt={boat.images[currentImageIndex]?.alt || name}
+            alt={boat.images[currentImageIndex]?.alt?.[locale] || boat.images[currentImageIndex]?.alt?.en || name}
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

@@ -1,7 +1,7 @@
 # Villas Boats - Revised Implementation Plan
 
-**Last Updated**: 2025-11-07
-**Status**: Waves 1, 2, 3 & 3.6 Complete - Full Booking System Operational (Backend + Frontend)
+**Last Updated**: 2025-11-09
+**Status**: Waves 1, 2, 3, 3.6 Complete + Wave 4 Phases 2 & 3 Complete - Full Booking System + Partial Admin Dashboard
 
 ---
 
@@ -18,7 +18,7 @@ Based on comprehensive analysis of the existing codebase:
 - Multi-language i18n via JSONB
 - Comprehensive validation and error handling
 
-### Frontend Status: 🟢 ~75% Complete
+### Frontend Status: 🟢 ~78% Complete
 **Implemented (✅)**:
 - Next.js 16 project structure
 - next-intl i18n (EN, PT-BR, PT-PT, ES)
@@ -43,10 +43,9 @@ Based on comprehensive analysis of the existing codebase:
 - SEO with JSON-LD structured data
 
 **In Progress (🟡)**:
-- None - Ready for Wave 4 (Admin Dashboard)
+- **Admin dashboard** - Bookings and Boats management complete (~35% done), need Dashboard, Locations, Customers (Wave 4 - 6-8h remaining)
 
 **Missing (❌)**:
-- **Admin dashboard** - Only layout and login exist (~2% complete), no CRUD interfaces (Wave 4 - 10-14h)
 - **Testing** - E2E infrastructure exists (~15% complete), needs more scenarios and unit tests (Wave 6 - 5-7h)
 - **Production deployment** - No Docker, CI/CD, or infrastructure config (Wave 7 - 8-10h)
 
@@ -631,10 +630,11 @@ export default function BookBoatPage() {
 ---
 
 ### 👨‍💼 Wave 4: Admin Dashboard (Priority 4)
-**Completion**: ~5%
-**Estimated Time**: 16-18 hours
+**Completion**: ~35%
+**Time Spent**: ~6 hours
+**Estimated Remaining**: 6-8 hours
 **Dependencies**: Waves 1, 2, 3 complete ✅
-**Last Updated**: 2025-11-07
+**Last Updated**: 2025-11-09
 
 #### Current State:
 **Backend**: ✅ 100% Ready
@@ -651,12 +651,12 @@ export default function BookBoatPage() {
 - Authentication working (JWT + role-based access)
 - Admin login page functional
 
-**Admin UI**: ⚠️ ~5% Complete
+**Admin UI**: 🟢 ~35% Complete
 - ✅ Admin layout shell exists (`/backoffice/layout.tsx`)
 - ✅ Admin login page working (`/backoffice/login/page.tsx`)
 - ❌ Dashboard overview page (0%)
-- ❌ Bookings management interface (0%)
-- ❌ Boats management interface (0%)
+- ✅ **Bookings management interface (100%)** - BookingsTable component with full CRUD
+- ✅ **Boats management interface (100%)** - BoatsTable component with full CRUD (800+ lines)
 - ❌ Locations management interface (0%)
 - ❌ Customers view (0%)
 
@@ -681,41 +681,63 @@ export default function BookBoatPage() {
    - Create reusable page layout component
    - Add loading states and error boundaries
 
-**Phase 2: Bookings Management** (3.5h) 🔥 **HIGHEST PRIORITY**
-3. **Bookings Data Table** (1.5h)
-   - Data table with pagination and sorting
-   - Filter by status (PENDING, CONFIRMED, COMPLETED, CANCELLED)
-   - Filter by date range
-   - Search by booking reference or customer name
-   - Show key info: reference, customer, boat, dates, status, total price
+**Phase 2: Bookings Management** (3.5h) ✅ **COMPLETE**
+**Completed**: 2025-11-08
+**Time Spent**: ~3 hours
 
-4. **Bookings Management Actions** (2h)
-   - View booking details modal (full info display)
-   - Status management dropdown (PENDING → CONFIRMED → COMPLETED/CANCELLED)
-   - Add admin notes field (internal notes, not visible to customer)
-   - Confirm booking button (with validation)
-   - Cancel booking button (with confirmation dialog)
-   - Show booking history/timeline
+3. ✅ **Bookings Data Table** (1.5h)
+   - ✅ Data table with pagination and sorting
+   - ✅ Filter by status (PENDING, CONFIRMED, COMPLETED, CANCELLED)
+   - ✅ Filter by date range
+   - ✅ Search by booking reference or customer name
+   - ✅ Show key info: reference, customer, boat, dates, status, total price
 
-**Phase 3: Boats Management** (3.5h)
-5. **Boats Data Table** (1h)
-   - Boats list with pagination
-   - Filter by status (ACTIVE, INACTIVE, MAINTENANCE)
-   - Filter by type (CATAMARAN, YACHT, SAILBOAT, SPEEDBOAT, MOTORBOAT)
-   - Search by name
-   - Show key info: name, type, capacity, price range, status
+4. ✅ **Bookings Management Actions** (2h)
+   - ✅ View booking details modal (full info display)
+   - ✅ Status management dropdown (PENDING → CONFIRMED → COMPLETED/CANCELLED)
+   - ✅ Add admin notes field (internal notes, not visible to customer)
+   - ✅ Confirm booking button (with validation)
+   - ✅ Cancel booking button (with confirmation dialog)
+   - ✅ Show booking history/timeline
 
-6. **Boats CRUD Operations** (2.5h)
-   - Create boat modal form with:
-     * Multi-language name/description fields (EN, PT-BR, PT-PT, ES)
-     * Type selection dropdown
-     * Capacity inputs (min/max guests)
-     * Multi-currency pricing (EUR, USD, GBP, BRL)
-     * Status toggle
-     * Location assignment
-   - Edit boat modal (same form, pre-populated)
-   - Delete boat with confirmation dialog
-   - Validation for all required fields
+**Implementation Notes**:
+- **Component**: `/components/admin/BookingsTable.tsx` - Comprehensive bookings management interface
+- **Integration**: `/app/backoffice/bookings/page.tsx` - Integrated into backoffice
+- **Features**: Pagination (10/25/50/100 per page), status filters, date range filters, search by reference/customer
+- **CRUD Operations**: View details, update status, add admin notes, confirm/cancel bookings
+- **Build Status**: ✅ All TypeScript errors fixed, build successful
+
+**Phase 3: Boats Management** (3.5h) ✅ **COMPLETE**
+**Completed**: 2025-11-09
+**Time Spent**: ~3 hours
+
+5. ✅ **Boats Data Table** (1h)
+   - ✅ Boats list with pagination (10/25/50/100 per page)
+   - ✅ Filter by status (ACTIVE, INACTIVE, MAINTENANCE)
+   - ✅ Filter by type (SAILBOAT, MOTORBOAT, CATAMARAN, YACHT, JETSKI, FISHING_BOAT)
+   - ✅ Search by name, make, or model
+   - ✅ Show key info: name, type, capacity, price range, status
+
+6. ✅ **Boats CRUD Operations** (2.5h)
+   - ✅ Create boat modal form with:
+     * ✅ Multi-language name/description/shortDescription fields (EN, PT-BR, PT-PT, ES)
+     * ✅ Type selection dropdown (all 6 boat types)
+     * ✅ Capacity, cabins, bathrooms inputs
+     * ✅ Specifications (make, model, year, length)
+     * ✅ Multi-currency pricing (EUR, USD, GBP, BRL)
+     * ✅ Status toggle (ACTIVE, INACTIVE, MAINTENANCE)
+     * ✅ Location assignment
+   - ✅ Edit boat modal (same form, pre-populated)
+   - ✅ Delete boat with confirmation dialog
+   - ✅ Validation for all required fields
+
+**Implementation Notes**:
+- **Component**: `/components/admin/BoatsTable.tsx` - 800+ lines, comprehensive boats management interface
+- **Integration**: `/app/backoffice/boats/page.tsx` - Integrated into backoffice
+- **Features**: Full CRUD operations, multi-section form, responsive design
+- **Type Fixes**: Corrected BoatType enum (6 types), BoatStatus enum (ACTIVE/INACTIVE/MAINTENANCE)
+- **Prerender Fix**: Removed useTranslations hook to fix Next.js 16 prerender issue
+- **Build Status**: ✅ All TypeScript errors fixed, build successful
 
 **Phase 4: Dashboard Overview** (2h)
 7. **Dashboard Stats & Metrics** (2h)
@@ -1179,16 +1201,16 @@ volumes:
 | 2 | Authentication | 6h | ✅ 100% |
 | 3 | Booking System | 8h | ✅ 100% |
 | 3.6 | Widget Integration | 2.5h | ✅ 100% |
-| 4 | Admin Dashboard | 10-14h | ⚠️ ~2% |
+| 4 | Admin Dashboard | 12h spent / 6-8h remaining | 🟢 ~35% (Phases 2 & 3 complete) |
 | 5 | Advanced Features | 8-12h | ❌ 0% |
 | 6 | Testing & QA | 5-7h | 🟡 ~15% |
 | 7 | Production | 8-10h | ❌ 0% |
-| **TOTAL** | **Complete Platform** | **51.5-69.5h** | **✅ ~75% Current** |
+| **TOTAL** | **Complete Platform** | **57.5h spent / 15-23h remaining** | **✅ ~78% Current** |
 
-**Current Progress**: Waves 0, 1, 2, 3, and 3.6 complete (full booking system operational)
-**Next Priority**: Wave 4 (10-14h) - Admin Dashboard CRUD interfaces
-**Estimated Remaining**: ~21-30 hours to complete platform
-**Estimated Completion**: 1 week (full-time) or 2-2.5 weeks (part-time)
+**Current Progress**: Waves 0, 1, 2, 3, 3.6 complete + Wave 4 Phases 2 & 3 complete (booking system + bookings/boats management)
+**Next Priority**: Wave 4 remaining phases (6-8h) - Dashboard Overview, Locations & Customers management
+**Estimated Remaining**: ~15-23 hours to complete platform
+**Estimated Completion**: 3-5 days (full-time) or 1-1.5 weeks (part-time)
 
 ---
 
@@ -1231,26 +1253,30 @@ volumes:
 - **Wave 2**: Authentication & User Management (100%)
 - **Wave 3**: Booking System - Backend & Frontend (100%)
 - **Wave 3.6**: BookingWidget Integration (100%)
+- **Wave 4 - Phase 2**: Bookings Management (100%)
+- **Wave 4 - Phase 3**: Boats Management (100%)
 
-**Latest Completion**: Wave 3.6 finished on 2025-11-06
-- ✅ BookingWidget integrated into boat detail pages
-- ✅ Booking confirmation page with all 4 languages
-- ✅ E2E test suite with 4 comprehensive scenarios
-- ✅ End-to-end flow tested and working
+**Latest Completion**: Wave 4 Phases 2 & 3 finished on 2025-11-09
+- ✅ BookingsTable component with full CRUD operations
+- ✅ BoatsTable component (800+ lines) with full CRUD operations
+- ✅ Multi-language support for all boat fields
+- ✅ Multi-currency pricing support
+- ✅ All TypeScript compilation errors fixed
+- ✅ Build successful
 
-### 🎯 Current Priority: Wave 4 - Admin Dashboard
+### 🎯 Current Priority: Wave 4 - Admin Dashboard (Remaining Phases)
 
-**Critical Business Need**: Enable the team to manage boats, bookings, and customers efficiently. Without admin tools, all data management requires direct database access.
+**Critical Business Need**: Complete the admin dashboard with overview metrics, locations and customers management.
 
-**Current State**: Only 2 files exist (layout shell + login page, ~2% complete)
+**Current State**: ~35% complete (bookings and boats management done)
 
-**What's Needed** (10-14 hours):
-1. **Booking Management** (3h) - List, view, update status, add notes
-2. **Boat CRUD** (3h) - Create, edit, delete boats with full details
-3. **Customer Management** (2h) - View customers, booking history
-4. **Dashboard Analytics** (2h) - Statistics, charts, key metrics
-5. **Responsive Tables** (2h) - Filters, search, pagination
-6. **Testing & Polish** (2h) - Verify all CRUD operations work
+**What's Remaining** (6-8 hours):
+1. ✅ ~~**Booking Management** (3h)~~ - COMPLETE
+2. ✅ ~~**Boat CRUD** (3h)~~ - COMPLETE
+3. **Dashboard Analytics** (2h) - Statistics, charts, key metrics - NOT STARTED
+4. **Locations Management** (2h) - CRUD for locations - NOT STARTED
+5. **Customer Management** (2h) - View customers, booking history - NOT STARTED
+6. **Testing & Polish** (0.5h) - Final verification
 
 **Dependencies Ready**:
 - ✅ All backend admin endpoints exist (43 REST endpoints)

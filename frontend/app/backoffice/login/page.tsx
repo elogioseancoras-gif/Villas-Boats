@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Container } from '@/components/layout';
 import { Button } from '@/components/ui/button';
@@ -59,7 +59,7 @@ const translations = {
 
 type Language = keyof typeof translations;
 
-export default function BackofficeLoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [language, setLanguage] = useState<Language>('en');
@@ -174,5 +174,17 @@ export default function BackofficeLoginPage() {
         </Card>
       </Container>
     </div>
+  );
+}
+
+export default function BackofficeLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
