@@ -8,6 +8,7 @@ import { BoatService } from '@/lib/api/services/boat.service';
 import { LocationService } from '@/lib/api/services/location.service';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { BookingResponse } from '@/types/api';
+import { BoatStatus } from '@/types';
 
 interface StatsCardProps {
   title: string;
@@ -72,7 +73,7 @@ export function DashboardStats() {
   // Fetch all boats for statistics
   const { data: boatsData, isLoading: boatsLoading } = useQuery({
     queryKey: ['dashboard-boats'],
-    queryFn: () => BoatService.getAll({ status: 'ACTIVE' }),
+    queryFn: () => BoatService.getAll({ status: BoatStatus.ACTIVE }),
   });
 
   // Fetch all locations for statistics

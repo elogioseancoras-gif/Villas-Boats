@@ -189,14 +189,7 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
     if (!selectedBoat) return;
 
     try {
-      const response = await fetch(`/api/boats/${selectedBoat.id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete boat');
-      }
-
+      await BoatService.delete(selectedBoat.id);
       await fetchBoats();
       setIsDeleteOpen(false);
       setSelectedBoat(null);
@@ -208,22 +201,10 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
 
   const handleSave = async () => {
     try {
-      const url = selectedBoat
-        ? `/api/boats/${selectedBoat.id}`
-        : '/api/boats';
-
-      const method = selectedBoat ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to ${selectedBoat ? 'update' : 'create'} boat`);
+      if (selectedBoat) {
+        await BoatService.update(selectedBoat.id, formData as any);
+      } else {
+        await BoatService.create(formData as any);
       }
 
       await fetchBoats();

@@ -146,6 +146,58 @@ export interface UpdateLocationRequest {
   isActive?: boolean;
 }
 
+export interface CreateBoatRequest {
+  nameI18n: I18nString;
+  descriptionI18n: I18nString;
+  shortDescriptionI18n: I18nString;
+  type: BoatType;
+  status: BoatStatus;
+  make?: string;
+  model?: string;
+  year?: number;
+  lengthFeet?: number;
+  capacity: number;
+  cabins?: number;
+  bathrooms?: number;
+  locationId: string;
+  pricePerDayUsd: number;
+  pricePerDayEur: number;
+  pricePerDayGbp: number;
+  pricePerDayBrl: number;
+  captainRequired: boolean;
+  captainPricePerDayUsd?: number;
+  captainPricePerDayEur?: number;
+  captainPricePerDayGbp?: number;
+  captainPricePerDayBrl?: number;
+  primaryImageUrl?: string;
+}
+
+export interface UpdateBoatRequest {
+  nameI18n?: I18nString;
+  descriptionI18n?: I18nString;
+  shortDescriptionI18n?: I18nString;
+  type?: BoatType;
+  status?: BoatStatus;
+  make?: string;
+  model?: string;
+  year?: number;
+  lengthFeet?: number;
+  capacity?: number;
+  cabins?: number;
+  bathrooms?: number;
+  locationId?: string;
+  pricePerDayUsd?: number;
+  pricePerDayEur?: number;
+  pricePerDayGbp?: number;
+  pricePerDayBrl?: number;
+  captainRequired?: boolean;
+  captainPricePerDayUsd?: number;
+  captainPricePerDayEur?: number;
+  captainPricePerDayGbp?: number;
+  captainPricePerDayBrl?: number;
+  primaryImageUrl?: string;
+}
+
 // Search/Filter Parameters
 export interface BoatSearchParams {
   type?: BoatType;

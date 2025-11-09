@@ -456,7 +456,7 @@ export default function BoatDetailsPage({ params }: PageProps) {
                 <BookingWidget
                   boat={{
                     id: boat.id,
-                    name: boat.name as unknown as Record<string, string>,
+                    name: boat.name,
                     slug: boat.slug,
                     pricePerDayUsd: boat.priceUSD,
                     pricePerDayEur: boat.priceEUR,
