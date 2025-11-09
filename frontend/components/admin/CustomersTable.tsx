@@ -21,57 +21,49 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { BookingService } from '@/lib/api/services/booking.service';
-import type { BookingResponse, CustomerResponse } from '@/types/api';
-import { User, Mail, Phone, Globe, Eye, Calendar, Anchor, CheckCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { CustomerService } from '@/lib/api/services/customer.service';
+import type { BookingResponse, CustomerWithStatsResponse } from '@/types/api';
+import { User, Mail, Phone, Globe, Eye, Calendar, Anchor, CheckCircle, ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { format } from 'date-fns';
 
-interface CustomerWithBookings extends CustomerResponse {
-  bookingCount: number;
-  totalSpent: number;
-  lastBookingDate: string;
-}
-
+/**
+ * Optimized customers table with server-side pagination and search.
+ * Uses backend aggregation for statistics to handle large datasets efficiently.
+ */
 export function CustomersTable() {
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerWithBookings | null>(null);
-  const [customerBookings, setCustomerBookings] = useState<BookingResponse[]>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerWithStatsResponse | null>(null);
+  const [page, setPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const pageSize = 10;
 
-  // Fetch all bookings to extract unique customers
-  const { data: bookings, isLoading, error } = useQuery({
-    queryKey: ['all-bookings-for-customers'],
-    queryFn: () => BookingService.getAll(),
+  // Fetch paginated customers with statistics
+  const { data: customersData, isLoading, error } = useQuery({
+    queryKey: ['customers', page, searchQuery],
+    queryFn: () => CustomerService.getCustomers({
+      search: searchQuery,
+      page,
+      size: pageSize,
+      sortBy: 'lastBookingDate',
+      direction: 'DESC',
+    }),
+    staleTime: 2 * 60 * 1000, // Cache for 2 minutes
   });
 
-  // Extract unique customers from bookings
-  const customers: CustomerWithBookings[] = bookings
-    ? Object.values(
-        bookings.reduce((acc, booking) => {
-          const customerId = booking.customer.id;
-          if (!acc[customerId]) {
-            acc[customerId] = {
-              ...booking.customer,
-              bookingCount: 0,
-              totalSpent: 0,
-              lastBookingDate: booking.createdAt,
-            };
-          }
-          acc[customerId].bookingCount += 1;
-          acc[customerId].totalSpent += booking.totalPrice;
-          if (new Date(booking.createdAt) > new Date(acc[customerId].lastBookingDate)) {
-            acc[customerId].lastBookingDate = booking.createdAt;
-          }
-          return acc;
-        }, {} as Record<string, CustomerWithBookings>)
-      )
-    : [];
+  // Fetch customer bookings when viewing details
+  const { data: bookingsData, isLoading: bookingsLoading } = useQuery({
+    queryKey: ['customer-bookings', selectedCustomer?.id],
+    queryFn: () => selectedCustomer ? CustomerService.getCustomerBookings(selectedCustomer.id) : Promise.resolve(null),
+    enabled: selectedCustomer !== null,
+  });
 
-  const handleViewDetails = (customer: CustomerWithBookings) => {
+  const handleViewDetails = (customer: CustomerWithStatsResponse) => {
     setSelectedCustomer(customer);
-    // Filter bookings for this customer
-    const customerBookingList = bookings?.filter(
-      (b) => b.customer.id === customer.id
-    ) || [];
-    setCustomerBookings(customerBookingList);
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    setPage(0); // Reset to first page on new search
   };
 
   if (isLoading) {
@@ -91,6 +83,10 @@ export function CustomersTable() {
     );
   }
 
+  const customers = customersData?.content ?? [];
+  const totalCustomers = customersData?.page?.totalElements ?? 0;
+  const totalPages = customersData?.page?.totalPages ?? 0;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -100,7 +96,20 @@ export function CustomersTable() {
           <p className="text-gray-500 mt-1">View customer information and booking history</p>
         </div>
         <div className="text-sm text-gray-600">
-          Total Customers: <span className="font-semibold">{customers.length}</span>
+          Total Customers: <span className="font-semibold">{totalCustomers}</span>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className="flex items-center gap-4">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input
+            placeholder="Search by name or email..."
+            value={searchQuery}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="pl-10"
+          />
         </div>
       </div>
 
@@ -120,9 +129,7 @@ export function CustomersTable() {
           </TableHeader>
           <TableBody>
             {customers && customers.length > 0 ? (
-              customers
-                .sort((a, b) => new Date(b.lastBookingDate).getTime() - new Date(a.lastBookingDate).getTime())
-                .map((customer) => (
+              customers.map((customer) => (
                   <TableRow key={customer.id}>
                     <TableCell>
                       <div className="flex items-center gap-3">
@@ -172,7 +179,7 @@ export function CustomersTable() {
                       </span>
                     </TableCell>
                     <TableCell className="text-sm text-gray-500">
-                      {format(new Date(customer.lastBookingDate), 'MMM dd, yyyy')}
+                      {customer.lastBookingDate ? format(new Date(customer.lastBookingDate), 'MMM dd, yyyy') : 'No bookings'}
                     </TableCell>
                     <TableCell className="text-right">
                       <Button
@@ -197,6 +204,35 @@ export function CustomersTable() {
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between px-2">
+          <div className="text-sm text-gray-600">
+            Page {page + 1} of {totalPages}
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={page === 0}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+              disabled={page >= totalPages - 1}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Customer Details Modal */}
       <Dialog open={selectedCustomer !== null} onOpenChange={() => setSelectedCustomer(null)}>
@@ -254,8 +290,15 @@ export function CustomersTable() {
               {/* Booking History */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Booking History</h3>
-                <div className="space-y-3">
-                  {customerBookings.map((booking) => (
+                {bookingsLoading ? (
+                  <div className="space-y-3">
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                  </div>
+                ) : bookingsData && bookingsData.content.length > 0 ? (
+                  <div className="space-y-3">
+                    {bookingsData.content.map((booking) => (
                     <div
                       key={booking.id}
                       className="flex items-start gap-4 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
@@ -318,7 +361,10 @@ export function CustomersTable() {
                       </div>
                     </div>
                   ))}
-                </div>
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500 py-8">No bookings found for this customer.</p>
+                )}
               </div>
             </div>
           )}

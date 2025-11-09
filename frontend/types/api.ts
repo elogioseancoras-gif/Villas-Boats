@@ -274,3 +274,44 @@ export interface ErrorResponse {
   message: string;
   path: string;
 }
+
+// Admin Statistics
+export interface BookingsTrend {
+  current30Days: number;
+  previous30Days: number;
+  percentChange: number;
+}
+
+export interface AdminStatsResponse {
+  totalBookings: number;
+  pendingBookings: number;
+  confirmedBookings: number;
+  completedBookings: number;
+  activeBoats: number;
+  totalLocations: number;
+  totalRevenue: number;
+  uniqueCustomers: number;
+  bookingsTrend: BookingsTrend;
+}
+
+// Customer with Statistics
+export interface CustomerWithStatsResponse {
+  id: string;
+  email: string;
+  fullName: string;
+  phoneNumber: string | null;
+  preferredLanguage: Language;
+  bookingCount: number;
+  totalSpent: number;
+  lastBookingDate: string | null;
+  createdAt: string;
+}
+
+// Customer Search Parameters
+export interface CustomerSearchParams {
+  search?: string;
+  page?: number;
+  size?: number;
+  sortBy?: string;
+  direction?: 'ASC' | 'DESC';
+}
