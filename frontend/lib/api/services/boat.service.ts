@@ -1,5 +1,5 @@
 import { apiClient } from '../client';
-import type { BoatResponse, BoatSearchParams, PageResponse } from '@/types/api';
+import type { BoatResponse, BoatSearchParams, PageResponse, CreateBoatRequest, UpdateBoatRequest } from '@/types/api';
 
 export class BoatService {
   /**
@@ -58,5 +58,28 @@ export class BoatService {
   static async getFeatured(): Promise<BoatResponse[]> {
     const { data } = await apiClient.get<BoatResponse[]>('/boats/popular');
     return data;
+  }
+
+  /**
+   * Create a new boat
+   */
+  static async create(request: CreateBoatRequest): Promise<BoatResponse> {
+    const { data } = await apiClient.post<BoatResponse>('/boats', request);
+    return data;
+  }
+
+  /**
+   * Update an existing boat
+   */
+  static async update(id: string, request: UpdateBoatRequest): Promise<BoatResponse> {
+    const { data } = await apiClient.put<BoatResponse>(`/boats/${id}`, request);
+    return data;
+  }
+
+  /**
+   * Delete a boat
+   */
+  static async delete(id: string): Promise<void> {
+    await apiClient.delete(`/boats/${id}`);
   }
 }

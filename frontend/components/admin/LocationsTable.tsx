@@ -26,7 +26,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { LocationService } from '@/lib/api/services/location.service';
 import type { LocationResponse, CreateLocationRequest, UpdateLocationRequest } from '@/types/api';
-import { Plus, Edit, Trash2, MapPin, Globe, CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { Plus, Edit, Trash2, MapPin, Globe, CheckCircle, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 
 interface LocationFormData {
