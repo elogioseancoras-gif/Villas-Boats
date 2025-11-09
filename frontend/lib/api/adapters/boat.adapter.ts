@@ -16,7 +16,7 @@ export function adaptLocation(location: LocationResponse): Location {
           longitude: location.longitude,
         }
       : undefined,
-    description: location.descriptionI18n,
+    description: location.descriptionI18n as any,
     image: location.imageUrl || undefined,
   };
 }
@@ -31,7 +31,7 @@ export function adaptBoat(boat: BoatResponse): Boat {
         {
           id: `${boat.id}-primary`,
           url: boat.primaryImageUrl,
-          alt: boat.nameI18n,
+          alt: boat.nameI18n as any,
           isPrimary: true,
         },
       ]
@@ -40,9 +40,9 @@ export function adaptBoat(boat: BoatResponse): Boat {
   return {
     id: boat.id,
     slug: boat.slug,
-    name: boat.nameI18n,
-    description: boat.descriptionI18n,
-    shortDescription: boat.shortDescriptionI18n,
+    name: boat.nameI18n as any,
+    description: boat.descriptionI18n as any,
+    shortDescription: boat.shortDescriptionI18n as any,
     type: boat.type as FrontendBoatType,
     status: boat.status as FrontendBoatStatus,
 

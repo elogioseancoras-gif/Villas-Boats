@@ -57,7 +57,7 @@ export function BoatGallery({ images, boatName }: BoatGalleryProps) {
         <div className="group relative h-96 overflow-hidden rounded-lg lg:h-[500px]">
           <Image
             src={images[selectedImageIndex].url}
-            alt={images[selectedImageIndex].alt || boatName}
+            alt={images[selectedImageIndex].alt?.en || boatName}
             fill
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 66vw"
@@ -115,7 +115,7 @@ export function BoatGallery({ images, boatName }: BoatGalleryProps) {
               >
                 <Image
                   src={image.url}
-                  alt={image.alt || `${boatName} - Image ${index + 1}`}
+                  alt={image.alt?.en || `${boatName} - Image ${index + 1}`}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 25vw, 16vw"
@@ -162,7 +162,7 @@ export function BoatGallery({ images, boatName }: BoatGalleryProps) {
           <div className="relative h-[90vh] w-[90vw]">
             <Image
               src={images[lightboxIndex].url}
-              alt={images[lightboxIndex].alt || boatName}
+              alt={images[lightboxIndex].alt?.en || boatName}
               fill
               className="object-contain"
               sizes="90vw"

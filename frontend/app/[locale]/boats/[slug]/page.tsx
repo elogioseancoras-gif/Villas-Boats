@@ -10,7 +10,7 @@ import {
   BoatSpecs,
   BoatFeatures,
 } from '@/components/boats';
-import { Boat, BoatType } from '@/types';
+import { Boat, BoatType, BoatStatus } from '@/types';
 import { MapPin, Star, ArrowLeft, Heart, Share2 } from 'lucide-react';
 import { useCurrency } from '@/app/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
@@ -35,14 +35,13 @@ const mockBoats: Boat[] = [
       es: 'Experimente la aventura de navegación definitiva en este impresionante catamarán de 15m. Perfecto para familias y grupos, con cubiertas espaciosas, comodidades modernas y vistas impresionantes del océano. Nuestra tripulación experimentada garantiza un viaje seguro y memorable a lo largo de la costa del Algarve.',
     },
     type: BoatType.CATAMARAN,
+    status: BoatStatus.ACTIVE,
     capacity: 12,
     length: 15,
     cabins: 4,
     bathrooms: 3,
-    enginePower: 200,
-    fuelType: 'Diesel',
-    yearBuilt: 2020,
-    manufacturer: 'Lagoon',
+    year: 2020,
+    make: 'Lagoon',
     model: '50',
     location: {
       id: '1',
@@ -63,25 +62,25 @@ const mockBoats: Boat[] = [
       {
         id: '1',
         url: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1200&q=80',
-        alt: 'Luxury catamaran sailing',
+        alt: { en: 'Luxury catamaran sailing', 'pt-BR': 'Catamarã de luxo navegando', 'pt-PT': 'Catamarã de luxo à vela', es: 'Catamarán de lujo navegando' },
         isPrimary: true,
       },
       {
         id: '2',
         url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80',
-        alt: 'Catamaran deck view',
+        alt: { en: 'Catamaran deck view', 'pt-BR': 'Vista do deck do catamarã', 'pt-PT': 'Vista do convés do catamarã', es: 'Vista de la cubierta del catamarán' },
         isPrimary: false,
       },
       {
         id: '3',
         url: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80',
-        alt: 'Catamaran interior cabin',
+        alt: { en: 'Catamaran interior cabin', 'pt-BR': 'Cabine interior do catamarã', 'pt-PT': 'Cabina interior do catamarã', es: 'Cabina interior del catamarán' },
         isPrimary: false,
       },
       {
         id: '4',
         url: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=1200&q=80',
-        alt: 'Sunset sailing',
+        alt: { en: 'Sunset sailing', 'pt-BR': 'Navegação ao pôr do sol', 'pt-PT': 'Velejar ao pôr do sol', es: 'Navegando al atardecer' },
         isPrimary: false,
       },
     ],
@@ -99,6 +98,8 @@ const mockBoats: Boat[] = [
     ],
     rating: 4.9,
     reviewCount: 127,
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-12-01'),
   },
   {
     id: '850e8400-e29b-41d4-a716-446655440002', // Real UUID from database
@@ -116,14 +117,13 @@ const mockBoats: Boat[] = [
       es: 'Descubre el río Tajo en un velero clásico con tripulación experimentada. Perfecto para noches románticas o aventuras familiares a lo largo de la hermosa costa de Lisboa.',
     },
     type: BoatType.SAILBOAT,
+    status: BoatStatus.ACTIVE,
     capacity: 6,
     length: 12,
     cabins: 2,
     bathrooms: 1,
-    enginePower: 40,
-    fuelType: 'Diesel',
-    yearBuilt: 2018,
-    manufacturer: 'Bavaria',
+    year: 2018,
+    make: 'Bavaria',
     model: '40',
     location: {
       id: '2',
@@ -144,13 +144,13 @@ const mockBoats: Boat[] = [
       {
         id: '5',
         url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80',
-        alt: 'Classic sailboat',
+        alt: { en: 'Classic sailboat', 'pt-BR': 'Veleiro clássico', 'pt-PT': 'Veleiro clássico', es: 'Velero clásico' },
         isPrimary: true,
       },
       {
         id: '6',
         url: 'https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1200&q=80',
-        alt: 'Sailboat deck',
+        alt: { en: 'Sailboat deck', 'pt-BR': 'Deck do veleiro', 'pt-PT': 'Convés do veleiro', es: 'Cubierta del velero' },
         isPrimary: false,
       },
     ],
@@ -163,6 +163,8 @@ const mockBoats: Boat[] = [
     ],
     rating: 4.8,
     reviewCount: 45,
+    createdAt: new Date('2024-02-10'),
+    updatedAt: new Date('2024-12-01'),
   },
   {
     id: '850e8400-e29b-41d4-a716-446655440003', // Real UUID from database
@@ -180,14 +182,13 @@ const mockBoats: Boat[] = [
       es: 'Explora las impresionantes bahías de Río en una lancha rápida. Experimenta la emoción de la velocidad mientras disfrutas de las impresionantes vistas del Cristo Redentor y el Pan de Azúcar.',
     },
     type: BoatType.SPEEDBOAT,
+    status: BoatStatus.ACTIVE,
     capacity: 8,
     length: 10,
     cabins: 1,
     bathrooms: 1,
-    enginePower: 450,
-    fuelType: 'Gasoline',
-    yearBuilt: 2021,
-    manufacturer: 'Quicksilver',
+    year: 2021,
+    make: 'Quicksilver',
     model: 'Activ 855',
     location: {
       id: '3',
@@ -208,13 +209,13 @@ const mockBoats: Boat[] = [
       {
         id: '7',
         url: 'https://images.unsplash.com/photo-1605281317010-fe5ffe798166?w=1200&q=80',
-        alt: 'Speedboat on water',
+        alt: { en: 'Speedboat on water', 'pt-BR': 'Lancha na água', 'pt-PT': 'Lancha na água', es: 'Lancha en el agua' },
         isPrimary: true,
       },
       {
         id: '8',
         url: 'https://images.unsplash.com/photo-1540946485063-a40da27545f8?w=1200&q=80',
-        alt: 'Speedboat view',
+        alt: { en: 'Speedboat view', 'pt-BR': 'Vista da lancha', 'pt-PT': 'Vista da lancha', es: 'Vista de la lancha' },
         isPrimary: false,
       },
     ],
@@ -227,6 +228,8 @@ const mockBoats: Boat[] = [
     ],
     rating: 4.7,
     reviewCount: 38,
+    createdAt: new Date('2024-03-20'),
+    updatedAt: new Date('2024-12-01'),
   },
 ];
 
@@ -270,7 +273,7 @@ export default function BoatDetailsPage({ params }: PageProps) {
     image: boat.images.map((img) => img.url),
     brand: {
       '@type': 'Brand',
-      name: boat.manufacturer || 'Villas Boats',
+      name: boat.make || 'Villas Boats',
     },
     model: boat.model,
     offers: {
@@ -310,10 +313,10 @@ export default function BoatDetailsPage({ params }: PageProps) {
         name: 'Bathrooms',
         value: boat.bathrooms,
       } : undefined,
-      boat.yearBuilt ? {
+      boat.year ? {
         '@type': 'PropertyValue',
         name: 'Year Built',
-        value: boat.yearBuilt,
+        value: boat.year,
       } : undefined,
     ].filter(Boolean),
     geo: boat.location.coordinates ? {
@@ -453,7 +456,7 @@ export default function BoatDetailsPage({ params }: PageProps) {
                 <BookingWidget
                   boat={{
                     id: boat.id,
-                    name: boat.name,
+                    name: boat.name as unknown as Record<string, string>,
                     slug: boat.slug,
                     pricePerDayUsd: boat.priceUSD,
                     pricePerDayEur: boat.priceEUR,
