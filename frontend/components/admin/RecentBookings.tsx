@@ -146,7 +146,7 @@ export function RecentBookings() {
         ))}
       </div>
 
-      {data && data.page.totalElements > 5 && (
+      {data?.page?.totalElements && data.page.totalElements > 5 && (
         <div className="mt-4 pt-4 border-t text-center">
           <Link href="/backoffice/bookings">
             <Button variant="outline" className="w-full">

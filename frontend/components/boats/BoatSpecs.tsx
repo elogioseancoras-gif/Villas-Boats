@@ -4,6 +4,20 @@ import { Users, Ruler, Anchor, Bed, Waves } from 'lucide-react';
 import { Boat } from '@/types';
 import { cn } from '@/lib/utils';
 
+/**
+ * BoatSpecs component displays key specifications for a boat.
+ *
+ * Note: The following specs were removed as they are not included in the current backend API:
+ * - enginePower: Engine specifications (e.g., "2x 300HP")
+ * - fuelType: Fuel type (e.g., "Diesel", "Gasoline")
+ *
+ * These fields can be re-added in the future if needed by:
+ * 1. Adding them to the Boat type in @/types/index.ts
+ * 2. Adding them to BoatResponse in @/types/api.ts
+ * 3. Implementing backend API support in the BoatController
+ * 4. Updating the boat adapter to map these fields
+ */
+
 interface BoatSpecsProps {
   boat: Boat;
   className?: string;

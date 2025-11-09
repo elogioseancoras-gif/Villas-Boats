@@ -22,6 +22,8 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     Page<Booking> findByCustomerId(UUID customerId, Pageable pageable);
 
+    List<Booking> findByCustomerId(UUID customerId);
+
     Page<Booking> findByBoatId(UUID boatId, Pageable pageable);
 
     List<Booking> findByStatus(BookingStatus status);
@@ -114,4 +116,47 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     BigDecimal calculateTotalSpentByCustomer(@Param("customerId") UUID customerId);
 
     boolean existsByBookingReference(String bookingReference);
+
+    // Admin Statistics Queries
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.status = :status")
+    long countByStatus(@Param("status") BookingStatus status);
+
+    @Query("""
+        SELECT SUM(b.totalPrice) FROM Booking b
+        WHERE b.status IN ('CONFIRMED', 'COMPLETED')
+        """)
+    BigDecimal calculateTotalRevenue();
+
+    @Query("SELECT COUNT(DISTINCT b.customer.id) FROM Booking b")
+    long countUniqueCustomers();
+
+    @Query("""
+        SELECT COUNT(b) FROM Booking b
+        WHERE b.createdAt >= :startDate
+        AND b.createdAt < :endDate
+        """)
+    long countBookingsInDateRange(
+        @Param("startDate") LocalDateTime startDate,
+        @Param("endDate") LocalDateTime endDate
+    );
+
+    // Customer Statistics Queries
+    @Query("SELECT COUNT(b) FROM Booking b WHERE b.customer.id = :customerId")
+    long countByCustomerId(@Param("customerId") UUID customerId);
+
+    @Query("""
+        SELECT SUM(b.totalPrice) FROM Booking b
+        WHERE b.customer.id = :customerId
+        AND b.status IN :statuses
+        """)
+    BigDecimal sumTotalPriceByCustomerIdAndStatus(
+        @Param("customerId") UUID customerId,
+        @Param("statuses") List<BookingStatus> statuses
+    );
+
+    @Query("""
+        SELECT MAX(b.createdAt) FROM Booking b
+        WHERE b.customer.id = :customerId
+        """)
+    LocalDateTime findLatestBookingDateByCustomerId(@Param("customerId") UUID customerId);
 }

@@ -42,9 +42,10 @@ import {
   Ruler,
   DollarSign,
 } from 'lucide-react';
-import { Boat, BoatType, BoatStatus } from '@/types';
+import { Boat, BoatStatus } from '@/types';
 import { BoatService } from '@/lib/api/services/boat.service';
 import { adaptBoats } from '@/lib/api/adapters/boat.adapter';
+import type { CreateBoatRequest, UpdateBoatRequest, BoatType } from '@/types/api';
 
 interface BoatsTableProps {
   locale?: 'en' | 'pt-BR' | 'pt-PT' | 'es';
@@ -76,7 +77,7 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
   const [formData, setFormData] = useState({
     name: { en: '', 'pt-BR': '', 'pt-PT': '', es: '' },
     slug: '',
-    type: BoatType.YACHT,
+    type: 'SAILBOAT' as BoatType,
     status: BoatStatus.ACTIVE,
     description: { en: '', 'pt-BR': '', 'pt-PT': '', es: '' },
     shortDescription: { en: '', 'pt-BR': '', 'pt-PT': '', es: '' },
@@ -87,10 +88,17 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
     capacity: 0,
     cabins: 0,
     bathrooms: 0,
+    locationId: '',
     priceUSD: 0,
     priceEUR: 0,
     priceGBP: 0,
     priceBRL: 0,
+    captainRequired: false,
+    captainPriceUSD: 0,
+    captainPriceEUR: 0,
+    captainPriceGBP: 0,
+    captainPriceBRL: 0,
+    primaryImageUrl: '',
   });
 
   useEffect(() => {
@@ -138,7 +146,7 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
     setFormData({
       name: boat.name,
       slug: boat.slug,
-      type: boat.type,
+      type: boat.type as unknown as BoatType,  // Cast to API BoatType
       status: boat.status,
       description: boat.description,
       shortDescription: boat.shortDescription || { en: '', 'pt-BR': '', 'pt-PT': '', es: '' },
@@ -149,10 +157,17 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
       capacity: boat.capacity,
       cabins: boat.cabins || 0,
       bathrooms: boat.bathrooms || 0,
+      locationId: boat.location?.id || '',
       priceUSD: boat.priceUSD,
       priceEUR: boat.priceEUR || 0,
       priceGBP: boat.priceGBP || 0,
       priceBRL: boat.priceBRL || 0,
+      captainRequired: false, // Not available in current Boat type
+      captainPriceUSD: boat.captainPricePerDayUsd || 0,
+      captainPriceEUR: boat.captainPricePerDayEur || 0,
+      captainPriceGBP: boat.captainPricePerDayGbp || 0,
+      captainPriceBRL: boat.captainPricePerDayBrl || 0,
+      primaryImageUrl: boat.images?.[0]?.url || '',
     });
     setIsEditOpen(true);
   };
@@ -166,7 +181,7 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
     setFormData({
       name: { en: '', 'pt-BR': '', 'pt-PT': '', es: '' },
       slug: '',
-      type: BoatType.YACHT,
+      type: 'SAILBOAT' as BoatType,
       status: BoatStatus.ACTIVE,
       description: { en: '', 'pt-BR': '', 'pt-PT': '', es: '' },
       shortDescription: { en: '', 'pt-BR': '', 'pt-PT': '', es: '' },
@@ -177,10 +192,17 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
       capacity: 0,
       cabins: 0,
       bathrooms: 0,
+      locationId: '',
       priceUSD: 0,
       priceEUR: 0,
       priceGBP: 0,
       priceBRL: 0,
+      captainRequired: false,
+      captainPriceUSD: 0,
+      captainPriceEUR: 0,
+      captainPriceGBP: 0,
+      captainPriceBRL: 0,
+      primaryImageUrl: '',
     });
     setIsCreateOpen(true);
   };
@@ -199,12 +221,67 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
     }
   };
 
+  // Map formData to API request format
+  const mapFormDataToCreateRequest = (data: typeof formData): CreateBoatRequest => ({
+    nameI18n: data.name,
+    descriptionI18n: data.description,
+    shortDescriptionI18n: data.shortDescription,
+    type: data.type,
+    status: data.status,
+    make: data.make || undefined,
+    model: data.model || undefined,
+    year: data.year || undefined,
+    lengthFeet: data.length || undefined,
+    capacity: data.capacity,
+    cabins: data.cabins || undefined,
+    bathrooms: data.bathrooms || undefined,
+    locationId: data.locationId,
+    pricePerDayUsd: data.priceUSD,
+    pricePerDayEur: data.priceEUR,
+    pricePerDayGbp: data.priceGBP,
+    pricePerDayBrl: data.priceBRL,
+    captainRequired: data.captainRequired,
+    captainPricePerDayUsd: data.captainPriceUSD || undefined,
+    captainPricePerDayEur: data.captainPriceEUR || undefined,
+    captainPricePerDayGbp: data.captainPriceGBP || undefined,
+    captainPricePerDayBrl: data.captainPriceBRL || undefined,
+    primaryImageUrl: data.primaryImageUrl || undefined,
+  });
+
+  const mapFormDataToUpdateRequest = (data: typeof formData): UpdateBoatRequest => ({
+    nameI18n: data.name,
+    descriptionI18n: data.description,
+    shortDescriptionI18n: data.shortDescription,
+    type: data.type,
+    status: data.status,
+    make: data.make || undefined,
+    model: data.model || undefined,
+    year: data.year || undefined,
+    lengthFeet: data.length || undefined,
+    capacity: data.capacity,
+    cabins: data.cabins || undefined,
+    bathrooms: data.bathrooms || undefined,
+    locationId: data.locationId,
+    pricePerDayUsd: data.priceUSD,
+    pricePerDayEur: data.priceEUR,
+    pricePerDayGbp: data.priceGBP,
+    pricePerDayBrl: data.priceBRL,
+    captainRequired: data.captainRequired,
+    captainPricePerDayUsd: data.captainPriceUSD || undefined,
+    captainPricePerDayEur: data.captainPriceEUR || undefined,
+    captainPricePerDayGbp: data.captainPriceGBP || undefined,
+    captainPricePerDayBrl: data.captainPriceBRL || undefined,
+    primaryImageUrl: data.primaryImageUrl || undefined,
+  });
+
   const handleSave = async () => {
     try {
       if (selectedBoat) {
-        await BoatService.update(selectedBoat.id, formData as any);
+        const updateRequest = mapFormDataToUpdateRequest(formData);
+        await BoatService.update(selectedBoat.id, updateRequest);
       } else {
-        await BoatService.create(formData as any);
+        const createRequest = mapFormDataToCreateRequest(formData);
+        await BoatService.create(createRequest);
       }
 
       await fetchBoats();
@@ -230,20 +307,23 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
     }
   };
 
-  const getTypeBadgeVariant = (type: BoatType) => {
+  const getTypeBadgeVariant = (type: string) => {
     switch (type) {
-      case BoatType.YACHT:
+      case 'SAILBOAT':
         return 'default';
-      case BoatType.SAILBOAT:
+      case 'CATAMARAN':
         return 'secondary';
-      case BoatType.CATAMARAN:
+      case 'MOTOR_YACHT':
+      case 'YACHT':  // Legacy frontend enum value
         return 'outline';
-      case BoatType.MOTORBOAT:
+      case 'GULET':
         return 'destructive';
-      case BoatType.JETSKI:
+      case 'MOTORBOAT':  // Legacy frontend enum value
+      case 'JETSKI':  // Legacy frontend enum value
+      case 'FISHING_BOAT':  // Legacy frontend enum value
+      case 'SPEEDBOAT':  // Legacy frontend enum value
+      case 'OTHER':
         return 'secondary';
-      case BoatType.FISHING_BOAT:
-        return 'outline';
       default:
         return 'secondary';
     }
@@ -294,12 +374,11 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Types</SelectItem>
-            <SelectItem value={BoatType.YACHT}>Yacht</SelectItem>
-            <SelectItem value={BoatType.SAILBOAT}>Sailboat</SelectItem>
-            <SelectItem value={BoatType.CATAMARAN}>Catamaran</SelectItem>
-            <SelectItem value={BoatType.MOTORBOAT}>Motorboat</SelectItem>
-            <SelectItem value={BoatType.JETSKI}>Jet Ski</SelectItem>
-            <SelectItem value={BoatType.FISHING_BOAT}>Fishing Boat</SelectItem>
+            <SelectItem value="SAILBOAT">Sailboat</SelectItem>
+            <SelectItem value="CATAMARAN">Catamaran</SelectItem>
+            <SelectItem value="MOTOR_YACHT">Motor Yacht</SelectItem>
+            <SelectItem value="GULET">Gulet</SelectItem>
+            <SelectItem value="OTHER">Other</SelectItem>
           </SelectContent>
         </Select>
         <Select
@@ -643,12 +722,11 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value={BoatType.YACHT}>Yacht</SelectItem>
-                      <SelectItem value={BoatType.SAILBOAT}>Sailboat</SelectItem>
-                      <SelectItem value={BoatType.CATAMARAN}>Catamaran</SelectItem>
-                      <SelectItem value={BoatType.MOTORBOAT}>Motorboat</SelectItem>
-                      <SelectItem value={BoatType.JETSKI}>Jet Ski</SelectItem>
-                      <SelectItem value={BoatType.FISHING_BOAT}>Fishing Boat</SelectItem>
+                      <SelectItem value="SAILBOAT">Sailboat</SelectItem>
+                      <SelectItem value="CATAMARAN">Catamaran</SelectItem>
+                      <SelectItem value="MOTOR_YACHT">Motor Yacht</SelectItem>
+                      <SelectItem value="GULET">Gulet</SelectItem>
+                      <SelectItem value="OTHER">Other</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

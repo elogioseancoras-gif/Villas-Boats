@@ -94,4 +94,8 @@ public interface BoatRepository extends JpaRepository<Boat, UUID> {
         AND b.location.id = :locationId
         """)
     long countActiveBoatsByLocation(@Param("locationId") UUID locationId);
+
+    // Admin Statistics Queries
+    @Query("SELECT COUNT(b) FROM Boat b WHERE b.status = 'ACTIVE'")
+    long countActiveBoats();
 }

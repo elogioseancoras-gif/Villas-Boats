@@ -1,10 +1,6 @@
-'use client';
-
 import { Inter, Outfit } from 'next/font/google';
-import { usePathname } from 'next/navigation';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { QueryProvider } from '@/app/providers/QueryProvider';
-import { AdminSidebar } from '@/components/admin/AdminSidebar';
+import { Metadata } from 'next';
+import { BackofficeLayoutClient } from './BackofficeLayoutClient';
 import '../globals.css';
 
 const inter = Inter({
@@ -19,27 +15,27 @@ const outfit = Outfit({
   display: 'swap',
 });
 
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Villas Boats Admin',
+    default: 'Admin Portal | Villas Boats',
+  },
+  description: 'Administrative portal for managing Villas Boats fleet, bookings, and customers',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
+
 export default function BackofficeLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isLoginPage = pathname?.includes('/login');
-
   return (
     <html lang="en">
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
-        <QueryProvider>
-          <AuthProvider>
-            <div className="flex h-screen overflow-hidden bg-gray-50">
-              {!isLoginPage && <AdminSidebar />}
-              <main className="flex-1 overflow-y-auto">
-                {children}
-              </main>
-            </div>
-          </AuthProvider>
-        </QueryProvider>
+        <BackofficeLayoutClient>{children}</BackofficeLayoutClient>
       </body>
     </html>
   );
