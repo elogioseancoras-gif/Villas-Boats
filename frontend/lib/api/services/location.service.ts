@@ -1,12 +1,30 @@
 import { apiClient } from '../client';
-import type { LocationResponse } from '@/types/api';
+import type { LocationResponse, CreateLocationRequest, UpdateLocationRequest, PageResponse } from '@/types/api';
 
 export class LocationService {
   /**
-   * Get all active locations
+   * Get all locations (including inactive)
    */
   static async getAll(): Promise<LocationResponse[]> {
     const { data } = await apiClient.get<LocationResponse[]>('/locations');
+    return data;
+  }
+
+  /**
+   * Get locations with pagination
+   */
+  static async getPage(page: number = 0, size: number = 10): Promise<PageResponse<LocationResponse>> {
+    const { data } = await apiClient.get<PageResponse<LocationResponse>>('/locations/page', {
+      params: { page, size, sort: 'createdAt,desc' },
+    });
+    return data;
+  }
+
+  /**
+   * Get only active locations
+   */
+  static async getActive(): Promise<LocationResponse[]> {
+    const { data } = await apiClient.get<LocationResponse[]>('/locations/active');
     return data;
   }
 
@@ -34,5 +52,28 @@ export class LocationService {
       params: { query },
     });
     return data;
+  }
+
+  /**
+   * Create a new location (admin only)
+   */
+  static async create(request: CreateLocationRequest): Promise<LocationResponse> {
+    const { data } = await apiClient.post<LocationResponse>('/locations', request);
+    return data;
+  }
+
+  /**
+   * Update a location (admin only)
+   */
+  static async update(id: string, request: UpdateLocationRequest): Promise<LocationResponse> {
+    const { data } = await apiClient.put<LocationResponse>(`/locations/${id}`, request);
+    return data;
+  }
+
+  /**
+   * Delete a location (admin only)
+   */
+  static async delete(id: string): Promise<void> {
+    await apiClient.delete(`/locations/${id}`);
   }
 }
