@@ -122,6 +122,30 @@ export interface UpdateBookingRequest {
   needsCaptain?: boolean;
 }
 
+export interface CreateLocationRequest {
+  country: string;
+  city: string;
+  region?: string;
+  latitude?: number;
+  longitude?: number;
+  nameI18n?: I18nString;
+  descriptionI18n?: I18nString;
+  imageUrl?: string;
+  isActive: boolean;
+}
+
+export interface UpdateLocationRequest {
+  country?: string;
+  city?: string;
+  region?: string;
+  latitude?: number;
+  longitude?: number;
+  nameI18n?: I18nString;
+  descriptionI18n?: I18nString;
+  imageUrl?: string;
+  isActive?: boolean;
+}
+
 // Search/Filter Parameters
 export interface BoatSearchParams {
   type?: BoatType;
