@@ -1,0 +1,17 @@
+node_modules/
+.next/
+.git/
+.DS_Store
+*.log
+.env*
+!.env.example
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+out/
+build/
+dist/
+coverage/
+.turbo/
