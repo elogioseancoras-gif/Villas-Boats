@@ -37,21 +37,6 @@ export enum Language {
   ES = 'es',
 }
 
-export enum ReservationStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  CANCELLED = 'CANCELLED',
-  COMPLETED = 'COMPLETED',
-}
-
-export enum RentalType {
-  BAREBOAT = 'BAREBOAT',
-  SKIPPERED = 'SKIPPERED',
-  CREWED = 'CREWED',
-  DAY_TRIP = 'DAY_TRIP',
-  MULTI_DAY = 'MULTI_DAY',
-}
-
 // ============================================================================
 // Location Types
 // ============================================================================
@@ -228,7 +213,6 @@ export interface BookingData {
   dateFrom: Date;
   dateTo: Date;
   guests: number;
-  rentalType?: RentalType;
   extras?: BookingExtra[];
 
   // Customer info
@@ -253,36 +237,6 @@ export interface BookingExtra {
   price: number;
   quantity?: number;
   required?: boolean;
-}
-
-export interface Reservation {
-  id: string;
-  bookingData: BookingData;
-  status: ReservationStatus;
-  confirmationCode?: string;
-  confirmedAt?: Date;
-  cancelledAt?: Date;
-  cancellationReason?: string;
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-// ============================================================================
-// Customer Types
-// ============================================================================
-
-export interface Customer {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  country?: string;
-  preferredLanguage?: Language;
-  preferredCurrency?: Currency;
-  reservations?: Reservation[];
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 // ============================================================================

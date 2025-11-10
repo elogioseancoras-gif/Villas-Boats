@@ -67,18 +67,8 @@ public class CustomerService {
             throw new RuntimeException("Customer not found with id: " + customerId);
         }
 
-        // Delegate to BookingService which has proper conversion logic
-        Page<BookingResponse> bookingsPage = bookingService.getCustomerBookings(customerId, pageable);
-
-        return PageResponse.<BookingResponse>builder()
-                .content(bookingsPage.getContent())
-                .page(PageResponse.PageInfo.builder()
-                        .size(bookingsPage.getSize())
-                        .number(bookingsPage.getNumber())
-                        .totalElements(bookingsPage.getTotalElements())
-                        .totalPages(bookingsPage.getTotalPages())
-                        .build())
-                .build();
+        // Delegate to BookingService which already returns PageResponse
+        return bookingService.getCustomerBookings(customerId, pageable);
     }
 
     private CustomerWithStatsResponse toCustomerWithStats(User user) {

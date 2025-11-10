@@ -69,14 +69,42 @@ public class BookingService {
                 .build();
     }
 
-    public Page<BookingResponse> getCustomerBookings(UUID customerId, Pageable pageable) {
-        return bookingRepository.findCustomerBookings(customerId, pageable)
-                .map(this::toResponse);
+    public PageResponse<BookingResponse> getCustomerBookings(UUID customerId, Pageable pageable) {
+        Page<Booking> bookingsPage = bookingRepository.findCustomerBookings(customerId, pageable);
+
+        List<BookingResponse> bookings = bookingsPage.getContent()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
+        return PageResponse.<BookingResponse>builder()
+                .content(bookings)
+                .page(PageResponse.PageInfo.builder()
+                        .size(bookingsPage.getSize())
+                        .number(bookingsPage.getNumber())
+                        .totalElements(bookingsPage.getTotalElements())
+                        .totalPages(bookingsPage.getTotalPages())
+                        .build())
+                .build();
     }
 
-    public Page<BookingResponse> getBoatBookings(UUID boatId, Pageable pageable) {
-        return bookingRepository.findByBoatId(boatId, pageable)
-                .map(this::toResponse);
+    public PageResponse<BookingResponse> getBoatBookings(UUID boatId, Pageable pageable) {
+        Page<Booking> bookingsPage = bookingRepository.findByBoatId(boatId, pageable);
+
+        List<BookingResponse> bookings = bookingsPage.getContent()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
+        return PageResponse.<BookingResponse>builder()
+                .content(bookings)
+                .page(PageResponse.PageInfo.builder()
+                        .size(bookingsPage.getSize())
+                        .number(bookingsPage.getNumber())
+                        .totalElements(bookingsPage.getTotalElements())
+                        .totalPages(bookingsPage.getTotalPages())
+                        .build())
+                .build();
     }
 
     public List<BookingResponse> getBookingsByStatus(BookingStatus status) {

@@ -12,10 +12,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { createInquiry } from '@/lib/api/inquiries';
 import { toast } from 'sonner';
+import type { I18nString, Language } from '@/types/api';
 
 interface Boat {
   id: string;
-  name: Record<string, string>;
+  name: I18nString;
   slug: string;
   pricePerDayUsd: number;
   pricePerDayEur: number;
@@ -231,7 +232,7 @@ export function BookingWidget({ boat, locale, onSuccess }: BookingWidgetProps) {
       <CardHeader>
         <CardTitle>{t('title')}</CardTitle>
         <CardDescription>
-          {t('description', { boat: boat.name[locale] || boat.name.en })}
+          {t('description', { boat: boat.name[locale as Language] || boat.name.en || '' })}
         </CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
