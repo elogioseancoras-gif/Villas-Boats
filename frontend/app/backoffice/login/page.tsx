@@ -69,7 +69,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
 
   const t = translations[language];
-  const redirectTo = searchParams.get('redirect') || `/${language}`;
+  const redirectTo = searchParams.get('redirect') || '/backoffice/dashboard';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
