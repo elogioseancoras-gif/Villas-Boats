@@ -146,7 +146,7 @@ export function BookingsTable() {
     );
   });
 
-  const totalPages = data?.page.totalPages || 0;
+  const totalPages = data?.page?.totalPages || 0;
 
   return (
     <div className="space-y-4">

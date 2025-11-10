@@ -10,6 +10,7 @@ import com.villasboats.infrastructure.web.dto.request.CreateBoatRequest;
 import com.villasboats.infrastructure.web.dto.request.UpdateBoatRequest;
 import com.villasboats.infrastructure.web.dto.response.BoatResponse;
 import com.villasboats.infrastructure.web.dto.response.LocationResponse;
+import com.villasboats.infrastructure.web.dto.response.PageResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -35,9 +36,23 @@ public class BoatService {
                 .toList();
     }
 
-    public Page<BoatResponse> getBoatsPage(Pageable pageable) {
-        return boatRepository.findAll(pageable)
-                .map(this::toResponse);
+    public PageResponse<BoatResponse> getBoatsPage(Pageable pageable) {
+        Page<Boat> boatsPage = boatRepository.findAll(pageable);
+
+        List<BoatResponse> boats = boatsPage.getContent()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
+        return PageResponse.<BoatResponse>builder()
+                .content(boats)
+                .page(PageResponse.PageInfo.builder()
+                        .size(boatsPage.getSize())
+                        .number(boatsPage.getNumber())
+                        .totalElements(boatsPage.getTotalElements())
+                        .totalPages(boatsPage.getTotalPages())
+                        .build())
+                .build();
     }
 
     public Page<BoatResponse> getBoatsByStatus(BoatStatus status, Pageable pageable) {
