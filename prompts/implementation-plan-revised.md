@@ -1284,7 +1284,7 @@ volumes:
 | 3.6 | Widget Integration | 2.5h | ✅ 100% |
 | 4 | Admin Dashboard | 18h | ✅ 100% |
 | 5 | Advanced Features | 8-12h | ❌ 0% |
-| 6 | Testing & QA | 5-7h | 🟡 ~25% (E2E suite complete) |
+| 6 | Testing & QA | 5-7h | 🟡 ~25% (E2E suite complete; unit/integration/manual QA remaining) |
 | 7 | Production | 8-10h | ❌ 0% |
 | **TOTAL** | **Complete Platform** | **66.5h spent / 21-29h remaining** | **✅ ~70% Core Features** |
 

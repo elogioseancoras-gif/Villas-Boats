@@ -1,9 +1,9 @@
 // Enums matching backend
 export type Currency = 'USD' | 'EUR' | 'GBP' | 'BRL';
-export type BoatType = 'SAILBOAT' | 'CATAMARAN' | 'MOTOR_YACHT' | 'GULET' | 'OTHER';
+export type BoatType = 'SAILBOAT' | 'MOTORBOAT' | 'CATAMARAN' | 'YACHT' | 'JETSKI' | 'FISHING_BOAT' | 'SPEEDBOAT';
 export type BoatStatus = 'ACTIVE' | 'INACTIVE' | 'MAINTENANCE';
 export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
-export type UserRole = 'CUSTOMER' | 'ADMIN';
+export type UserRole = 'CUSTOMER' | 'BOAT_OWNER' | 'ADMIN' | 'SUPER_ADMIN';
 export type Language = 'en' | 'pt-BR' | 'pt-PT' | 'es';
 
 // I18N type

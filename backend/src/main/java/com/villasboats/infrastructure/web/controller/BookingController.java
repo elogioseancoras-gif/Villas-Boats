@@ -41,7 +41,7 @@ public class BookingController {
 
     @GetMapping("/my-bookings")
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<Page<BookingResponse>> getMyBookings(
+    public ResponseEntity<PageResponse<BookingResponse>> getMyBookings(
             Authentication authentication,
             Pageable pageable) {
         UUID customerId = UUID.fromString(authentication.getName());
@@ -50,7 +50,7 @@ public class BookingController {
 
     @GetMapping("/customer/{customerId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<BookingResponse>> getCustomerBookings(
+    public ResponseEntity<PageResponse<BookingResponse>> getCustomerBookings(
             @PathVariable UUID customerId,
             Pageable pageable) {
         return ResponseEntity.ok(bookingService.getCustomerBookings(customerId, pageable));
@@ -58,7 +58,7 @@ public class BookingController {
 
     @GetMapping("/boat/{boatId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<BookingResponse>> getBoatBookings(
+    public ResponseEntity<PageResponse<BookingResponse>> getBoatBookings(
             @PathVariable UUID boatId,
             Pageable pageable) {
         return ResponseEntity.ok(bookingService.getBoatBookings(boatId, pageable));

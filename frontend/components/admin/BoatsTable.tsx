@@ -42,10 +42,10 @@ import {
   Ruler,
   DollarSign,
 } from 'lucide-react';
-import { Boat, BoatStatus } from '@/types';
+import { Boat, BoatStatus, BoatType } from '@/types';
 import { BoatService } from '@/lib/api/services/boat.service';
 import { adaptBoats } from '@/lib/api/adapters/boat.adapter';
-import type { CreateBoatRequest, UpdateBoatRequest, BoatType } from '@/types/api';
+import type { CreateBoatRequest, UpdateBoatRequest } from '@/types/api';
 
 interface BoatsTableProps {
   locale?: 'en' | 'pt-BR' | 'pt-PT' | 'es';
