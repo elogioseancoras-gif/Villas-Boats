@@ -6,6 +6,7 @@ import com.villasboats.domain.valueobject.BoatType;
 import com.villasboats.infrastructure.web.dto.request.CreateBoatRequest;
 import com.villasboats.infrastructure.web.dto.request.UpdateBoatRequest;
 import com.villasboats.infrastructure.web.dto.response.BoatResponse;
+import com.villasboats.infrastructure.web.dto.response.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,7 +33,7 @@ public class BoatController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Page<BoatResponse>> getBoatsPage(Pageable pageable) {
+    public ResponseEntity<PageResponse<BoatResponse>> getBoatsPage(Pageable pageable) {
         return ResponseEntity.ok(boatService.getBoatsPage(pageable));
     }
 

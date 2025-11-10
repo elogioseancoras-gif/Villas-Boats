@@ -6,6 +6,7 @@ import com.villasboats.infrastructure.web.dto.request.CreateBookingRequest;
 import com.villasboats.infrastructure.web.dto.request.CreateInquiryRequest;
 import com.villasboats.infrastructure.web.dto.request.UpdateBookingRequest;
 import com.villasboats.infrastructure.web.dto.response.BookingResponse;
+import com.villasboats.infrastructure.web.dto.response.PageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,7 @@ public class BookingController {
 
     @GetMapping("/page")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<BookingResponse>> getBookingsPage(Pageable pageable) {
+    public ResponseEntity<PageResponse<BookingResponse>> getBookingsPage(Pageable pageable) {
         return ResponseEntity.ok(bookingService.getBookingsPage(pageable));
     }
 

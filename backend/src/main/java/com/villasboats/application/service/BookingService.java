@@ -15,6 +15,7 @@ import com.villasboats.infrastructure.web.dto.response.BoatResponse;
 import com.villasboats.infrastructure.web.dto.response.BookingResponse;
 import com.villasboats.infrastructure.web.dto.response.CustomerResponse;
 import com.villasboats.infrastructure.web.dto.response.LocationResponse;
+import com.villasboats.infrastructure.web.dto.response.PageResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -49,9 +50,23 @@ public class BookingService {
                 .toList();
     }
 
-    public Page<BookingResponse> getBookingsPage(Pageable pageable) {
-        return bookingRepository.findAll(pageable)
-                .map(this::toResponse);
+    public PageResponse<BookingResponse> getBookingsPage(Pageable pageable) {
+        Page<Booking> bookingsPage = bookingRepository.findAll(pageable);
+
+        List<BookingResponse> bookings = bookingsPage.getContent()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
+        return PageResponse.<BookingResponse>builder()
+                .content(bookings)
+                .page(PageResponse.PageInfo.builder()
+                        .size(bookingsPage.getSize())
+                        .number(bookingsPage.getNumber())
+                        .totalElements(bookingsPage.getTotalElements())
+                        .totalPages(bookingsPage.getTotalPages())
+                        .build())
+                .build();
     }
 
     public Page<BookingResponse> getCustomerBookings(UUID customerId, Pageable pageable) {

@@ -60,6 +60,7 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalBoats, setTotalBoats] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -127,7 +128,8 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
       const adaptedBoats = adaptBoats(response.content);
 
       setBoats(adaptedBoats);
-      setTotalBoats(response.page.totalElements);
+      setTotalBoats(response?.page?.totalElements || 0);
+      setTotalPages(response?.page?.totalPages || 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load boats');
       console.error('Error fetching boats:', err);
@@ -329,8 +331,6 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
     }
   };
 
-  const totalPages = Math.ceil(totalBoats / pageSize);
-
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -518,49 +518,51 @@ export function BoatsTable({ locale = 'en' }: BoatsTableProps) {
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Rows per page:</span>
-          <Select
-            value={pageSize.toString()}
-            onValueChange={(value) => {
-              setPageSize(parseInt(value));
-              setCurrentPage(1);
-            }}
-          >
-            <SelectTrigger className="w-[70px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectContent>
-          </Select>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Rows per page:</span>
+            <Select
+              value={pageSize.toString()}
+              onValueChange={(value) => {
+                setPageSize(parseInt(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-[70px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages} ({totalBoats} total boats)
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            Page {currentPage} of {totalPages} ({totalBoats} total boats)
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      )}
 
       {/* Details Dialog */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
