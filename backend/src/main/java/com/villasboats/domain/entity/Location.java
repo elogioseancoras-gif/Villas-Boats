@@ -45,6 +45,7 @@ public class Location extends BaseEntity {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    @Builder.Default
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 }
