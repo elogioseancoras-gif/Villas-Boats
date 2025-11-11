@@ -44,6 +44,7 @@ public class Boat extends BaseEntity {
     @Column(name = "type", nullable = false, length = 20)
     private BoatType type;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private BoatStatus status = BoatStatus.ACTIVE;
@@ -85,6 +86,7 @@ public class Boat extends BaseEntity {
     @Column(name = "price_per_day_brl", nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePerDayBrl;
 
+    @Builder.Default
     @Column(name = "captain_required", nullable = false)
     private Boolean captainRequired = false;
 
@@ -106,9 +108,11 @@ public class Boat extends BaseEntity {
     @Column(name = "average_rating", precision = 3, scale = 2)
     private BigDecimal averageRating;
 
+    @Builder.Default
     @Column(name = "review_count", nullable = false)
     private Integer reviewCount = 0;
 
+    @Builder.Default
     @Column(name = "total_bookings", nullable = false)
     private Integer totalBookings = 0;
 }

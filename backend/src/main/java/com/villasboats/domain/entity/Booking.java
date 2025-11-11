@@ -43,6 +43,7 @@ public class Booking extends BaseEntity {
     @Column(name = "guest_count", nullable = false)
     private Integer guestCount;
 
+    @Builder.Default
     @Column(name = "needs_captain", nullable = false)
     private Boolean needsCaptain = false;
 
@@ -59,21 +60,25 @@ public class Booking extends BaseEntity {
     @Column(name = "days_count", nullable = false)
     private Integer daysCount;
 
+    @Builder.Default
     @Column(name = "extras_total", precision = 10, scale = 2)
     private BigDecimal extrasTotal = BigDecimal.ZERO;
 
     @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
     private BigDecimal subtotal;
 
+    @Builder.Default
     @Column(name = "tax_percentage", precision = 5, scale = 2)
     private BigDecimal taxPercentage = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(name = "tax_amount", precision = 10, scale = 2)
     private BigDecimal taxAmount = BigDecimal.ZERO;
 
     @Column(name = "total_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private BookingStatus status = BookingStatus.PENDING;

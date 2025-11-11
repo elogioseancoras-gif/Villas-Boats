@@ -29,10 +29,12 @@ public class User extends BaseEntity {
     @Column(name = "phone", length = 50)
     private String phone;
 
+    @Builder.Default
     @Convert(converter = com.villasboats.infrastructure.converter.UserRoleConverter.class)
     @Column(name = "role", nullable = false)
     private UserRole role = UserRole.CUSTOMER;
 
+    @Builder.Default
     @Convert(converter = com.villasboats.infrastructure.converter.LanguageConverter.class)
     @Column(name = "preferred_language")
     private Language preferredLanguage = Language.EN;
@@ -40,9 +42,11 @@ public class User extends BaseEntity {
     @Column(name = "country", length = 100)
     private String country;
 
+    @Builder.Default
     @Column(name = "is_email_verified", nullable = false)
     private Boolean isEmailVerified = false;
 
+    @Builder.Default
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
