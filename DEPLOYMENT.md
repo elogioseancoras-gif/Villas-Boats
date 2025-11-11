@@ -16,35 +16,36 @@ This guide covers deploying the Villas Boats application to the staging environm
 
 Before deploying, ensure you have:
 
-- Access to Portainer at https://mcg.sh:9443
-- Access to N8N at https://n8n.mcg.sh
+- Access to Portainer at <https://mcg.sh:9443>
+- Access to N8N at <https://n8n.mcg.sh>
 - GitHub repository permissions
 - Docker images built and pushed to registry
 - Environment variables configured
 
 ## Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    mcg.sh_network (external)                │
-├─────────────────────────────────────────────────────────────┤
+```ascii
+┌───────────────────────────────────────────────────────────┐
+│                    mcg.sh_network (external)              │
+├───────────────────────────────────────────────────────────┤
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐   │
 │  │ Traefik  │  │   N8N    │  │ Frontend │  │ Backend  │   │
 │  │  (SSL)   │  │          │  │  :3000   │  │  :8080   │   │
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘   │
-│       │             │              │              │         │
-│       └─────────────┼──────────────┴──────────────┘         │
-│                     │                     │                 │
-│                     │         ┌───────────┴────────┐        │
-│                     │         │                    │        │
-│                ┌────▼─────┐  ┌▼──────────┐  ┌─────▼─────┐  │
-│                │PostgreSQL│  │   Redis   │  │  Volumes  │  │
-│                │    :5432 │  │   :6379   │  │           │  │
-│                └──────────┘  └───────────┘  └───────────┘  │
-└─────────────────────────────────────────────────────────────┘
+│       │             │              │              │       │
+│       └─────────────┼──────────────┴──────────────┘       │
+│                     │                     │               │
+│                     │              ┌──────┴──────┐        │
+│                     │              │             │        │
+│                ┌────▼─────┐  ┌─────▼─────┐ ┌─────▼─────┐  │
+│                │PostgreSQL│  │   Redis   │ │  Volumes  │  │
+│                │    :5432 │  │   :6379   │ │           │  │
+│                └──────────┘  └───────────┘ └───────────┘  │
+└───────────────────────────────────────────────────────────┘
 ```
 
 **Components:**
+
 - **Traefik**: Reverse proxy with automatic Let's Encrypt SSL
 - **Frontend**: Next.js application (port 3000, internal)
 - **Backend**: Spring Boot API (port 8080, internal)
@@ -53,9 +54,10 @@ Before deploying, ensure you have:
 - **N8N**: Workflow automation (external, pre-existing)
 
 **Network:**
+
 - All services share `mcg.sh_network` (external)
 - Only frontend is exposed via Traefik
-- Backend accessible at https://villasboats.mcg.sh/api
+- Backend accessible at <https://villasboats.mcg.sh/api>
 
 ## Environment Setup
 
@@ -74,6 +76,7 @@ DOCKER_REPO=<your-github-username>/villasboats
 ```
 
 **Generate Secure Passwords:**
+
 ```bash
 # Database password (32 characters)
 openssl rand -base64 32
@@ -111,7 +114,7 @@ docker build -t villasboats/frontend:test .
 
 ### Step 1: Import N8N Workflows
 
-1. Navigate to https://n8n.mcg.sh
+1. Navigate to <https://n8n.mcg.sh>
 2. Click "Workflows" → "Import from File"
 3. Import each workflow from `backend/n8n-workflows/`:
    - `booking-inquiry-new.json`
@@ -119,9 +122,9 @@ docker build -t villasboats/frontend:test .
    - `booking-status-update.json`
 4. Activate each workflow after import
 5. Verify webhook URLs:
-   - https://n8n.mcg.sh/webhook/booking-inquiry-new
-   - https://n8n.mcg.sh/webhook/booking-inquiry-followup
-   - https://n8n.mcg.sh/webhook/booking-status-update
+   - <https://n8n.mcg.sh/webhook/booking-inquiry-new>
+   - <https://n8n.mcg.sh/webhook/booking-inquiry-followup>
+   - <https://n8n.mcg.sh/webhook/booking-status-update>
 
 ### Step 2: Configure N8N SMTP Credentials
 
@@ -129,39 +132,42 @@ docker build -t villasboats/frontend:test .
 2. Click "Add Credential" → Select "SMTP"
 3. Configure your email provider:
 
-**For Gmail:**
-```
-Host: smtp.gmail.com
-Port: 587
-Secure: TLS
-User: your-email@gmail.com
-Password: <app-password>  # Not your Gmail password!
-```
+   **For Gmail:**
 
-**For SendGrid:**
-```
-Host: smtp.sendgrid.net
-Port: 587
-Secure: TLS
-User: apikey
-Password: <your-sendgrid-api-key>
-```
+   ```ascii
+   Host: smtp.gmail.com
+   Port: 587
+   Secure: TLS
+   User: your-email@gmail.com
+   Password: <app-password>  # Not your Gmail password!
+   ```
 
-**For AWS SES:**
-```
-Host: email-smtp.<region>.amazonaws.com
-Port: 587
-Secure: TLS
-User: <smtp-username>
-Password: <smtp-password>
-```
+   **For SendGrid:**
+
+   ```ascii
+   Host: smtp.sendgrid.net
+   Port: 587
+   Secure: TLS
+   User: apikey
+   Password: <your-sendgrid-api-key>
+   ```
+
+   **For AWS SES:**
+
+   ```ascii
+   Host: email-smtp.<region>.amazonaws.com
+   Port: 587
+   Secure: TLS
+   User: <smtp-username>
+   Password: <smtp-password>
+   ```
 
 4. Update all 3 workflows to use this SMTP credential
 5. Test by triggering a workflow manually
 
 ### Step 3: Create Portainer Stack
 
-1. Login to Portainer at https://mcg.sh:9443
+1. Login to Portainer at <https://mcg.sh:9443>
 2. Select your environment (e.g., "local")
 3. Navigate to "Stacks" → Click "Add stack"
 4. Configure stack:
@@ -171,23 +177,23 @@ Password: <smtp-password>
 
 5. Add environment variables in Portainer:
 
-Click "Add an environment variable" for each:
+   Click "Add an environment variable" for each:
 
-```
-DB_NAME=villas_boats_staging
-DB_USER=villasboats
-DB_PASSWORD=<your-secure-db-password>
-REDIS_PASSWORD=<your-secure-redis-password>
-JWT_SECRET_KEY=<your-256-bit-jwt-secret>
-STORAGE_TYPE=s3
-S3_BUCKET=villas-boats-staging
-S3_REGION=us-east-1
-S3_ACCESS_KEY=<your-s3-access-key>
-S3_SECRET_KEY=<your-s3-secret-key>
-DOCKER_REGISTRY=ghcr.io
-DOCKER_REPO=<your-github-username>/villasboats
-VERSION=latest
-```
+   ```ascii
+   DB_NAME=villas_boats_staging
+   DB_USER=villasboats
+   DB_PASSWORD=<your-secure-db-password>
+   REDIS_PASSWORD=<your-secure-redis-password>
+   JWT_SECRET_KEY=<your-256-bit-jwt-secret>
+   STORAGE_TYPE=s3
+   S3_BUCKET=villas-boats-staging
+   S3_REGION=us-east-1
+   S3_ACCESS_KEY=<your-s3-access-key>
+   S3_SECRET_KEY=<your-s3-secret-key>
+   DOCKER_REGISTRY=ghcr.io
+   DOCKER_REPO=<your-github-username>/villasboats
+   VERSION=latest
+   ```
 
 6. Click "Deploy the stack"
 
@@ -201,7 +207,8 @@ VERSION=latest
 
 ### Step 5: Trigger Initial Deployment
 
-**Option A: Push to develop branch**
+#### Option A: Push to develop branch
+
 ```bash
 git checkout develop
 git pull
@@ -209,7 +216,8 @@ git pull
 git push
 ```
 
-**Option B: Manual workflow dispatch**
+#### Option B: Manual workflow dispatch
+
 1. Go to GitHub Actions in your repository
 2. Select "Deploy to Staging" workflow
 3. Click "Run workflow" → Select "develop" branch
@@ -218,7 +226,7 @@ git push
 ### Step 6: Monitor Deployment
 
 1. **GitHub Actions**: Check workflow progress at github.com/your-repo/actions
-2. **Portainer**: Monitor containers at https://mcg.sh:9443
+2. **Portainer**: Monitor containers at <https://mcg.sh:9443>
    - All containers should show "running" status
    - Health checks should be passing (green checkmarks)
 3. **Container Logs**: Click on each container to view logs
@@ -295,7 +303,7 @@ curl -X POST https://n8n.mcg.sh/webhook/booking-inquiry-new \
 
 ### 5. Frontend Verification
 
-1. Open https://villasboats.mcg.sh in browser
+1. Open <https://villasboats.mcg.sh> in browser
 2. Verify:
    - ✅ Page loads without errors
    - ✅ All images load correctly
@@ -326,6 +334,7 @@ curl -X POST https://n8n.mcg.sh/webhook/booking-inquiry-new \
 **Symptoms**: Container status shows "Exited" or "Restarting"
 
 **Diagnosis**:
+
 ```bash
 # Check logs
 docker logs villas-boats-backend-staging
@@ -334,12 +343,14 @@ docker logs villas-boats-postgres-staging
 ```
 
 **Common Causes**:
+
 1. **Invalid environment variables**: Check Portainer stack environment variables
 2. **Health check failing**: Container starts but health check fails, causing restart
 3. **Port conflict**: Another service using the same port
 4. **Resource limits**: Insufficient memory or CPU
 
 **Resolution**:
+
 ```bash
 # Fix environment variables in Portainer
 # Update stack → Environment variables → Save
@@ -356,6 +367,7 @@ docker stats
 **Symptoms**: Backend logs show `Connection refused` or `Unknown host`
 
 **Diagnosis**:
+
 ```bash
 # Test connection from backend container
 docker exec villas-boats-backend-staging nc -zv postgres 5432
@@ -364,11 +376,13 @@ docker exec villas-boats-backend-staging nc -zv postgres 5432
 ```
 
 **Common Causes**:
+
 1. Postgres container not healthy yet
 2. Wrong DB_HOST environment variable
 3. Wrong credentials
 
 **Resolution**:
+
 ```bash
 # Check postgres is healthy
 docker ps | grep postgres
@@ -385,6 +399,7 @@ docker logs villas-boats-postgres-staging
 **Symptoms**: Browser shows "Not secure" or certificate errors
 
 **Diagnosis**:
+
 ```bash
 # Check Traefik logs
 docker logs traefik | grep villasboats
@@ -394,12 +409,14 @@ nslookup villasboats.mcg.sh
 ```
 
 **Common Causes**:
+
 1. DNS not pointing to correct server
 2. Traefik labels incorrect
 3. Let's Encrypt rate limit exceeded
 4. Ports 80/443 not accessible
 
 **Resolution**:
+
 1. Verify DNS: `villasboats.mcg.sh` → server IP
 2. Check Traefik labels in docker-compose.staging.yml
 3. Ensure firewall allows ports 80 and 443
@@ -410,6 +427,7 @@ nslookup villasboats.mcg.sh
 **Symptoms**: Booking created but no email received
 
 **Diagnosis**:
+
 ```bash
 # Test webhook directly
 curl -X POST https://n8n.mcg.sh/webhook/booking-inquiry-new \
@@ -421,16 +439,19 @@ docker logs villas-boats-backend-staging | grep n8n
 ```
 
 **Common Causes**:
+
 1. N8N workflow not activated
 2. Wrong webhook URL in backend config
 3. N8N SMTP credentials not configured
 4. Network connectivity issue
 
 **Resolution**:
+
 1. Verify N8N_WEBHOOK_BASE_URL: `https://n8n.mcg.sh/webhook`
 2. Check workflow is active in N8N
 3. Test SMTP credentials in N8N
 4. Check backend can reach N8N:
+
    ```bash
    docker exec villas-boats-backend-staging curl -I https://n8n.mcg.sh
    ```
@@ -441,22 +462,28 @@ docker logs villas-boats-backend-staging | grep n8n
 
 **Common Failures**:
 
-**1. Cannot push to GHCR**
-```
+#### 1. Cannot push to GHCR
+
+```ascii
 Error: denied: permission_denied
 ```
+
 **Fix**: Enable package write permissions in repository settings
 
-**2. Portainer webhook fails**
-```
+#### 2. Portainer webhook fails
+
+```ascii
 curl: (7) Failed to connect
 ```
+
 **Fix**: Verify PORTAINER_WEBHOOK_URL secret is correct
 
-**3. Health check timeout**
-```
+#### 3. Health check timeout
+
+```ascii
 ❌ Backend health check failed
 ```
+
 **Fix**: Check backend container logs, may need more startup time
 
 ### Frontend 404 Errors
@@ -464,11 +491,13 @@ curl: (7) Failed to connect
 **Symptoms**: Some pages return 404 errors
 
 **Common Causes**:
+
 1. Missing environment variable NEXT_PUBLIC_API_URL
 2. Static files not copied correctly
 3. Standalone build issue
 
 **Resolution**:
+
 ```bash
 # Check frontend environment
 docker exec villas-boats-frontend-staging env | grep NEXT_PUBLIC
@@ -486,19 +515,23 @@ If deployment fails and you need to rollback:
 1. Go to Portainer → Images
 2. Find previous working image tag (e.g., `develop-abc123`)
 3. Update stack environment variable:
-   ```
+
+   ```ascii
    VERSION=develop-abc123
    ```
+
 4. Click "Update the stack"
 5. Wait for containers to restart with old version
 
 ### Method 2: Via GitHub Actions
 
 1. Revert the problematic commit:
+
    ```bash
    git revert <commit-sha>
    git push origin develop
    ```
+
 2. GitHub Actions will automatically deploy the reverted version
 3. Monitor deployment in Actions tab
 
@@ -529,11 +562,13 @@ docker-compose logs -f
 ### Regular Health Checks
 
 **Daily**:
+
 - Check Portainer dashboard: All containers healthy
 - Review error logs: No critical errors
-- Test frontend: https://villasboats.mcg.sh loads
+- Test frontend: <https://villasboats.mcg.sh> loads
 
 **Weekly**:
+
 - Review N8N execution history: Workflows executing successfully
 - Check database size growth: Plan for backups
 - Review application logs: No anomalies
