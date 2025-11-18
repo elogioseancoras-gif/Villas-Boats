@@ -70,10 +70,10 @@ Copy `.env.staging` template and update with actual values:
 DB_PASSWORD=<generate-secure-password>
 REDIS_PASSWORD=<generate-secure-password>
 JWT_SECRET_KEY=<generate-256-bit-secret>
-S3_ACCESS_KEY=<your-s3-access-key>
-S3_SECRET_KEY=<your-s3-secret-key>
 DOCKER_REPO=<your-github-username>/villasboats
 ```
+
+**Note:** For this initial release, images are stored on the local filesystem. S3 cloud storage can be configured later if needed.
 
 **Generate Secure Passwords:**
 
@@ -185,15 +185,14 @@ docker build -t villasboats/frontend:test .
    DB_PASSWORD=<your-secure-db-password>
    REDIS_PASSWORD=<your-secure-redis-password>
    JWT_SECRET_KEY=<your-256-bit-jwt-secret>
-   STORAGE_TYPE=s3
-   S3_BUCKET=villas-boats-staging
-   S3_REGION=us-east-1
-   S3_ACCESS_KEY=<your-s3-access-key>
-   S3_SECRET_KEY=<your-s3-secret-key>
+   STORAGE_TYPE=local
+   UPLOAD_DIR=/app/uploads
    DOCKER_REGISTRY=ghcr.io
    DOCKER_REPO=<your-github-username>/villasboats
    VERSION=latest
    ```
+
+   **Note:** The `uploads_data` volume (defined in docker-compose.staging.yml) will persist uploaded images across container restarts. For future S3 migration, add S3 credentials and change `STORAGE_TYPE=s3`.
 
 6. Click "Deploy the stack"
 

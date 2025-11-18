@@ -5,6 +5,8 @@ volumes:
     name: villas-boats-postgres-staging
   redis_data:
     name: villas-boats-redis-staging
+  uploads_data:
+    name: villas-boats-uploads-staging
 
 networks:
   default:
@@ -68,12 +70,11 @@ services:
       CORS_ALLOWED_ORIGINS: https://villasboats.mcg.sh
       N8N_WEBHOOK_BASE_URL: https://n8n.mcg.sh/webhook
       N8N_WEBHOOK_ENABLED: "true"
-      STORAGE_TYPE: ${STORAGE_TYPE:-s3}
-      S3_BUCKET: ${S3_BUCKET}
-      S3_REGION: ${S3_REGION}
-      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
-      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      STORAGE_TYPE: ${STORAGE_TYPE:-local}
+      UPLOAD_DIR: /app/uploads
       VERSION: ${VERSION:-1.0.0}
+    volumes:
+      - uploads_data:/app/uploads
     networks:
       - default
     restart: unless-stopped
