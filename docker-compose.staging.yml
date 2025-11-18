@@ -42,7 +42,7 @@ services:
     networks:
       - default
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a $REDIS_PASSWORD ping"]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -92,7 +92,8 @@ services:
       backend:
         condition: service_healthy
     environment:
-      NEXT_PUBLIC_API_URL: https://villasboats.mcg.sh/api
+      # NEXT_PUBLIC_API_URL is baked into the image at build time via build-arg
+      # Runtime environment variables don't work for NEXT_PUBLIC_* in Next.js standalone
       NODE_ENV: production
     networks:
       - default
@@ -113,7 +114,7 @@ services:
       # Middleware (optional - add security headers)
       - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.X-Frame-Options=SAMEORIGIN"
       - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.X-Content-Type-Options=nosniff"
-      - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.X-XSS-Protection=1; mode=block"
+      - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.Content-Security-Policy=default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://villasboats.mcg.sh"
       - "traefik.http.routers.villasboats-staging.middlewares=villasboats-staging-headers"
     restart: unless-stopped
     healthcheck:
