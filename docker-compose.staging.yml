@@ -111,10 +111,12 @@ services:
       # Service
       - "traefik.http.services.villasboats-staging.loadbalancer.server.port=3000"
 
-      # Middleware (optional - add security headers)
+      # Middleware - Security headers with strengthened CSP
       - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.X-Frame-Options=SAMEORIGIN"
       - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.X-Content-Type-Options=nosniff"
-      - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.Content-Security-Policy=default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://villasboats.mcg.sh"
+      # Removed 'unsafe-inline' and 'unsafe-eval' from script-src to strengthen XSS protection
+      # If Next.js runtime requires these, consider implementing nonce-based CSP instead
+      - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.Content-Security-Policy=default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://villasboats.mcg.sh"
       - "traefik.http.routers.villasboats-staging.middlewares=villasboats-staging-headers"
     restart: unless-stopped
     healthcheck:
