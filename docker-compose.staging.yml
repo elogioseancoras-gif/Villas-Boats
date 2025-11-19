@@ -42,7 +42,7 @@ services:
     networks:
       - default
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a $REDIS_PASSWORD ping"]
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a $$REDIS_PASSWORD ping"]
       interval: 10s
       timeout: 3s
       retries: 5
@@ -111,12 +111,12 @@ services:
       # Service
       - "traefik.http.services.villasboats-staging.loadbalancer.server.port=3000"
 
-      # Middleware - Security headers with strengthened CSP
+      # Middleware - Security headers
       - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.X-Frame-Options=SAMEORIGIN"
       - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.X-Content-Type-Options=nosniff"
-      # Removed 'unsafe-inline' and 'unsafe-eval' from script-src to strengthen XSS protection
-      # If Next.js runtime requires these, consider implementing nonce-based CSP instead
-      - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.Content-Security-Policy=default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://villasboats.mcg.sh"
+      # TODO: 'unsafe-inline' and 'unsafe-eval' are temporarily included in script-src for Next.js compatibility.
+      # Remove these and implement nonce-based CSP as soon as possible to strengthen XSS protection.
+      - "traefik.http.middlewares.villasboats-staging-headers.headers.customResponseHeaders.Content-Security-Policy=default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://villasboats.mcg.sh"
       - "traefik.http.routers.villasboats-staging.middlewares=villasboats-staging-headers"
     restart: unless-stopped
     healthcheck:
