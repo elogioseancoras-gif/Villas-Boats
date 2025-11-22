@@ -63,7 +63,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ${DOCKER_REGISTRY:-ghcr.io}/${DOCKER_REPO:-elogioseancoras-gif/villas-boats}/backend:${VERSION:-develop}
+    image: villas-boats-backend:local
     container_name: villas-boats-backend-local
     env_file: .env.staging
     depends_on:
