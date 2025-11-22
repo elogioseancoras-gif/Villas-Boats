@@ -7,8 +7,8 @@ WORKDIR /app
 # Install pnpm (pinned version for reproducible builds)
 RUN corepack enable && corepack prepare pnpm@10.22.0 --activate
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# Copy package files and pnpm configuration
+COPY package.json pnpm-lock.yaml .npmrc ./
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Build
