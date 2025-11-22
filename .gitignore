@@ -5,3 +5,21 @@ node_modules
 .vscode/
 .idea/
 vite.config.*s.*
+
+# Environment files - exclude all .env files except examples/templates
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+.env.staging.local
+
+# Allow .env example and template files
+!.env.example
+!.env.*.example
+!.env.template
+!.env.*.template
