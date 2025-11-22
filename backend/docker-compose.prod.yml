@@ -27,7 +27,7 @@ services:
           memory: 1G
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     container_name: villas-boats-redis-prod
     command: redis-server --requirepass ${REDIS_PASSWORD}
     volumes:
