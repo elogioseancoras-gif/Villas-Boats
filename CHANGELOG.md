@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Environment variable security improvements
 
 ### Changed
+- **Backend**: Upgraded Spring Boot from 3.5.7 to 4.0.0
+- **Backend**: Upgraded Springdoc OpenAPI from 2.8.14 to 3.0.0
+- **Backend**: Removed @EntityScan annotation (auto-discovery in Spring Boot 4)
+- **Frontend**: Upgraded pnpm from 10.22.0 to 10.23.0
+- **Frontend**: Upgraded Next.js from 16.0.0 to 16.0.3
+- **Frontend**: Upgraded @tanstack/react-query from 5.90.6 to 5.90.10
+- **Frontend**: Upgraded axios from 1.13.1 to 1.13.2
+- **Frontend**: Upgraded lucide-react from 0.548.0 to 0.554.0
+- **Frontend**: Upgraded next-intl from 4.4.0 to 4.5.5
+- **Frontend**: Upgraded tailwind-merge from 3.3.1 to 3.4.0
+- **Frontend**: Upgraded ESLint from 9.38.0 to 9.39.1
+- **Frontend**: Upgraded TypeScript from ^5 to ^5.9.3
 - Staging environment now explicitly uses `develop` Docker image tag
 - Updated .gitignore patterns for .env file security
 - Enhanced deployment documentation structure
