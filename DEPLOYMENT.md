@@ -4,6 +4,7 @@ This guide covers deploying the Villas Boats application to the staging environm
 
 ## Table of Contents
 
+- [Local Development Testing](#local-development-testing)
 - [Prerequisites](#prerequisites)
 - [Architecture Overview](#architecture-overview)
 - [Environment Setup](#environment-setup)
@@ -11,6 +12,111 @@ This guide covers deploying the Villas Boats application to the staging environm
 - [Post-Deployment Verification](#post-deployment-verification)
 - [Troubleshooting](#troubleshooting)
 - [Rollback Procedure](#rollback-procedure)
+
+## Local Development Testing
+
+For testing the complete stack locally before deploying to Portainer, use the dedicated `docker-compose.local.yml` configuration.
+
+### Quick Start
+
+1. **Prepare environment file**:
+   ```bash
+   # Copy the example file
+   cp backend/.env.staging.example .env.staging
+
+   # Edit and fill in actual values
+   nano .env.staging
+   ```
+
+2. **Start the stack**:
+   ```bash
+   docker compose -f docker-compose.local.yml up
+   ```
+
+3. **Access the application**:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8080
+   - Postgres: localhost:5432
+   - Redis: localhost:6379
+
+### Key Differences from Staging
+
+The local development configuration:
+
+- ✅ Uses `.env.staging` file for environment variables (via `env_file` directive)
+- ✅ Exposes ports directly (no Traefik reverse proxy)
+- ✅ Uses local volumes (separate from staging)
+- ✅ CORS configured for `http://localhost:3000`
+- ✅ Pulls images from GHCR (same as staging)
+
+### Common Commands
+
+```bash
+# Start all services
+docker compose -f docker-compose.local.yml up
+
+# Start in background
+docker compose -f docker-compose.local.yml up -d
+
+# View logs
+docker compose -f docker-compose.local.yml logs -f
+
+# Stop services
+docker compose -f docker-compose.local.yml down
+
+# Stop and remove volumes (clean slate)
+docker compose -f docker-compose.local.yml down -v
+
+# Check service health
+docker compose -f docker-compose.local.yml ps
+```
+
+### Database Access
+
+Connect to the local Postgres database:
+
+```bash
+# Using psql
+psql -h localhost -U villasboats -d villas_boats_staging
+
+# Using docker exec
+docker exec -it villas-boats-postgres-local psql -U villasboats -d villas_boats_staging
+```
+
+### Troubleshooting Local Development
+
+**Issue: Ports already in use**
+```bash
+# Check what's using the ports
+lsof -i :3000  # Frontend
+lsof -i :8080  # Backend
+lsof -i :5432  # Postgres
+lsof -i :6379  # Redis
+```
+
+**Issue: Permission denied on volumes**
+```bash
+# Clean up and recreate volumes
+docker compose -f docker-compose.local.yml down -v
+docker compose -f docker-compose.local.yml up
+```
+
+**Issue: Image not found**
+```bash
+# Authenticate with GHCR
+echo $GHCR_TOKEN | docker login ghcr.io -u <your-username> --password-stdin
+
+# Pull images manually
+docker compose -f docker-compose.local.yml pull
+```
+
+### Notes
+
+- ⚠️ Local development uses **different volumes** than staging (`postgres_data_local` vs `villas-boats-postgres-staging`)
+- ⚠️ NEXT_PUBLIC_API_URL is baked into the frontend image at build time (defaults to production API URL)
+- ⚠️ For full local development with hot-reload, use the development setups in `frontend/` and `backend/` instead
+
+---
 
 ## Prerequisites
 
