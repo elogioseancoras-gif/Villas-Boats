@@ -12,6 +12,7 @@ This guide covers deploying the Villas Boats application to the staging environm
 - [Post-Deployment Verification](#post-deployment-verification)
 - [Troubleshooting](#troubleshooting)
 - [Rollback Procedure](#rollback-procedure)
+- [Production Deployment](#production-deployment)
 
 ## Local Development Testing
 
@@ -731,6 +732,173 @@ docker exec villas-boats-postgres-staging \
 # Redis memory usage
 docker exec villas-boats-redis-staging redis-cli --no-auth-warning -a "$REDIS_PASSWORD" INFO memory
 ```
+
+## Production Deployment
+
+Production deployments to **https://villasboats.com** follow a controlled release process with manual approval gates and semantic versioning.
+
+### Overview
+
+- **Environment**: Production
+- **URL**: https://villasboats.com
+- **Trigger**: Git tags matching `v*.*.*` (e.g., v1.0.0)
+- **Approval**: Manual approval required via GitHub Environments
+- **Workflow**: `.github/workflows/deploy-production.yml`
+- **Configuration**: `docker-compose.production.yml`
+
+### Version Strategy
+
+Production uses **Semantic Versioning 2.0.0**:
+
+- **vMAJOR.MINOR.PATCH** (e.g., v1.2.3)
+- **MAJOR**: Breaking changes (v2.0.0)
+- **MINOR**: New features, backward-compatible (v1.1.0)
+- **PATCH**: Bug fixes, backward-compatible (v1.0.1)
+
+See [docs/deployment-strategy.md](docs/deployment-strategy.md) for complete versioning guidelines.
+
+### Production Release Process
+
+**Quick Overview**:
+
+1. **Merge to Main**:
+   ```bash
+   git checkout main
+   git merge develop
+   git push origin main
+   ```
+
+2. **Create Release Tag**:
+   ```bash
+   git tag -a v1.0.0 -m "Release v1.0.0: Brief description
+
+   Features:
+   - Feature 1
+   - Feature 2
+
+   Fixes:
+   - Bug fix 1
+   - Bug fix 2"
+
+   git push origin v1.0.0
+   ```
+
+3. **Approve Deployment**:
+   - GitHub Actions builds images (~5-10 minutes)
+   - Navigate to Actions tab → "Deploy to Production"
+   - Click "Review deployments" → "Approve and deploy"
+
+4. **Verify Production**:
+   ```bash
+   curl https://api.villasboats.com/actuator/health
+   # Expected: {"status":"UP"}
+   ```
+
+### Docker Image Tags
+
+Each production release creates multiple image tags:
+
+```
+v1.0.0  → ghcr.io/.../backend:v1.0.0
+         ghcr.io/.../backend:1.0.0
+         ghcr.io/.../backend:1.0
+         ghcr.io/.../backend:1
+         ghcr.io/.../backend:latest
+```
+
+This allows flexible version pinning in `docker-compose.production.yml`.
+
+### Portainer Configuration
+
+**Production Stack**: `villas-boats-production`
+
+**Required Environment Variables**:
+```bash
+DB_NAME=villas_boats_production
+DB_USER=villasboats
+DB_PASSWORD=<secure-password>
+REDIS_PASSWORD=<secure-password>
+JWT_SECRET_KEY=<256-bit-key>
+DOCKER_REGISTRY=ghcr.io
+DOCKER_REPO=elogioseancoras-gif/villas-boats
+VERSION=v1.0.0  # Update to desired version
+```
+
+**Deployment Methods**:
+
+**Option 1: Automatic via Webhook** (when configured)
+- GitHub Actions triggers Portainer webhook
+- Stack automatically updates to new version
+
+**Option 2: Manual Update in Portainer**
+1. Navigate to Stacks → villas-boats-production
+2. Update `VERSION` environment variable to new version
+3. Click "Update the stack"
+4. Select "Re-pull image and redeploy"
+5. Monitor container logs during deployment
+
+### Production Verification
+
+After deployment, verify critical functionality:
+
+```bash
+# Health checks
+curl https://api.villasboats.com/actuator/health
+curl https://villasboats.com
+
+# Version verification
+curl https://api.villasboats.com/actuator/info | jq '.build.version'
+```
+
+**Manual Testing**:
+- [ ] Homepage loads
+- [ ] User login works
+- [ ] Boat search functions
+- [ ] Booking system operational
+- [ ] Admin dashboard accessible
+
+### Rollback Procedures
+
+If issues occur in production:
+
+**Quick Rollback via Portainer** (~2 minutes):
+1. Navigate to villas-boats-production stack
+2. Update `VERSION` to previous stable version (e.g., v1.0.0)
+3. Click "Update the stack" + "Re-pull image and redeploy"
+
+**Planned Rollback via GitHub Actions** (~10 minutes):
+```bash
+gh workflow run deploy-production.yml -f version=v1.0.0
+```
+
+See [docs/rollback-procedures.md](docs/rollback-procedures.md) for detailed rollback strategies.
+
+### Production-Specific Configuration
+
+**Security Headers** (via Traefik):
+- `Strict-Transport-Security`: HSTS with preload
+- `X-Frame-Options`: SAMEORIGIN
+- `X-Content-Type-Options`: nosniff
+- `Content-Security-Policy`: Strict CSP (TODO: implement nonce-based)
+
+**Rate Limiting**:
+- Average: 100 requests/second
+- Burst: 200 requests
+
+**Resource Limits**:
+- Backend: 2 CPU, 2GB memory (limit), 0.5 CPU, 512MB (reserved)
+- Frontend: 1 CPU, 1GB memory (limit), 0.25 CPU, 256MB (reserved)
+- Postgres: 2 CPU, 2GB memory (limit), 0.5 CPU, 512MB (reserved)
+- Redis: 1 CPU, 512MB memory (limit), 0.25 CPU, 128MB (reserved)
+
+### Complete Documentation
+
+For comprehensive production deployment procedures:
+
+- **[Deployment Strategy](docs/deployment-strategy.md)**: Overall strategy and versioning
+- **[Production Deployment Guide](docs/production-deployment.md)**: Step-by-step deployment
+- **[Rollback Procedures](docs/rollback-procedures.md)**: Emergency rollback steps
+- **[Developer Workflow](docs/developer-workflow.md)**: Development to production flow
 
 ## Security Considerations
 
