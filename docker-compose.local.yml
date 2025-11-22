@@ -45,7 +45,7 @@ services:
     restart: unless-stopped
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     container_name: villas-boats-redis-local
     env_file: .env.staging
     command: redis-server --requirepass ${REDIS_PASSWORD}

@@ -20,7 +20,7 @@ services:
       - villas-boats-network
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     container_name: villas-boats-redis
     ports:
       - "6379:6379"

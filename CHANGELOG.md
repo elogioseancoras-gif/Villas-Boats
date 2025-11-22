@@ -27,9 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Frontend**: Upgraded tailwind-merge from 3.3.1 to 3.4.0
 - **Frontend**: Upgraded ESLint from 9.38.0 to 9.39.1
 - **Frontend**: Upgraded TypeScript from ^5 to ^5.9.3
+- **Infrastructure**: Upgraded Redis from 7-alpine to 8-alpine across all environments
 - Staging environment now explicitly uses `develop` Docker image tag
 - Updated .gitignore patterns for .env file security
 - Enhanced deployment documentation structure
+
+### Fixed
+- **Backend**: Corrected JWT property paths in JwtUtils to match application.yml structure
 
 ### Security
 - Removed .env files from git tracking
