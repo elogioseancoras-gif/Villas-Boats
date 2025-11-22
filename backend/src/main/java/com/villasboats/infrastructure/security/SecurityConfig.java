@@ -52,6 +52,8 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // Actuator endpoints (health checks, metrics) - must be first to avoid authentication
+                        .requestMatchers("/actuator/**").permitAll()
                         // Public endpoints (paths relative to context path /api)
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
@@ -62,8 +64,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/bookings/inquiries").permitAll()
                         // Swagger/OpenAPI endpoints
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        // Health check endpoints
-                        .requestMatchers("/actuator/health").permitAll()
                         // All other requests require authentication
                         .anyRequest().authenticated()
                 );
