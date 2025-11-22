@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **Backend**: Corrected JWT property paths in JwtUtils to match application.yml structure
+- **Frontend**: Added .npmrc to enable build scripts for native dependencies (@swc/core, sharp)
 
 ### Security
 - Removed .env files from git tracking
