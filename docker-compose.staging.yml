@@ -84,7 +84,7 @@ services:
       - "traefik.http.routers.villasboats-backend-staging.rule=Host(`villasboats.mcg.sh`) && PathPrefix(`/api`)"
       - "traefik.http.routers.villasboats-backend-staging.entrypoints=websecure"
       - "traefik.http.routers.villasboats-backend-staging.tls=true"
-      - "traefik.http.routers.villasboats-backend-staging.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.villasboats-backend-staging.tls.certresolver=mytlschallenge"
 
       # Service
       - "traefik.http.services.villasboats-backend-staging.loadbalancer.server.port=8080"
@@ -128,7 +128,7 @@ services:
       - "traefik.http.routers.villasboats-staging.rule=Host(`villasboats.mcg.sh`)"
       - "traefik.http.routers.villasboats-staging.entrypoints=websecure"
       - "traefik.http.routers.villasboats-staging.tls=true"
-      - "traefik.http.routers.villasboats-staging.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.villasboats-staging.tls.certresolver=mytlschallenge"
 
       # Service
       - "traefik.http.services.villasboats-staging.loadbalancer.server.port=3000"
