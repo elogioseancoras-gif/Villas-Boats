@@ -77,7 +77,7 @@ public class CustomerService {
 
         BigDecimal totalSpent = bookingRepository.sumTotalPriceByCustomerIdAndStatus(
                 user.getId(),
-                List.of(BookingStatus.CONFIRMED, BookingStatus.COMPLETED)
+                new String[]{"CONFIRMED", "COMPLETED"}
         );
 
         LocalDateTime lastBookingDate = bookingRepository.findLatestBookingDateByCustomerId(user.getId());

@@ -144,14 +144,14 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @Query("SELECT COUNT(b) FROM Booking b WHERE b.customer.id = :customerId")
     long countByCustomerId(@Param("customerId") UUID customerId);
 
-    @Query("""
-        SELECT SUM(b.totalPrice) FROM Booking b
-        WHERE b.customer.id = :customerId
-        AND CAST(b.status AS string) IN :statuses
-        """)
+    @Query(value = """
+        SELECT SUM(total_price) FROM bookings
+        WHERE customer_id = :customerId
+        AND status::text = ANY(CAST(:statuses AS text[]))
+        """, nativeQuery = true)
     BigDecimal sumTotalPriceByCustomerIdAndStatus(
         @Param("customerId") UUID customerId,
-        @Param("statuses") List<BookingStatus> statuses
+        @Param("statuses") String[] statuses
     );
 
     @Query("""
