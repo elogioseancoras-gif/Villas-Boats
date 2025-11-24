@@ -76,6 +76,29 @@ services:
       - uploads_data:/app/uploads
     networks:
       - default
+      - mcg.sh_network
+    labels:
+      - "traefik.enable=true"
+
+      # HTTP Router for API
+      - "traefik.http.routers.villasboats-backend-staging.rule=Host(`villasboats.mcg.sh`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.villasboats-backend-staging.entrypoints=websecure"
+      - "traefik.http.routers.villasboats-backend-staging.tls=true"
+      - "traefik.http.routers.villasboats-backend-staging.tls.certresolver=letsencrypt"
+
+      # Service
+      - "traefik.http.services.villasboats-backend-staging.loadbalancer.server.port=8080"
+
+      # Rate Limiting Middleware
+      - "traefik.http.middlewares.backend-ratelimit.ratelimit.average=100"
+      - "traefik.http.middlewares.backend-ratelimit.ratelimit.burst=50"
+
+      # Security Headers Middleware
+      - "traefik.http.middlewares.backend-security.headers.customResponseHeaders.X-Content-Type-Options=nosniff"
+      - "traefik.http.middlewares.backend-security.headers.customResponseHeaders.X-Frame-Options=DENY"
+
+      # Apply Middlewares
+      - "traefik.http.routers.villasboats-backend-staging.middlewares=backend-ratelimit,backend-security"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/api/actuator/health"]
