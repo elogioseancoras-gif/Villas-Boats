@@ -43,7 +43,7 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @Query("""
         SELECT b FROM Booking b
         WHERE b.boat.id = :boatId
-        AND b.status IN :statuses
+        AND CAST(b.status AS string) IN :statuses
         AND (
             (b.startDatetime <= :endDatetime AND b.endDatetime >= :startDatetime)
         )
@@ -147,7 +147,7 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     @Query("""
         SELECT SUM(b.totalPrice) FROM Booking b
         WHERE b.customer.id = :customerId
-        AND b.status IN :statuses
+        AND CAST(b.status AS string) IN :statuses
         """)
     BigDecimal sumTotalPriceByCustomerIdAndStatus(
         @Param("customerId") UUID customerId,
